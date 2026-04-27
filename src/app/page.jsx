@@ -15,6 +15,8 @@ import { motion } from "motion/react"
 export default function BirthdayApp() {
   const [currentScreen, setCurrentScreen] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+  // Add this if you were getting an error for setMusicStarted previously
+  const [musicStarted, setMusicStarted] = useState(false) 
 
   const birthdayDate = new Date("2026-03-11T00:00:00")
   const [isBirthdayOver, setisBirthdayOver] = useState(new Date().getTime() >= birthdayDate.getTime())
@@ -26,13 +28,18 @@ export default function BirthdayApp() {
     return () => clearTimeout(timer)
   }, [])
 
+  // YAHAN SEQUENCE SET KIYA HAI
   const screens = [
     !isBirthdayOver
       ? <Countdown key="countdown" onComplete={() => setisBirthdayOver(true)} birthdayDate={birthdayDate} />
       : <Celebration key="celebration" onNext={() => setCurrentScreen(1)} onMusicStart={() => setMusicStarted(true)} />,
     <HappyBirthday key="happy" onNext={() => setCurrentScreen(2)} />,
     <PhotoGallery key="gallery" onNext={() => setCurrentScreen(3)} />,
-    <Letter key="letter" />,
+    
+    // Yahan onNext missig tha, add kar diya aur next screens bhi laga diye!
+    <Letter key="letter" onNext={() => setCurrentScreen(4)} />,
+    <Wishes key="wishes" onNext={() => setCurrentScreen(5)} />,
+    <MessageBoard key="messageboard" />,
   ]
 
   return (
