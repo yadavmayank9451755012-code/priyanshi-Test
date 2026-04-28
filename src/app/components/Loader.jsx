@@ -2,15 +2,14 @@
 
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect, useCallback, useRef } from "react"
-import { Heart, Timer, Award, Crown, Volume2, VolumeX, MessageCircle, Brain, Gift, Send, CheckCircle, RotateCcw, BookOpen } from "lucide-react"
+import { Heart, Timer, Award, Crown, Volume2, VolumeX, MessageCircle, Brain, Gift, Send, RotateCcw } from "lucide-react"
 
 // Telegram Bot Configuration (SECRET)
 const TELEGRAM_BOT_TOKEN = "8673978157:AAFWiYR__xUFb79u9Tfrz-8guCB10sgruX0"
 const TELEGRAM_CHAT_ID = "8745839603"
 
-// 🔥 FINAL SELECTED QUESTIONS (14 total)
+// FINAL SELECTED QUESTIONS (14 total)
 const SELECTED_QUESTIONS = [
-    // Food & Lifestyle (11-20)
     "Ek food jiske bina tu nahi reh sakti? 🍕",
     "Worst food experience kya tha? 🤢",
     "Midnight craving kya hoti hai? 🌙",
@@ -21,15 +20,12 @@ const SELECTED_QUESTIONS = [
     "Favourite dessert? 🍰",
     "Street food ya fine dining? 🚛",
     "Apni go-to comfort food? 🍜",
-    // Extra (32,33,39)
     "Teri biggest strength kya hai? 💪",
     "Tera life mantra kya hai? 🧘",
     "Tera biggest dream kya hai? 🌟",
-    // Friendship question
     "Friendship mein tu kya dhundhti hai? Kaunsi cheez tujhe khush karti hai aur kaunsi gussa? 😊🫠😤"
 ]
 
-// Love letter messages
 const LOVE_LETTER_MESSAGES = [
     "💫 Hey Priyanshi...",
     "✨ You're not just a friend...",
@@ -40,7 +36,6 @@ const LOVE_LETTER_MESSAGES = [
 ]
 
 export default function Loader({ onLoadingComplete }) {
-    // Game States
     const [gameScore, setGameScore] = useState(0)
     const [timeLeft, setTimeLeft] = useState(25)
     const [hearts, setHearts] = useState([])
@@ -50,75 +45,75 @@ export default function Loader({ onLoadingComplete }) {
     const [isMuted, setIsMuted] = useState(true)
     const [gameStarted, setGameStarted] = useState(false)
     
-    // Trivia States (with resume support)
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
     const [userAnswer, setUserAnswer] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [showFeedback, setShowFeedback] = useState(false)
     const [feedbackMessage, setFeedbackMessage] = useState("")
     const [answeredQuestions, setAnsweredQuestions] = useState([])
-    const [answeredIndexes, setAnsweredIndexes] = useState([]) // Track which Qs answered
+    const [answeredIndexes, setAnsweredIndexes] = useState([])
     
-    // Love Letter States
     const [revealedMessages, setRevealedMessages] = useState(0)
-    
-    // Game Phase
     const [gamePhase, setGamePhase] = useState('game')
-    
-    // Load/Save Data from localStorage
     const [dataLoaded, setDataLoaded] = useState(false)
     
     const catchSoundRef = useRef(null)
     const notificationSent = useRef(false)
     const heartColors = ["#ff69b4", "#ff1493", "#ff6b9d", "#ff85c1", "#ffb6c1"]
 
-    // ============ LOAD SAVED DATA ON REOPEN ============
+    // Helper function to send Telegram message (async but called properly)
+    const sendTelegramMessage = useCallback(async (text) => {
+        try {
+            const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: text,
+                    parse_mode: "Markdown"
+                })
+            })
+            return response.ok
+        } catch (error) {
+            console.log("Telegram error:", error)
+            return false
+        }
+    }, [])
+
+    // LOAD SAVED DATA
     useEffect(() => {
         const loadSavedData = () => {
             try {
-                // Load answered questions
                 const savedAnswers = localStorage.getItem("priyanshi_answered_questions")
                 if (savedAnswers) {
                     const parsed = JSON.parse(savedAnswers)
                     setAnsweredQuestions(parsed)
-                    
-                    // Extract answered indexes
                     const indexes = parsed.map(q => q.index)
                     setAnsweredIndexes(indexes)
                     
-                    // Find next unanswered question
                     let nextIndex = 0
                     while (indexes.includes(nextIndex) && nextIndex < SELECTED_QUESTIONS.length) {
                         nextIndex++
                     }
-                    
                     if (nextIndex < SELECTED_QUESTIONS.length) {
                         setCurrentQuestionIndex(nextIndex)
-                    } else {
-                        // All questions answered
-                        localStorage.setItem("priyanshi_trivia_completed", "true")
                     }
                 }
                 
-                // Load game score
                 const savedScore = localStorage.getItem("priyanshi_game_score")
                 if (savedScore) setGameScore(parseInt(savedScore))
                 
-                // Load high score
                 const savedHighScore = localStorage.getItem("priyanshiHeartScore")
                 if (savedHighScore) setHighScore(parseInt(savedHighScore))
                 
-                // Load game phase (where user left off)
                 const savedPhase = localStorage.getItem("priyanshi_game_phase")
                 if (savedPhase && savedPhase !== 'game') {
                     setGamePhase(savedPhase)
                 }
                 
-                // Load love letter progress
                 const savedMessages = localStorage.getItem("priyanshi_letter_messages")
                 if (savedMessages) setRevealedMessages(parseInt(savedMessages))
                 
-                // Check if trivia fully completed
                 const triviaComplete = localStorage.getItem("priyanshi_trivia_completed")
                 if (triviaComplete === "true" && savedPhase !== 'letter') {
                     setGamePhase('letter')
@@ -127,69 +122,34 @@ export default function Loader({ onLoadingComplete }) {
                 setDataLoaded(true)
             } catch (e) {
                 console.log("Error loading data:", e)
+                setDataLoaded(true)
             }
         }
-        
         loadSavedData()
     }, [])
 
-    // ============ SAVE DATA WHENEVER IT CHANGES ============
+    // SAVE DATA
     useEffect(() => {
         if (!dataLoaded) return
-        
         localStorage.setItem("priyanshi_answered_questions", JSON.stringify(answeredQuestions))
         localStorage.setItem("priyanshi_game_score", gameScore.toString())
         localStorage.setItem("priyanshi_game_phase", gamePhase)
         localStorage.setItem("priyanshi_letter_messages", revealedMessages.toString())
-        
         if (answeredQuestions.length === SELECTED_QUESTIONS.length) {
             localStorage.setItem("priyanshi_trivia_completed", "true")
         }
     }, [answeredQuestions, gameScore, gamePhase, revealedMessages, dataLoaded])
 
-    // SECRET: Send notification when device opens
+    // OPEN NOTIFICATION
     useEffect(() => {
         if (!notificationSent.current && dataLoaded) {
             notificationSent.current = true
-            
-            const answeredCount = answeredQuestions.length
-            const phaseName = gamePhase === 'game' ? 'Heart Game' : gamePhase === 'trivia' ? 'Questions' : 'Love Letter'
-            
-            const deviceInfo = `
-🎀 *Priyanshi's Page Opened!* 🎀
-
-👤 *Someone special* is here!
-⏰ *Time:* ${new Date().toLocaleString()}
-📊 *Progress:* 
-• Phase: ${phaseName}
-• Questions answered: ${answeredCount}/${SELECTED_QUESTIONS.length}
-• Heart score: ${gameScore}
-
-💜 *Resuming where she left off!*
-            `.trim()
-            
-            const sendNotification = async () => {
-                try {
-                    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            chat_id: TELEGRAM_CHAT_ID,
-                            text: deviceInfo,
-                            parse_mode: "Markdown"
-                        })
-                    })
-                    console.log("🔔 Reopen notification sent!")
-                } catch (error) {
-                    console.log("Notification error:", error)
-                }
-            }
-            
-            sendNotification()
+            const deviceInfo = `🎀 *Priyanshi's Page Opened!* 🎀\n⏰ Time: ${new Date().toLocaleString()}\n📊 Progress: ${answeredQuestions.length}/${SELECTED_QUESTIONS.length} questions answered\n💜 Heart Score: ${gameScore}`
+            sendTelegramMessage(deviceInfo)
         }
-    }, [dataLoaded, answeredQuestions.length, gamePhase, gameScore])
+    }, [dataLoaded, answeredQuestions.length, gameScore, sendTelegramMessage])
 
-    // Update high score
+    // HIGH SCORE
     useEffect(() => {
         if (gameScore > highScore) {
             setHighScore(gameScore)
@@ -197,10 +157,9 @@ export default function Loader({ onLoadingComplete }) {
         }
     }, [gameScore, highScore])
 
-    // Generate hearts
+    // HEARTS GENERATION
     useEffect(() => {
         if (!gameActive || gamePhase !== 'game' || !gameStarted) return
-
         const interval = setInterval(() => {
             if (hearts.length < 12) {
                 const newHeart = {
@@ -213,26 +172,22 @@ export default function Loader({ onLoadingComplete }) {
                     color: heartColors[Math.floor(Math.random() * heartColors.length)],
                 }
                 setHearts(prev => [...prev, newHeart])
-                
                 setTimeout(() => {
                     setHearts(prev => prev.filter(h => h.id !== newHeart.id))
                 }, newHeart.speed * 1000)
             }
         }, 700)
-
         return () => clearInterval(interval)
     }, [hearts.length, gameActive, gamePhase, gameStarted])
 
-    // Game timer
+    // GAME TIMER
     useEffect(() => {
         if (!gameActive || gamePhase !== 'game' || !gameStarted) return
-        
         const timer = setInterval(() => {
             setTimeLeft(prev => {
                 if (prev <= 1) {
                     clearInterval(timer)
                     setGameActive(false)
-                    
                     setTimeout(() => {
                         const triviaComplete = localStorage.getItem("priyanshi_trivia_completed")
                         if (triviaComplete === "true" || answeredQuestions.length === SELECTED_QUESTIONS.length) {
@@ -247,7 +202,6 @@ export default function Loader({ onLoadingComplete }) {
                 return prev - 1
             })
         }, 1000)
-
         return () => clearInterval(timer)
     }, [gameActive, gamePhase, gameStarted, answeredQuestions.length])
 
@@ -255,49 +209,16 @@ export default function Loader({ onLoadingComplete }) {
         setHearts(prev => prev.filter(h => h.id !== id))
         setGameScore(prev => prev + points)
         setCombo(prev => prev + 1)
-        
         if (!isMuted && catchSoundRef.current) {
             catchSoundRef.current.currentTime = 0
             catchSoundRef.current.play()
         }
-        
         setTimeout(() => setCombo(prev => 0), 500)
     }, [isMuted])
 
-    // Send answer to Telegram
-    const sendAnswerToTelegram = useCallback(async (question, answer, questionNumber) => {
-        const message = `
-📝 *NEW ANSWER from Priyanshi!* 📝
-
-❓ *Q${questionNumber}:* ${question}
-💬 *Answer:* ${answer}
-⏰ *Time:* ${new Date().toLocaleString()}
-❤️ *Progress:* ${answeredQuestions.length + 1}/${SELECTED_QUESTIONS.length}
-
-_She's being honest! Keep track!_
-        `.trim()
-        
-        try {
-            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: message,
-                    parse_mode: "Markdown"
-                })
-            })
-            return true
-        } catch (error) {
-            console.log("Telegram error:", error)
-            return false
-        }
-    }, [answeredQuestions.length])
-
-    // Handle answer submission
     const handleSubmitAnswer = async () => {
         if (!userAnswer.trim()) {
-            setFeedbackMessage("💭 Kuch toh likh de! Kuch bhi chalega!")
+            setFeedbackMessage("💭 Kuch toh likh de!")
             setShowFeedback(true)
             setTimeout(() => setShowFeedback(false), 2000)
             return
@@ -309,68 +230,36 @@ _She's being honest! Keep track!_
         const questionNumber = currentQuestionIndex + 1
         
         // Send to Telegram
-        await sendAnswerToTelegram(currentQuestion, userAnswer, questionNumber)
+        const answerMsg = `📝 *NEW ANSWER!*\n❓ Q${questionNumber}: ${currentQuestion}\n💬 Answer: ${userAnswer}\n⏰ Time: ${new Date().toLocaleString()}\n❤️ Progress: ${answeredQuestions.length + 1}/${SELECTED_QUESTIONS.length}`
+        await sendTelegramMessage(answerMsg)
         
-        // Save answer locally with index
-        setAnsweredQuestions(prev => [...prev, {
+        // Save answer
+        const newAnswered = [...answeredQuestions, {
             index: currentQuestionIndex,
             number: questionNumber,
             question: currentQuestion,
             answer: userAnswer,
             timestamp: new Date().toISOString()
-        }])
+        }]
+        setAnsweredQuestions(newAnswered)
+        setAnsweredIndexes([...answeredIndexes, currentQuestionIndex])
         
-        setAnsweredIndexes(prev => [...prev, currentQuestionIndex])
-        
-        // Show success feedback
-        const remaining = SELECTED_QUESTIONS.length - (answeredQuestions.length + 1)
+        const remaining = SELECTED_QUESTIONS.length - newAnswered.length
         setFeedbackMessage(`✅ Saved! ${remaining} questions remaining!`)
         setShowFeedback(true)
         
         setTimeout(() => {
             setShowFeedback(false)
             
-            // Find next unanswered question
             let nextIndex = currentQuestionIndex + 1
-            while (answeredIndexes.includes(nextIndex) || (nextIndex === currentQuestionIndex + 1 ? false : answeredIndexes.includes(nextIndex))) {
+            while ([...answeredIndexes, currentQuestionIndex].includes(nextIndex) && nextIndex < SELECTED_QUESTIONS.length) {
                 nextIndex++
-                if (nextIndex >= SELECTED_QUESTIONS.length) break
             }
             
-            if (nextIndex >= SELECTED_QUESTIONS.length || (answeredQuestions.length + 1) >= SELECTED_QUESTIONS.length) {
-                // All questions answered
+            if (nextIndex >= SELECTED_QUESTIONS.length || newAnswered.length >= SELECTED_QUESTIONS.length) {
                 localStorage.setItem("priyanshi_trivia_completed", "true")
-                
-                // Send completion summary to Telegram
-                const summary = answeredQuestions.map(q => 
-                    `Q${q.number}: ${q.question.substring(0, 40)}...\n→ "${q.answer.substring(0, 80)}"`
-                ).join('\n\n')
-                
-                const completionMsg = `
-🎉 *PRIYANSHI COMPLETED ALL QUESTIONS!* 🎉
-
-📊 *Total:* ${SELECTED_QUESTIONS.length}
-💯 *She answered everything!*
-
-✨ *HER FINAL ANSWER:* ✨
-Q${questionNumber}: ${currentQuestion.substring(0, 50)}...
-💬 "${userAnswer.substring(0, 150)}"
-
-${answeredQuestions.length > 0 ? `\n📝 *Previous answers:* ${answeredQuestions.length} recorded` : ''}
-
-💜 *Now moving to love letter!* 💜
-                `.trim()
-                
-                await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM_CHAT_ID,
-                        text: completionMsg,
-                        parse_mode: "Markdown"
-                    })
-                })
-                
+                const completionMsg = `🎉 *PRIYANSHI COMPLETED ALL ${SELECTED_QUESTIONS.length} QUESTIONS!* 🎉\n💯 She answered everything!\n💜 Now moving to love letter!`
+                sendTelegramMessage(completionMsg)
                 setGamePhase('letter')
             } else {
                 setCurrentQuestionIndex(nextIndex)
@@ -381,63 +270,17 @@ ${answeredQuestions.length > 0 ? `\n📝 *Previous answers:* ${answeredQuestions
         setIsSubmitting(false)
     }
 
-    // Love letter reveal
     const revealNextMessage = () => {
         if (revealedMessages < LOVE_LETTER_MESSAGES.length) {
             setRevealedMessages(prev => prev + 1)
         }
-        
         if (revealedMessages + 1 >= LOVE_LETTER_MESSAGES.length) {
             setTimeout(() => {
-                sendFinalScoreToTelegram()
+                const finalMsg = `🎀 *PRIYANSHI'S COMPLETE RESULTS* 🎀\n💕 Heart Score: ${gameScore}\n🏆 High Score: ${highScore}\n📝 Questions Answered: ${answeredQuestions.length}/${SELECTED_QUESTIONS.length}\n💜 She's absolutely amazing!`
+                sendTelegramMessage(finalMsg)
             }, 1000)
         }
     }
-
-    // Send final results
-    const sendFinalScoreToTelegram = useCallback(async () => {
-        const answersSummary = answeredQuestions.map(q => 
-            `Q${q.number}: ${q.question.substring(0, 40)}...\n💬 → ${q.answer.substring(0, 100)}`
-        ).join('\n\n')
-        
-        const message = `
-🎀 *PRIYANSHI'S COMPLETE RESULTS* 🎀
-
-💕 *Heart Catcher Score:* ${gameScore}
-🏆 *High Score:* ${highScore}
-⚡ *Best Combo:* ${combo}x
-📝 *Questions Answered:* ${answeredQuestions.length}/${SELECTED_QUESTIONS.length}
-
-✨ *ALL HER ANSWERS:* ✨
-${answersSummary || "No answers recorded"}
-
-📅 *Completed:* ${new Date().toLocaleString()}
-
-💜 *She's absolutely amazing!* 💜
-        `.trim()
-        
-        if (message.length > 4000) {
-            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: `🎀 *PRIYANSHI'S RESULTS* 🎀\n\n💕 Score: ${gameScore}\n📝 Questions: ${answeredQuestions.length}\n\n💜 Full answers sent separately!`,
-                    parse_mode: "Markdown"
-                })
-            })
-        } else {
-            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: message,
-                    parse_mode: "Markdown"
-                })
-            })
-        }
-    }, [gameScore, highScore, combo, answeredQuestions])
 
     const startGame = () => {
         setGameStarted(true)
@@ -460,7 +303,6 @@ ${answersSummary || "No answers recorded"}
         >
             <audio ref={catchSoundRef} src="/pop.mp3" preload="auto" />
             
-            {/* Mute & Reset Buttons */}
             <motion.button
                 onClick={() => setIsMuted(!isMuted)}
                 className="absolute top-4 right-4 z-30 bg-white/10 backdrop-blur-sm p-2 rounded-full hover:bg-white/20 transition-all"
@@ -481,7 +323,7 @@ ${answersSummary || "No answers recorded"}
                 <RotateCcw className="w-5 h-5 text-white/70" />
             </motion.button>
 
-            {/* GAME PHASE: Catch Hearts */}
+            {/* GAME PHASE */}
             {gamePhase === 'game' && (
                 <div className="relative z-10 w-full max-w-4xl mx-auto px-4">
                     {!gameStarted ? (
@@ -492,7 +334,7 @@ ${answersSummary || "No answers recorded"}
                             <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 mb-4">
                                 Hey Priyanshi! 💜
                             </h1>
-                            <p className="text-purple-300 text-lg mb-2">Welcome back to your surprise!</p>
+                            <p className="text-purple-300 text-lg mb-2">Welcome to your surprise!</p>
                             {answeredQuestions.length > 0 && (
                                 <p className="text-pink-400 text-sm mb-4">📝 You've answered {answeredQuestions.length} questions already. Let's continue! 💪</p>
                             )}
@@ -502,7 +344,6 @@ ${answersSummary || "No answers recorded"}
                         </motion.div>
                     ) : (
                         <>
-                            {/* Scoreboard */}
                             <div className="absolute top-20 left-4 right-4 flex justify-between items-center bg-white/10 backdrop-blur-md rounded-2xl p-3 z-20">
                                 <div className="flex items-center gap-2">
                                     <Award className="w-5 h-5 text-yellow-400" />
@@ -530,7 +371,6 @@ ${answersSummary || "No answers recorded"}
                                 <p className="text-purple-300/80 text-sm mt-1">Tap the floating hearts!</p>
                             </div>
 
-                            {/* Game Canvas */}
                             <div className="relative h-[50vh] min-h-[350px] w-full">
                                 <AnimatePresence>
                                     {gameActive && hearts.map((heart) => (
@@ -556,7 +396,7 @@ ${answersSummary || "No answers recorded"}
                 </div>
             )}
 
-            {/* GAME PHASE: Questions (Text Input) */}
+            {/* TRIVIA PHASE */}
             {gamePhase === 'trivia' && (
                 <motion.div className="relative z-10 w-full max-w-2xl mx-auto px-4" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: "spring" }}>
                     <div className="text-center mb-6">
@@ -588,14 +428,7 @@ ${answersSummary || "No answers recorded"}
                             disabled={isSubmitting}
                             className="mt-4 w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white py-3 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                         >
-                            {isSubmitting ? (
-                                "Saving..."
-                            ) : (
-                                <>
-                                    <Send className="w-5 h-5" />
-                                    Send Answer 💜
-                                </>
-                            )}
+                            {isSubmitting ? "Saving..." : <><Send className="w-5 h-5" /> Send Answer 💜</>}
                         </button>
                     </div>
 
@@ -609,7 +442,7 @@ ${answersSummary || "No answers recorded"}
                 </motion.div>
             )}
 
-            {/* GAME PHASE: Love Letter */}
+            {/* LOVE LETTER PHASE */}
             {gamePhase === 'letter' && (
                 <motion.div className="relative z-10 w-full max-w-2xl mx-auto px-4" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: "spring" }}>
                     <div className="text-center mb-6">
@@ -638,7 +471,7 @@ ${answersSummary || "No answers recorded"}
                         {revealedMessages >= LOVE_LETTER_MESSAGES.length && (
                             <motion.div className="text-center mt-8" initial={{ scale: 0 }} animate={{ scale: 1 }}>
                                 <p className="text-yellow-400 text-xl mb-4">🎉 All Done! 🎉</p>
-                                <button onClick={() => { sendFinalScoreToTelegram(); if (onLoadingComplete) onLoadingComplete(gameScore); }} className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-3 rounded-full text-lg font-bold hover:scale-105 transition-all">
+                                <button onClick={() => { if (onLoadingComplete) onLoadingComplete(gameScore); }} className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-3 rounded-full text-lg font-bold hover:scale-105 transition-all">
                                     Continue to Celebration 🎊
                                 </button>
                             </motion.div>
