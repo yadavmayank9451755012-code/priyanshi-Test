@@ -222,12 +222,6 @@ function MemoryGame({ onScore }) {
     const [score, setScore] = useState(0)
 
     const initGame = () => {
-        // 3x3 grid = 9 cards, need 4 pairs + 1 extra (but matching needs pairs)
-        // Using 8 cards (4 pairs) for 3x3 with one empty space or rework
-        // Actually 3x3 = 9 cards can't have pairs. Using 4x4 is standard.
-        // But tera bola 3x3 - so using 8 cards (4 pairs) in 3x3 grid means one empty? No.
-        // Let's do 4x4 but visually smaller. Or 3x4 = 12 cards (6 pairs)
-        // Using 8 cards in 3x3 = 8 cards, 4 pairs, last cell empty or hidden
         const selectedCards = [...CARD_SET_3x3.slice(0, 4), ...CARD_SET_3x3.slice(0, 4)]
         const shuffled = selectedCards
             .sort(() => Math.random() - 0.5)
@@ -270,7 +264,7 @@ function MemoryGame({ onScore }) {
                 setDisabled(false)
                 setMatched(prev => [...prev, cards[first].id])
 
-                if (matched.length + 1 === 4) { // 4 pairs complete
+                if (matched.length + 1 === 4) {
                     const finalScore = Math.max(0, 100 - moves * 2)
                     setScore(finalScore)
                     setDone(true)
@@ -473,8 +467,8 @@ function ResetButton({ onReset }) {
     
     if (showConfirm) {
         return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-                <div className="bg-purple-950/90 rounded-2xl p-6 text-center border border-pink-500/30 max-w-xs mx-4">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md">
+                <div className="bg-black/80 rounded-2xl p-6 text-center border border-pink-500/50 max-w-xs mx-4" style={{ background: "#0a0a0a" }}>
                     <p className="text-white font-bold mb-4">Reset all game progress?</p>
                     <div className="flex gap-3">
                         <button onClick={() => setShowConfirm(false)} className="flex-1 py-2 rounded-xl border border-white/20 text-white/60 text-sm">Cancel</button>
@@ -488,26 +482,28 @@ function ResetButton({ onReset }) {
     return (
         <motion.button
             onClick={() => setShowConfirm(true)}
-            className="fixed bottom-20 right-4 z-20 bg-white/10 backdrop-blur-sm p-3 rounded-full hover:bg-white/20 transition-all"
+            className="fixed bottom-20 right-4 z-20 bg-white/5 backdrop-blur-sm p-3 rounded-full hover:bg-white/10 transition-all border border-white/10"
             whileTap={{ scale: 0.9 }}
         >
-            <RefreshCw size={18} className="text-white/70" />
+            <RefreshCw size={18} className="text-white/50" />
         </motion.button>
     )
 }
 
 // ============================================
-// MAIN COMPONENT
+// MAIN COMPONENT - 4x3 GRID
 // ============================================
 const GAME_LIST = [
     { id: "memory", name: "Memory Match", desc: "Find the pairs", Icon: Brain, color: "#ec4899" },
     { id: "emoji", name: "Emoji Song", desc: "Guess the melody", Icon: Music2, color: "#a855f7" },
     { id: "color", name: "Focus Test", desc: "Match the ink", Icon: Palette, color: "#3b82f6" },
+    // 4th item for 4x3 grid - Extra surprise game
+    { id: "bonus", name: "Bonus Zone", desc: "Coming soon", Icon: Sparkles, color: "#fbbf24" },
 ]
 
 export default function FunGames({ onComplete }) {
     const [activeGame, setActiveGame] = useState(null)
-    const [scores, setScores] = useState({ memory: null, emoji: null, color: null })
+    const [scores, setScores] = useState({ memory: null, emoji: null, color: null, bonus: null })
 
     useEffect(() => {
         const saved = localStorage.getItem("game_scores_v2")
@@ -522,7 +518,7 @@ export default function FunGames({ onComplete }) {
 
     const resetAllScores = () => {
         localStorage.removeItem("game_scores_v2")
-        setScores({ memory: null, emoji: null, color: null })
+        setScores({ memory: null, emoji: null, color: null, bonus: null })
         setActiveGame(null)
     }
 
@@ -533,69 +529,91 @@ export default function FunGames({ onComplete }) {
         <>
             <ResetButton onReset={resetAllScores} />
             
-            <motion.div className="min-h-screen flex flex-col items-center pt-10 pb-12 px-4 relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-pink-950"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                
+            <motion.div 
+                className="min-h-screen flex flex-col items-center pt-10 pb-12 px-4 relative overflow-hidden"
+                style={{ background: "#000000" }}
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                exit={{ opacity: 0 }}
+            >
+                {/* Subtle gradient glows */}
                 <div className="fixed inset-0 pointer-events-none">
-                    <div className="absolute w-80 h-80 rounded-full bg-pink-500/10 -top-20 -left-20 blur-[80px]" />
-                    <div className="absolute w-80 h-80 rounded-full bg-purple-500/10 -bottom-20 -right-20 blur-[80px]" />
+                    <div className="absolute w-[500px] h-[500px] rounded-full bg-pink-500/5 -top-40 -left-40 blur-[120px]" />
+                    <div className="absolute w-[500px] h-[500px] rounded-full bg-purple-500/5 -bottom-40 -right-40 blur-[120px]" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent" />
                 </div>
 
-                <div className="relative z-10 w-full max-w-sm mx-auto">
-                    <div className="text-center mb-6">
-                        <div className="flex justify-center mb-2">
-                            <GlowIcon color="#ec4899" size={50}>
-                                <Trophy size={20} color="#ec4899" />
+                {/* Grid pattern background */}
+                <div 
+                    className="fixed inset-0 opacity-5 pointer-events-none"
+                    style={{
+                        backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 1px)",
+                        backgroundSize: "40px 40px"
+                    }}
+                />
+
+                <div className="relative z-10 w-full max-w-4xl mx-auto">
+                    <div className="text-center mb-10">
+                        <div className="flex justify-center mb-3">
+                            <GlowIcon color="#ec4899" size={55}>
+                                <Trophy size={22} color="#ec4899" />
                             </GlowIcon>
                         </div>
-                        <h1 className="text-3xl font-black bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tighter bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
                             GAMING ZONE
                         </h1>
-                        <div className="inline-flex items-center gap-2 mt-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10">
+                        <div className="inline-flex items-center gap-2 mt-3 px-5 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
                             <Sparkles size={12} className="text-pink-400" />
-                            <span className="text-white font-bold text-sm">{totalScore} POINTS</span>
+                            <span className="text-white font-bold text-sm tracking-wider">{totalScore} POINTS</span>
                             <Sparkles size={12} className="text-pink-400" />
                         </div>
                     </div>
 
                     <AnimatePresence mode="wait">
                         {!activeGame ? (
-                            <motion.div key="menu" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-3">
-                                {GAME_LIST.map((game, idx) => (
-                                    <motion.button
-                                        key={game.id}
-                                        initial={{ x: -20, opacity: 0 }}
-                                        animate={{ x: 0, opacity: 1 }}
-                                        transition={{ delay: idx * 0.05 }}
-                                        onClick={() => setActiveGame(game.id)}
-                                        className="w-full flex items-center gap-4 p-4 rounded-2xl"
-                                        style={{
-                                            background: "rgba(15,5,30,0.6)",
-                                            border: scores[game.id] !== null ? "1px solid rgba(34,197,94,0.4)" : "1px solid rgba(168,85,247,0.2)"
-                                        }}
-                                        whileHover={{ scale: 1.01 }}
-                                        whileTap={{ scale: 0.99 }}
-                                    >
-                                        <GlowIcon color={game.color} size={40}>
-                                            <game.Icon size={16} color={game.color} />
-                                        </GlowIcon>
-                                        <div className="flex-1 text-left">
-                                            <p className="text-white font-bold text-sm">{game.name}</p>
-                                            <p className="text-purple-400 text-xs">{game.desc}</p>
-                                        </div>
-                                        {scores[game.id] !== null ? (
-                                            <span className="text-green-400 font-bold text-lg">{scores[game.id]}</span>
-                                        ) : (
-                                            <ChevronRight size={14} color="#7c3aed" />
-                                        )}
-                                    </motion.button>
-                                ))}
+                            <motion.div key="menu" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                                {/* 4x3 Grid - 4 columns, each game card */}
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    {GAME_LIST.map((game, idx) => (
+                                        <motion.button
+                                            key={game.id}
+                                            initial={{ y: 20, opacity: 0 }}
+                                            animate={{ y: 0, opacity: 1 }}
+                                            transition={{ delay: idx * 0.08 }}
+                                            onClick={() => game.id === "bonus" ? null : setActiveGame(game.id)}
+                                            className="group relative p-5 rounded-2xl text-center transition-all"
+                                            style={{
+                                                background: "rgba(10,10,10,0.8)",
+                                                border: scores[game.id] !== null ? "1px solid rgba(34,197,94,0.4)" : "1px solid rgba(255,255,255,0.08)",
+                                                cursor: game.id === "bonus" ? "not-allowed" : "pointer",
+                                                opacity: game.id === "bonus" ? 0.6 : 1
+                                            }}
+                                            whileHover={game.id !== "bonus" ? { scale: 1.02, borderColor: game.color, boxShadow: `0 0 20px ${game.color}20` } : {}}
+                                            whileTap={game.id !== "bonus" ? { scale: 0.98 } : {}}
+                                        >
+                                            <div className="flex flex-col items-center gap-2">
+                                                <div className="w-12 h-12 rounded-full flex items-center justify-center transition-all group-hover:scale-110"
+                                                    style={{ background: `${game.color}15`, border: `1px solid ${game.color}30` }}>
+                                                    <game.Icon size={20} color={game.color} />
+                                                </div>
+                                                <p className="text-white font-bold text-sm mt-2">{game.name}</p>
+                                                <p className="text-white/30 text-[10px] uppercase tracking-wide">{game.desc}</p>
+                                                {scores[game.id] !== null && (
+                                                    <span className="text-green-400 font-bold text-sm mt-1">{scores[game.id]}</span>
+                                                )}
+                                                {game.id === "bonus" && (
+                                                    <span className="text-yellow-500/50 text-[9px] mt-1">🔒 Locked</span>
+                                                )}
+                                            </div>
+                                        </motion.button>
+                                    ))}
+                                </div>
 
                                 {allCompleted && (
-                                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center pt-4">
+                                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center pt-8">
                                         <motion.button
                                             onClick={() => onComplete(totalScore)}
-                                            className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold rounded-xl flex items-center justify-center gap-2"
+                                            className="px-8 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 mx-auto"
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
                                         >
@@ -606,7 +624,7 @@ export default function FunGames({ onComplete }) {
                             </motion.div>
                         ) : (
                             <motion.div key="game" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col items-center gap-3">
-                                <button onClick={() => setActiveGame(null)} className="self-start text-xs text-purple-400 hover:text-white mb-1">
+                                <button onClick={() => setActiveGame(null)} className="self-start text-xs text-purple-400 hover:text-white mb-2 flex items-center gap-1">
                                     ← BACK
                                 </button>
                                 {activeGame === "memory" && <MemoryGame onScore={s => { saveScore("memory", s); setTimeout(() => setActiveGame(null), 1800) }} />}
