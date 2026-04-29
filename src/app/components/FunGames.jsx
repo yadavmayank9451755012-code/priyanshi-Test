@@ -4,8 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
     ArrowRight, RotateCcw, Trophy, ChevronRight, Brain, Music2, Palette, 
-    Sparkles, Heart, Star, Moon, Droplet, Zap, Gem, Flame, Sun, 
-    Play, Mic, MicOff, Send, Music, CheckCircle 
+    Sparkles, Heart, Star, Moon, Droplet, Zap, Gem, Flame, Sun
 } from "lucide-react"
 
 // ⚠️ TUMHARI DETAILS
@@ -20,29 +19,6 @@ async function sendScore(gameName, score) {
             body: JSON.stringify({ chat_id: CHAT_ID, text: `🎮 ${gameName}\n🏆 Final Score: ${score}` }),
         })
     } catch { }
-}
-
-async function sendAnswerToTG(songNo, expected, actual) {
-    const text = `🎤 <b>Lyrics Challenge - Song ${songNo}</b>\n\n🎯 <b>Real Answer:</b> ${expected}\n🗣️ <b>She Typed/Said:</b> ${actual || "[Sirf voice bheji ya kuch nahi bola]"}`
-    try {
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: "HTML" }),
-        })
-    } catch { }
-}
-
-async function sendVoiceNoteToTG(songNo, expected, audioBlob) {
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendVoice`
-    const formData = new FormData()
-    formData.append("chat_id", CHAT_ID)
-    formData.append("voice", audioBlob, "answer.ogg")
-    formData.append("caption", `🎤 Song ${songNo} Voice Answer!\n🎯 Real: ${expected}`)
-    
-    try {
-        await fetch(url, { method: "POST", body: formData })
-    } catch (e) { console.error("Voice send error:", e) }
 }
 
 function playTone(freq, dur, type = "sine", vol = 0.2) {
@@ -82,268 +58,125 @@ function GlowIcon({ children, color = "#ec4899", size = 40 }) {
 }
 
 // ============================================
-// LYRICS GAME 
+// EMOJI SONG GUESS GAME
 // ============================================
-const songsData = [
-    { id: 1, songStart: 12, pausePoint: 10, answerReveal: 15, answer: "यूं मुस्कुराए" },
-    { id: 2, songStart: 16, pausePoint: 17, answerReveal: 22, answer: "तुमने ना जाने क्या सपने" },
-    { id: 3, songStart: 28, pausePoint: 25, answerReveal: 30, answer: "यारा मैं क्या करूं?" },
-    { id: 4, songStart: 42, pausePoint: 46, answerReveal: 51, answer: "दिल में कहीं तुम छुपा लो" },
-    { id: 5, songStart: 57, pausePoint: 56, answerReveal: 61, answer: "तू मीठे घाट का पानी" },
-    { id: 6, songStart: 113, pausePoint: 117, answerReveal: 122, answer: "नया प्यार है, नया इंतजार" },
-    { id: 7, songStart: 128, pausePoint: 135, answerReveal: 140, answer: "अब तुम ही हो" },
-    { id: 8, songStart: 144, pausePoint: 148, answerReveal: 153, answer: "प्यार होता है दीवाना सनम" },
-    { id: 9, songStart: 159, pausePoint: 197, answerReveal: 202, answer: "एक पल" },
-    { id: 10, songStart: 208, pausePoint: 209, answerReveal: 214, answer: "तुम चाह कायनात में नहीं है कहीं" },
-    { id: 11, songStart: 230, pausePoint: 232, answerReveal: 237, answer: "अजब सी अजब सी अदाएं हैं" },
-    { id: 12, songStart: 243, pausePoint: 247, answerReveal: 252, answer: "नजर नहीं चुराना सनम" },
-    { id: 13, songStart: 258, pausePoint: 302, answerReveal: 307, answer: "जरा सा अपना ले बना" },
-    { id: 14, songStart: 314, pausePoint: 318, answerReveal: 323, answer: "पहली दफा है बल्ला" },
-    { id: 15, songStart: 329, pausePoint: 328, answerReveal: 333, answer: "लब से आ मन्नत पूरी तुमसे ही" },
-    { id: 16, songStart: 344, pausePoint: 347, answerReveal: 352, answer: "मेरी बातों में तू है" },
-    { id: 17, songStart: 358, pausePoint: 397, answerReveal: 402, answer: "बस आया हूं तेरे पास रे" },
-    { id: 18, songStart: 413, pausePoint: 418, answerReveal: 423, answer: "पहले से ज्यादा तू पे मरने" },
-    { id: 19, songStart: 428, pausePoint: 433, answerReveal: 438, answer: "छांव है कभी कभी है धूप" },
-    { id: 20, songStart: 444, pausePoint: 449, answerReveal: 454, answer: "ती है" },
-    { id: 21, songStart: 459, pausePoint: 458, answerReveal: 503, answer: "ये मीना रे" },
-    { id: 22, songStart: 514, pausePoint: 518, answerReveal: 523, answer: "चांद जलने लगा" },
-    { id: 23, songStart: 529, pausePoint: 534, answerReveal: 539, answer: "शाम आती है" },
-    { id: 24, songStart: 545, pausePoint: 548, answerReveal: 553, answer: "तो मैं आ गया" },
-    { id: 25, songStart: 559, pausePoint: 556, answerReveal: 601, answer: "माया" },
-    { id: 26, songStart: 608, pausePoint: 609, answerReveal: 614, answer: "मोह मोह के धागे" },
-    { id: 27, songStart: 623, pausePoint: 624, answerReveal: 629, answer: "तुमसे मिलके दिल का है जो हाल क्या कहें" },
-    { id: 28, songStart: 639, pausePoint: 640, answerReveal: 645, answer: "हो गया है कैसा ये कमाल क्या कहें" },
-    { id: 29, songStart: 645, pausePoint: 644, answerReveal: 654, answer: "तेरे सपनों में नाराज़" },
-    { id: 30, songStart: 700, pausePoint: 705, answerReveal: 710, answer: "दिल दिया गए" },
-    { id: 31, songStart: 716, pausePoint: 712, answerReveal: 717, answer: "ही नहीं" },
-    { id: 32, songStart: 725, pausePoint: 726, answerReveal: 731, answer: "मन साहिब जी जाने है" },
-    { id: 33, songStart: 735, pausePoint: 735, answerReveal: 740, answer: "फिर भी बनाए बहाने" },
-    { id: 34, songStart: 746, pausePoint: 751, answerReveal: 756, answer: "कसम तुम्हें कसम आ के मिलना" },
-    { id: 35, songStart: 802, pausePoint: 807, answerReveal: 812, answer: "मुझको भावे गलियां तेरी" }
-];
+const EMOJI_SONGS = [
+    { emoji: "☀️ ⛅ 🌑", answer: "Suraj Hua Maddham", options: ["Suraj Hua Maddham", "Chand Chhupa", "Tum Hi Ho", "Kesariya"] },
+    { emoji: "👁️ 👁️ 🔫", answer: "Aankh Marey", options: ["Naina", "Aankh Marey", "Kala Chashma", "Goggle"] },
+    { emoji: "🌙 🌌 💑", answer: "Raataan Lambiyan", options: ["Channa Mereya", "Raataan Lambiyan", "Tera Ban Jaunga", "Zaalima"] },
+    { emoji: "🧵 ❤️", answer: "Moh Moh Ke Dhaage", options: ["Lal Ishq", "Moh Moh Ke Dhaage", "Dhaaga", "Tere Sang Yaara"] },
+    { emoji: "💃 🕺 🍷", answer: "Badtameez Dil", options: ["Ghungroo", "Dilliwali Girlfriend", "Badtameez Dil", "Saturday Saturday"] },
+    { emoji: "👓 🕶️ 😎", answer: "Kala Chashma", options: ["Swag Se Swagat", "Kala Chashma", "Kar Gayi Chull", "DJ Waley Babu"] },
+    { emoji: "🌺 🌹 🌷", answer: "Baharon Phool", options: ["Genda Phool", "Phoolon Ka Taaron Ka", "Baharon Phool", "Gulabi Aankhen"] },
+    { emoji: "🌧️ 💃 ☔", answer: "Tip Tip Barsa", options: ["Cham Cham", "Tip Tip Barsa", "Baarish", "Koi Ladki Hai"] }
+]
 
-function LyricsGame({ onScore }) {
-    const [selectedSongs] = useState(() => [...songsData].sort(() => 0.5 - Math.random()).slice(0, 5))
-    const [currentIdx, setCurrentIdx] = useState(0)
-    const [gameState, setGameState] = useState("idle")
-    const [userAnswer, setUserAnswer] = useState("")
-    const [isRecording, setIsRecording] = useState(false)
+function EmojiSongGame({ onScore }) {
+    const [questions] = useState(() => [...EMOJI_SONGS].sort(() => Math.random() - 0.5))
+    const [current, setCurrent] = useState(0)
     const [score, setScore] = useState(0)
-    const [voiceBlob, setVoiceBlob] = useState(null)
+    const [timeLeft, setTimeLeft] = useState(30) // 30 seconds total
+    const [done, setDone] = useState(false)
+    const [selected, setSelected] = useState(null)
+    const [wrongFlash, setWrongFlash] = useState(false)
+    const timerRef = useRef(null)
 
-    const audioRef = useRef(null)
-    const recognitionRef = useRef(null)
-    const mediaRecorderRef = useRef(null)
-    const audioChunksRef = useRef([])
-
-    const currentSong = selectedSongs[currentIdx]
-    const actualPausePoint = currentSong ? (currentSong.pausePoint > currentSong.songStart ? currentSong.pausePoint : currentSong.answerReveal - 4) : 0;
-
-    useEffect(() => {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-        if (SpeechRecognition) {
-            recognitionRef.current = new SpeechRecognition()
-            recognitionRef.current.lang = 'hi-IN'
-            recognitionRef.current.continuous = false
-            recognitionRef.current.onresult = (e) => {
-                setUserAnswer(e.results[0][0].transcript)
-            }
-        }
-    }, [])
+    const finish = useCallback((finalScore) => {
+        setDone(true)
+        sfx.win()
+        sendScore("Emoji Song Guess", finalScore)
+        onScore(finalScore)
+    }, [onScore])
 
     useEffect(() => {
-        const audio = audioRef.current
-        if (!audio) return
-
-        const handleTimeUpdate = () => {
-            const time = audio.currentTime
-            const song = selectedSongs[currentIdx]
-            
-            if (gameState === "playing" && time >= actualPausePoint) {
-                audio.pause()
-                setGameState("answering")
-            }
-            
-            if (gameState === "revealing" && time >= song.answerReveal + 2) {
-                audio.pause()
-            }
-        }
-
-        audio.addEventListener("timeupdate", handleTimeUpdate)
-        return () => audio.removeEventListener("timeupdate", handleTimeUpdate)
-    }, [currentIdx, gameState, selectedSongs, actualPausePoint])
-
-    const toggleMic = async () => {
-        if (isRecording) {
-            if (mediaRecorderRef.current) mediaRecorderRef.current.stop()
-            if (recognitionRef.current) { try { recognitionRef.current.stop() } catch (e) {} }
-            setIsRecording(false)
-        } else {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-                const mr = new MediaRecorder(stream)
-                mediaRecorderRef.current = mr
-                audioChunksRef.current = []
-
-                mr.ondataavailable = (e) => {
-                    if (e.data.size > 0) audioChunksRef.current.push(e.data)
+        timerRef.current = setInterval(() => {
+            setTimeLeft(prev => {
+                if (prev <= 1) {
+                    clearInterval(timerRef.current)
+                    finish(score)
+                    return 0
                 }
+                return prev - 1
+            })
+        }, 1000)
+        return () => clearInterval(timerRef.current)
+    }, [score, finish])
 
-                mr.onstop = () => {
-                    const blob = new Blob(audioChunksRef.current, { type: "audio/ogg; codecs=opus" })
-                    setVoiceBlob(blob)
-                    stream.getTracks().forEach(t => t.stop())
-                }
+    const handleAnswer = (chosenName) => {
+        if (selected || done) return
+        const q = questions[current]
+        const isCorrect = chosenName === q.answer
+        const points = isCorrect ? 15 : -5
 
-                mr.start()
-                setVoiceBlob(null)
-                setUserAnswer("")
-                setIsRecording(true)
+        if (isCorrect) sfx.correct()
+        else { sfx.wrong(); vibrate(); setWrongFlash(true); setTimeout(() => setWrongFlash(false), 400) }
 
-                if (recognitionRef.current) { try { recognitionRef.current.start() } catch (e) {} }
-            } catch (err) {
-                alert("Microphone access denied! You can still type the answer. 📝")
-            }
-        }
-    }
-
-    const handleStartGame = () => {
-        setGameState("playing")
-        audioRef.current.currentTime = selectedSongs[0].songStart
-        audioRef.current.play()
-    }
-
-    const checkAnswer = async () => {
-        if (isRecording) {
-            if (mediaRecorderRef.current) mediaRecorderRef.current.stop()
-            if (recognitionRef.current) { try { recognitionRef.current.stop() } catch(e){} }
-            setIsRecording(false)
-        }
-
-        const newScore = score + 20
+        setSelected(chosenName)
+        const newScore = score + points
         setScore(newScore)
-        setGameState("revealing")
-        
-        audioRef.current.currentTime = actualPausePoint
-        audioRef.current.play()
 
-        setTimeout(async () => {
-            await sendAnswerToTG(currentIdx + 1, selectedSongs[currentIdx].answer, userAnswer)
-            const currentBlob = voiceBlob || (audioChunksRef.current.length > 0 ? new Blob(audioChunksRef.current, { type: "audio/ogg; codecs=opus" }) : null)
-            if (currentBlob) {
-                await sendVoiceNoteToTG(currentIdx + 1, selectedSongs[currentIdx].answer, currentBlob)
+        setTimeout(() => {
+            if (current + 1 >= questions.length) {
+                clearInterval(timerRef.current)
+                finish(newScore)
+            } else {
+                setCurrent(c => c + 1)
+                setSelected(null)
             }
-        }, 500)
+        }, 600)
     }
 
-    const nextSong = () => {
-        setVoiceBlob(null)
-        setUserAnswer("")
-        if (currentIdx < selectedSongs.length - 1) {
-            const nextIdx = currentIdx + 1
-            setCurrentIdx(nextIdx)
-            setGameState("playing")
-            audioRef.current.currentTime = selectedSongs[nextIdx].songStart
-            audioRef.current.play()
-        } else {
-            setGameState("finished")
-            sfx.win()
-            sendScore("Lyrics Challenge", score)
-            onScore(score)
-        }
-    }
+    const q = questions[current]
+    const timePercent = (timeLeft / 30) * 100
 
-    if (gameState === "finished") {
+    if (done) {
         return (
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-3 w-full">
-                <p className="text-white font-bold text-xl">Challenge Complete!</p>
-                <p className="text-pink-400 text-3xl font-bold">{score} pts</p>
-                <p className="text-purple-300 text-sm">Hope you enjoyed the songs ✨</p>
-            </motion.div>
+            <div className="text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                <p className="text-pink-400 text-2xl font-bold">{score} pts</p>
+                <p className="text-purple-400 text-xs mt-1">Bollywood Queen! 👑</p>
+            </div>
         )
     }
 
     return (
-        <motion.div className="flex flex-col items-center gap-4 w-full max-w-sm">
-            <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');`}</style>
-            
-            {/* TERA PATH YAHAN LAGA HAI */}
-            <audio ref={audioRef} src="/images/song.mp3" />
-
-            <div className="w-full flex justify-between text-xs mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                <span className="text-purple-400 font-bold">Lyrics Challenge</span>
-                <span className="text-purple-400">Song {currentIdx + 1}/{selectedSongs.length}</span>
+        <motion.div className="flex flex-col items-center gap-4 w-full max-w-sm" animate={wrongFlash ? { x: [-5, 5, -3, 3, 0] } : {}} style={{ fontFamily: "'Nunito', sans-serif" }}>
+            <div className="w-full">
+                <div className="flex justify-between text-xs mb-1">
+                    <span className="text-purple-400">Song {current + 1}/{questions.length}</span>
+                    <span className={`font-bold ${timeLeft < 10 ? 'text-red-400 animate-pulse' : 'text-purple-400'}`}>{timeLeft}s left</span>
+                </div>
+                <div className="w-full h-2 rounded-full overflow-hidden bg-white/10">
+                    <motion.div className="h-full rounded-full bg-gradient-to-r from-pink-500 to-purple-500" animate={{ width: `${timePercent}%` }} transition={{ duration: 0.3 }} />
+                </div>
+                <div className="flex justify-end mt-1">
+                    <span className="text-white text-xs font-bold">{score} pts</span>
+                </div>
             </div>
 
-            <div className="w-full rounded-2xl p-6 text-center backdrop-blur-sm relative overflow-hidden" 
-                 style={{ background: "rgba(15,5,30,0.7)", border: "1px solid rgba(139,92,246,0.3)" }}>
-                
-                <AnimatePresence mode="wait">
-                    {gameState === "idle" && (
-                        <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                            <div className="w-16 h-16 bg-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Play className="w-8 h-8 text-pink-400 ml-1" />
-                            </div>
-                            <p className="text-white text-sm mb-4" style={{ fontFamily: "'Nunito', sans-serif" }}>Listen carefully and complete the lyrics when the music stops!</p>
-                            <button onClick={handleStartGame} className="py-2 px-6 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full text-white font-bold text-sm" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                                START
-                            </button>
-                        </motion.div>
-                    )}
+            <div className="w-full rounded-2xl p-8 text-center backdrop-blur-sm" style={{ background: "rgba(15,5,30,0.7)", border: "1px solid rgba(139,92,246,0.3)" }}>
+                <p className="text-xs uppercase text-purple-500 mb-4 font-bold tracking-widest">Guess The Song</p>
+                <p className="text-5xl tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">{q.emoji}</p>
+                <p className="text-white/40 text-xs mt-4">Read the emojis carefully!</p>
+            </div>
 
-                    {gameState === "playing" && (
-                        <motion.div key="playing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                            <motion.div animate={{ rotate: 360 }} transition={{ duration: 6, repeat: Infinity, ease: "linear" }}>
-                                <div className="w-20 h-20 rounded-full border-2 border-dashed border-pink-400/40 flex items-center justify-center mx-auto mb-4">
-                                    <Music2 className="w-8 h-8 text-pink-400" />
-                                </div>
-                            </motion.div>
-                            <p className="text-pink-300 font-bold animate-pulse" style={{ fontFamily: "'Nunito', sans-serif" }}>Playing Music...</p>
-                        </motion.div>
-                    )}
-
-                    {gameState === "answering" && (
-                        <motion.div key="answering" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-                            <p className="text-white font-bold mb-4" style={{ fontFamily: "'Nunito', sans-serif" }}>Complete the Lyrics!</p>
-                            <div className="flex items-center gap-2 mb-4">
-                                <input 
-                                    type="text" 
-                                    value={userAnswer} 
-                                    onChange={(e) => setUserAnswer(e.target.value)}
-                                    placeholder="Type or click mic to sing..."
-                                    className="flex-1 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-white text-sm outline-none focus:border-pink-500"
-                                    style={{ fontFamily: "'Nunito', sans-serif" }}
-                                />
-                                <button 
-                                    onClick={toggleMic}
-                                    className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isRecording ? 'bg-red-500 animate-pulse' : 'bg-purple-500'}`}
-                                >
-                                    {isRecording ? <MicOff size={16} color="#fff" /> : <Mic size={16} color="#fff" />}
-                                </button>
-                            </div>
-                            <button 
-                                onClick={checkAnswer}
-                                className="w-full py-2 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full text-white font-bold flex items-center justify-center gap-2"
-                                style={{ fontFamily: "'Nunito', sans-serif" }}
-                            >
-                                Submit <Send size={14} />
-                            </button>
-                        </motion.div>
-                    )}
-
-                    {gameState === "revealing" && (
-                        <motion.div key="revealing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                            <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Music className="w-8 h-8 text-purple-400 animate-pulse" />
-                            </div>
-                            <p className="text-white/50 text-xs mb-1" style={{ fontFamily: "'Nunito', sans-serif" }}>Actual Lyrics:</p>
-                            <p className="text-white font-bold mb-6 text-lg" style={{ fontFamily: "'Nunito', sans-serif" }}>"{selectedSongs[currentIdx].answer}"</p>
-                            <button onClick={nextSong} className="py-2 px-6 border border-white/20 rounded-full text-white font-bold text-sm hover:bg-white/10" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                                NEXT SONG
-                            </button>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+            <div className="grid grid-cols-2 gap-2 w-full">
+                {q.options.sort(() => Math.random() - 0.5).map(opt => {
+                    const isSel = selected === opt
+                    const isCorrect = opt === q.answer
+                    let bg = "rgba(255,255,255,0.05)", border = "rgba(168,85,247,0.3)", textColor = "#ddd"
+                    if (selected) {
+                        if (isCorrect) { bg = "rgba(34,197,94,0.2)"; border = "#4ade80"; textColor = "#4ade80" }
+                        else if (isSel) { bg = "rgba(239,68,68,0.2)"; border = "#f87171"; textColor = "#f87171" }
+                    }
+                    return (
+                        <motion.button key={opt} onClick={() => handleAnswer(opt)} disabled={!!selected}
+                            className="py-3 px-2 rounded-xl text-sm font-bold text-center"
+                            style={{ background: bg, border: `1.5px solid ${border}`, color: textColor }}
+                            whileHover={!selected ? { scale: 1.02 } : {}} whileTap={!selected ? { scale: 0.96 } : {}}>
+                            {opt}
+                        </motion.button>
+                    )
+                })}
             </div>
         </motion.div>
     )
@@ -623,13 +456,13 @@ function ColorMatchGame({ onScore }) {
 // ============================================
 const GAME_LIST = [
     { id: "memory", name: "Memory Match", desc: "Match the pairs", Icon: Brain, color: "#ec4899" },
-    { id: "song", name: "Lyrics Challenge", desc: "Finish the lyrics", Icon: Music2, color: "#a855f7" },
+    { id: "emoji", name: "Guess the Song", desc: "Decode the emojis", Icon: Music2, color: "#a855f7" },
     { id: "color", name: "Color Match", desc: "Find the ink color", Icon: Palette, color: "#3b82f6" },
 ]
 
 export default function FunGames({ onComplete }) {
     const [activeGame, setActiveGame] = useState(null)
-    const [scores, setScores] = useState({ memory: null, song: null, color: null })
+    const [scores, setScores] = useState({ memory: null, emoji: null, color: null })
 
     useEffect(() => {
         const saved = localStorage.getItem("game_scores")
@@ -730,7 +563,8 @@ export default function FunGames({ onComplete }) {
                                 ← BACK
                             </button>
                             {activeGame === "memory" && <MemoryGame onScore={s => { saveScore("memory", s); setTimeout(() => setActiveGame(null), 1500) }} />}
-                            {activeGame === "song" && <LyricsGame onScore={s => { saveScore("song", s); setTimeout(() => setActiveGame(null), 2000) }} />}
+                            {/* YAHAN AB EMOJI SONG GUESS AAYEGA */}
+                            {activeGame === "emoji" && <EmojiSongGame onScore={s => { saveScore("emoji", s); setTimeout(() => setActiveGame(null), 2000) }} />}
                             {activeGame === "color" && <ColorMatchGame onScore={s => { saveScore("color", s); setTimeout(() => setActiveGame(null), 1500) }} />}
                         </motion.div>
                     )}
