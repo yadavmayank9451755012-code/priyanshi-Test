@@ -4,19 +4,31 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
     ArrowRight, RotateCcw, Trophy, ChevronRight, Brain, Music2, Palette, 
-    Sparkles, Heart, Star, Moon, Droplet, Zap, Gem, Flame, Sun
+    Sparkles, Heart, Star, Moon, Droplet, Zap, Gem, Flame, Sun, Send, CheckCircle, XCircle
 } from "lucide-react"
 
 // ⚠️ TUMHARI DETAILS
 const BOT_TOKEN = "8673978157:AAFWiYR__xUFb79u9Tfrz-8guCB10sgruX0"
 const CHAT_ID = "8745839603"
 
-async function sendScore(gameName, score) {
+// Telegram Update Function
+async function sendEmojiGuessToTG(emoji, expected, actual, isCorrect, points) {
+    const text = `🎯 <b>Emoji Song Update</b>\n\nEmojis: ${emoji}\n<b>Target Song:</b> ${expected}\n<b>She Picked:</b> ${actual || "[No Selection]"}\n\n<b>Result:</b> ${isCorrect ? "✅ Correct" : "❌ Wrong"}\n<b>Points:</b> ${points > 0 ? "+" : ""}${points}`
     try {
         await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: CHAT_ID, text: `🎮 ${gameName}\n🏆 Final Score: ${score}` }),
+            body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: "HTML" }),
+        })
+    } catch (e) { console.error(e) }
+}
+
+async function sendFinalScore(gameName, score) {
+    try {
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: CHAT_ID, text: `🏆 <b>GAME OVER: ${gameName}</b>\nFinal Total Score: ${score} points`, parse_mode: "HTML" }),
         })
     } catch { }
 }
@@ -58,7 +70,7 @@ function GlowIcon({ children, color = "#ec4899", size = 40 }) {
 }
 
 // ============================================
-// EMOJI SONG GUESS GAME
+// EMOJI SONG GUESS GAME (FIXED)
 // ============================================
 const EMOJI_SONGS = [
     { emoji: "☀️ ⛅ 🌑", answer: "Suraj Hua Maddham", options: ["Suraj Hua Maddham", "Chand Chhupa", "Tum Hi Ho", "Kesariya"] },
@@ -75,38 +87,21 @@ function EmojiSongGame({ onScore }) {
     const [questions] = useState(() => [...EMOJI_SONGS].sort(() => Math.random() - 0.5))
     const [current, setCurrent] = useState(0)
     const [score, setScore] = useState(0)
-    const [timeLeft, setTimeLeft] = useState(30) // 30 seconds total
+    const [timeLeft, setTimeLeft] = useState(15) // 15 seconds per song
     const [done, setDone] = useState(false)
     const [selected, setSelected] = useState(null)
     const [wrongFlash, setWrongFlash] = useState(false)
     const timerRef = useRef(null)
 
-    const finish = useCallback((finalScore) => {
-        setDone(true)
-        sfx.win()
-        sendScore("Emoji Song Guess", finalScore)
-        onScore(finalScore)
-    }, [onScore])
+    const stopTimer = () => { if(timerRef.current) clearInterval(timerRef.current) }
 
-    useEffect(() => {
-        timerRef.current = setInterval(() => {
-            setTimeLeft(prev => {
-                if (prev <= 1) {
-                    clearInterval(timerRef.current)
-                    finish(score)
-                    return 0
-                }
-                return prev - 1
-            })
-        }, 1000)
-        return () => clearInterval(timerRef.current)
-    }, [score, finish])
-
-    const handleAnswer = (chosenName) => {
-        if (selected || done) return
+    const handleAnswer = async (chosenName) => {
+        if (selected || timeLeft === 0) return
+        stopTimer()
+        
         const q = questions[current]
         const isCorrect = chosenName === q.answer
-        const points = isCorrect ? 15 : -5
+        const points = isCorrect ? 20 : -10 // +20 for correct, -10 for wrong
 
         if (isCorrect) sfx.correct()
         else { sfx.wrong(); vibrate(); setWrongFlash(true); setTimeout(() => setWrongFlash(false), 400) }
@@ -115,25 +110,51 @@ function EmojiSongGame({ onScore }) {
         const newScore = score + points
         setScore(newScore)
 
+        // Telegram Update
+        await sendEmojiGuessToTG(q.emoji, q.answer, chosenName, isCorrect, points)
+
         setTimeout(() => {
             if (current + 1 >= questions.length) {
-                clearInterval(timerRef.current)
-                finish(newScore)
+                setDone(true)
+                sfx.win()
+                sendFinalScore("Emoji Song Guess", newScore)
+                onScore(newScore)
             } else {
                 setCurrent(c => c + 1)
                 setSelected(null)
+                setTimeLeft(15)
+                startTimer()
             }
-        }, 600)
+        }, 1200)
     }
 
+    const startTimer = useCallback(() => {
+        stopTimer()
+        timerRef.current = setInterval(() => {
+            setTimeLeft(prev => {
+                if (prev <= 1) {
+                    stopTimer()
+                    // Time Up handling - No score but move forward or wait
+                    return 0
+                }
+                return prev - 1
+            })
+        }, 1000)
+    }, [])
+
+    useEffect(() => {
+        startTimer()
+        return () => stopTimer()
+    }, [startTimer])
+
     const q = questions[current]
-    const timePercent = (timeLeft / 30) * 100
+    const timePercent = (timeLeft / 15) * 100
 
     if (done) {
         return (
             <div className="text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                <p className="text-pink-400 text-2xl font-bold">{score} pts</p>
-                <p className="text-purple-400 text-xs mt-1">Bollywood Queen! 👑</p>
+                <p className="text-pink-400 text-3xl font-black">{score} pts</p>
+                <p className="text-purple-300 text-sm mt-2">Challenge Finished! 👑</p>
             </div>
         )
     }
@@ -141,43 +162,52 @@ function EmojiSongGame({ onScore }) {
     return (
         <motion.div className="flex flex-col items-center gap-4 w-full max-w-sm" animate={wrongFlash ? { x: [-5, 5, -3, 3, 0] } : {}} style={{ fontFamily: "'Nunito', sans-serif" }}>
             <div className="w-full">
-                <div className="flex justify-between text-xs mb-1">
-                    <span className="text-purple-400">Song {current + 1}/{questions.length}</span>
-                    <span className={`font-bold ${timeLeft < 10 ? 'text-red-400 animate-pulse' : 'text-purple-400'}`}>{timeLeft}s left</span>
+                <div className="flex justify-between text-[10px] mb-1 font-bold tracking-widest text-purple-400/60">
+                    <span>SONG {current + 1}/{questions.length}</span>
+                    <span className={timeLeft < 6 ? 'text-red-400' : ''}>{timeLeft}s REMAINING</span>
                 </div>
-                <div className="w-full h-2 rounded-full overflow-hidden bg-white/10">
-                    <motion.div className="h-full rounded-full bg-gradient-to-r from-pink-500 to-purple-500" animate={{ width: `${timePercent}%` }} transition={{ duration: 0.3 }} />
+                <div className="w-full h-1.5 rounded-full overflow-hidden bg-white/5 border border-white/5">
+                    <motion.div className="h-full bg-gradient-to-r from-pink-500 to-indigo-500" animate={{ width: `${timePercent}%` }} transition={{ duration: 1, ease: "linear" }} />
                 </div>
-                <div className="flex justify-end mt-1">
-                    <span className="text-white text-xs font-bold">{score} pts</span>
+                <div className="flex justify-between mt-2">
+                     <span className="text-white text-xs font-bold bg-white/10 px-3 py-1 rounded-full">{score} PTS</span>
+                     {timeLeft === 0 && <span className="text-red-400 text-xs font-black animate-pulse uppercase">Time's Up!</span>}
                 </div>
             </div>
 
-            <div className="w-full rounded-2xl p-8 text-center backdrop-blur-sm" style={{ background: "rgba(15,5,30,0.7)", border: "1px solid rgba(139,92,246,0.3)" }}>
-                <p className="text-xs uppercase text-purple-500 mb-4 font-bold tracking-widest">Guess The Song</p>
-                <p className="text-5xl tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">{q.emoji}</p>
-                <p className="text-white/40 text-xs mt-4">Read the emojis carefully!</p>
+            <div className="w-full rounded-3xl p-8 text-center backdrop-blur-xl relative overflow-hidden" 
+                 style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <p className="text-[10px] uppercase text-pink-400 mb-4 font-black tracking-widest">Identify the melody</p>
+                <p className="text-5xl drop-shadow-[0_0_20px_rgba(236,72,153,0.4)] mb-2">{q.emoji}</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 w-full">
-                {q.options.sort(() => Math.random() - 0.5).map(opt => {
+            <div className="grid grid-cols-1 gap-2 w-full">
+                {q.options.map(opt => {
                     const isSel = selected === opt
                     const isCorrect = opt === q.answer
-                    let bg = "rgba(255,255,255,0.05)", border = "rgba(168,85,247,0.3)", textColor = "#ddd"
+                    let bg = "rgba(255,255,255,0.05)", border = "rgba(255,255,255,0.1)", textColor = "rgba(255,255,255,0.6)"
+                    
                     if (selected) {
-                        if (isCorrect) { bg = "rgba(34,197,94,0.2)"; border = "#4ade80"; textColor = "#4ade80" }
-                        else if (isSel) { bg = "rgba(239,68,68,0.2)"; border = "#f87171"; textColor = "#f87171" }
+                        if (isCorrect) { bg = "rgba(34,197,94,0.15)"; border = "rgba(34,197,94,0.5)"; textColor = "#4ade80" }
+                        else if (isSel) { bg = "rgba(239,68,68,0.15)"; border = "rgba(239,68,68,0.5)"; textColor = "#f87171" }
                     }
+
                     return (
-                        <motion.button key={opt} onClick={() => handleAnswer(opt)} disabled={!!selected}
-                            className="py-3 px-2 rounded-xl text-sm font-bold text-center"
-                            style={{ background: bg, border: `1.5px solid ${border}`, color: textColor }}
-                            whileHover={!selected ? { scale: 1.02 } : {}} whileTap={!selected ? { scale: 0.96 } : {}}>
+                        <motion.button key={opt} onClick={() => handleAnswer(opt)} disabled={!!selected || timeLeft === 0}
+                            className="py-3 px-4 rounded-2xl text-sm font-bold text-left flex justify-between items-center transition-all border"
+                            style={{ background: bg, borderColor: border, color: textColor }}
+                            whileHover={!selected && timeLeft > 0 ? { scale: 1.02, background: "rgba(255,255,255,0.08)" } : {}}>
                             {opt}
+                            {selected && isCorrect && <CheckCircle size={14} />}
+                            {selected && isSel && !isCorrect && <XCircle size={14} />}
                         </motion.button>
                     )
                 })}
             </div>
+
+            {timeLeft === 0 && !selected && (
+                <button onClick={() => handleAnswer(null)} className="mt-2 text-purple-400 text-xs font-bold underline">Skip to Next</button>
+            )}
         </motion.div>
     )
 }
@@ -252,7 +282,7 @@ function MemoryGame({ onScore }) {
                     setScore(finalScore)
                     setDone(true)
                     sfx.win()
-                    sendScore("Memory Match", finalScore)
+                    sendFinalScore("Memory Match", finalScore)
                     onScore(finalScore)
                 }
             } else {
@@ -272,19 +302,19 @@ function MemoryGame({ onScore }) {
 
     if (done) {
         return (
-            <div className="text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                <p className="text-pink-400 text-2xl font-bold">{score} pts</p>
-                <p className="text-purple-400 text-xs mt-1">Completed in {moves} moves</p>
+            <div className="text-center">
+                <p className="text-pink-400 text-3xl font-black">{score} pts</p>
+                <p className="text-purple-400 text-xs mt-1">Found all pairs in {moves} moves!</p>
             </div>
         )
     }
 
     return (
-        <div className="flex flex-col items-center gap-3 w-full" style={{ fontFamily: "'Nunito', sans-serif" }}>
-            <div className="flex justify-between w-full px-1 text-xs text-purple-400">
-                <span>🎴 Moves: {moves}</span>
-                <span>✓ Pairs: {matched.length}/{CARD_SET.length}</span>
-                <button onClick={initGame} className="hover:text-white"><RotateCcw size={13} /></button>
+        <div className="flex flex-col items-center gap-3 w-full">
+            <div className="flex justify-between w-full px-1 text-[10px] font-bold text-purple-400/60 tracking-widest uppercase">
+                <span>MOVES: {moves}</span>
+                <span>PAIRS: {matched.length}/{CARD_SET.length}</span>
+                <button onClick={initGame} className="hover:text-white"><RotateCcw size={12} /></button>
             </div>
             <div className="grid grid-cols-4 gap-2 w-full">
                 {cards.map((card, idx) => {
@@ -294,10 +324,10 @@ function MemoryGame({ onScore }) {
                         <motion.button
                             key={card.uniqueId}
                             onClick={() => handleCardClick(idx)}
-                            className="aspect-square rounded-xl flex items-center justify-center"
+                            className="aspect-square rounded-2xl flex items-center justify-center border"
                             style={{
-                                background: isFlippedOrMatched ? `linear-gradient(135deg, ${card.color}40, ${card.color}20)` : "rgba(255,255,255,0.05)",
-                                border: isFlippedOrMatched ? `1.5px solid ${card.color}60` : "1.5px solid rgba(168,85,247,0.2)",
+                                background: isFlippedOrMatched ? `linear-gradient(135deg, ${card.color}20, ${card.color}10)` : "rgba(255,255,255,0.03)",
+                                borderColor: isFlippedOrMatched ? `${card.color}40` : "rgba(255,255,255,0.1)",
                             }}
                             whileTap={{ scale: 0.94 }}
                         >
@@ -322,7 +352,7 @@ const COLOR_LIST = [
     { name: "PURPLE", color: "#a855f7" },
 ]
 
-function generateQuestion() {
+function generateColorQ() {
     const textWord = COLOR_LIST[Math.floor(Math.random() * COLOR_LIST.length)]
     let inkColor = COLOR_LIST[Math.floor(Math.random() * COLOR_LIST.length)]
     while (inkColor.name === textWord.name) {
@@ -338,12 +368,11 @@ function generateQuestion() {
 }
 
 function ColorMatchGame({ onScore }) {
-    const [questions] = useState(() => Array.from({ length: 8 }, generateQuestion))
+    const [questions] = useState(() => Array.from({ length: 8 }, generateColorQ))
     const [current, setCurrent] = useState(0)
     const [score, setScore] = useState(0)
-    const [timeLeft, setTimeLeft] = useState(20)
+    const [timeLeft, setTimeLeft] = useState(10)
     const [done, setDone] = useState(false)
-    const [results, setResults] = useState([])
     const [selected, setSelected] = useState(null)
     const [wrongFlash, setWrongFlash] = useState(false)
     const timerRef = useRef(null)
@@ -351,7 +380,7 @@ function ColorMatchGame({ onScore }) {
     const finish = useCallback((finalScore) => {
         setDone(true)
         sfx.win()
-        sendScore("Color Match", finalScore)
+        sendFinalScore("Color Match", finalScore)
         onScore(finalScore)
     }, [onScore])
 
@@ -373,7 +402,7 @@ function ColorMatchGame({ onScore }) {
         if (selected || done) return
         const q = questions[current]
         const isCorrect = chosenName === q.correctAnswer
-        const points = isCorrect ? 10 : -3
+        const points = isCorrect ? 20 : -10
 
         if (isCorrect) sfx.correct()
         else { sfx.wrong(); vibrate(); setWrongFlash(true); setTimeout(() => setWrongFlash(false), 400) }
@@ -381,7 +410,6 @@ function ColorMatchGame({ onScore }) {
         setSelected(chosenName)
         const newScore = score + points
         setScore(newScore)
-        setResults([...results, { correct: isCorrect, points }])
 
         setTimeout(() => {
             if (current + 1 >= questions.length) {
@@ -390,62 +418,46 @@ function ColorMatchGame({ onScore }) {
             } else {
                 setCurrent(c => c + 1)
                 setSelected(null)
+                setTimeLeft(10)
             }
         }, 500)
     }
 
     const q = questions[current]
-    const timePercent = (timeLeft / 20) * 100
-
     if (done) {
-        const correctCount = results.filter(r => r.correct).length
         return (
-            <div className="text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                <p className="text-pink-400 text-2xl font-bold">{score} pts</p>
-                <p className="text-purple-400 text-xs mt-1">{correctCount}/8 correct</p>
+            <div className="text-center">
+                <p className="text-pink-400 text-3xl font-black">{score} pts</p>
+                <p className="text-purple-400 text-xs mt-1">Mind-blowing focus!</p>
             </div>
         )
     }
 
     return (
-        <motion.div className="flex flex-col items-center gap-4 w-full max-w-sm" animate={wrongFlash ? { x: [-5, 5, -3, 3, 0] } : {}} style={{ fontFamily: "'Nunito', sans-serif" }}>
+        <motion.div className="flex flex-col items-center gap-4 w-full max-w-sm" animate={wrongFlash ? { x: [-5, 5, -3, 3, 0] } : {}}>
             <div className="w-full">
-                <div className="flex justify-between text-xs mb-1">
-                    <span className="text-purple-400">Question {current + 1}/8</span>
-                    <span className={`font-bold ${timeLeft < 6 ? 'text-red-400' : 'text-purple-400'}`}>{timeLeft}s left</span>
+                <div className="flex justify-between text-[10px] font-bold text-purple-400/60 tracking-widest mb-1">
+                    <span>STAGE {current + 1}/8</span>
+                    <span>{timeLeft}s LEFT</span>
                 </div>
-                <div className="w-full h-2 rounded-full overflow-hidden bg-white/10">
-                    <motion.div className="h-full rounded-full bg-gradient-to-r from-pink-500 to-purple-500" animate={{ width: `${timePercent}%` }} transition={{ duration: 0.3 }} />
-                </div>
-                <div className="flex justify-end mt-1">
-                    <span className="text-white text-xs font-bold">{score} pts</span>
+                <div className="w-full h-1.5 rounded-full overflow-hidden bg-white/5 border border-white/5">
+                    <motion.div className="h-full bg-pink-500" animate={{ width: `${(timeLeft / 10) * 100}%` }} />
                 </div>
             </div>
 
-            <div className="w-full rounded-2xl p-8 text-center backdrop-blur-sm" style={{ background: "rgba(15,5,30,0.7)", border: "1px solid rgba(139,92,246,0.3)" }}>
-                <p className="text-xs uppercase text-purple-500 mb-2">What color is this word?</p>
+            <div className="w-full rounded-3xl p-10 text-center backdrop-blur-xl border border-white/10 bg-white/5">
                 <p className="text-5xl font-black" style={{ color: q.textColor }}>{q.text}</p>
-                <p className="text-white/40 text-xs mt-3">Ignore the meaning, focus on the color</p>
+                <p className="text-white/20 text-[9px] uppercase tracking-tighter mt-4">Pick the Ink Color, not the Word</p>
             </div>
 
             <div className="grid grid-cols-2 gap-2 w-full">
-                {q.options.map(opt => {
-                    const isSel = selected === opt.name
-                    const isCorrect = opt.name === q.correctAnswer
-                    let bg = "rgba(255,255,255,0.05)", border = "rgba(168,85,247,0.3)", textColor = "#ddd"
-                    if (selected) {
-                        if (isCorrect) { bg = "rgba(34,197,94,0.2)"; border = "#4ade80"; textColor = "#4ade80" }
-                        else if (isSel) { bg = "rgba(239,68,68,0.2)"; border = "#f87171"; textColor = "#f87171" }
-                    }
-                    return (
-                        <motion.button key={opt.name} onClick={() => handleAnswer(opt.name)} disabled={!!selected}
-                            className="py-2 rounded-xl text-sm font-bold text-center"
-                            style={{ background: bg, border: `1.5px solid ${border}`, color: textColor }}
-                            whileHover={!selected ? { scale: 1.02 } : {}} whileTap={!selected ? { scale: 0.96 } : {}}>
-                            {opt.name}
-                        </motion.button>
-                    )
-                })}
+                {q.options.map(opt => (
+                    <motion.button key={opt.name} onClick={() => handleAnswer(opt.name)} disabled={!!selected}
+                        className="py-3 rounded-2xl text-xs font-black border border-white/10 bg-white/5 text-white/60"
+                        whileTap={{ scale: 0.96 }}>
+                        {opt.name}
+                    </motion.button>
+                ))}
             </div>
         </motion.div>
     )
@@ -455,9 +467,9 @@ function ColorMatchGame({ onScore }) {
 // MAIN COMPONENT
 // ============================================
 const GAME_LIST = [
-    { id: "memory", name: "Memory Match", desc: "Match the pairs", Icon: Brain, color: "#ec4899" },
-    { id: "emoji", name: "Guess the Song", desc: "Decode the emojis", Icon: Music2, color: "#a855f7" },
-    { id: "color", name: "Color Match", desc: "Find the ink color", Icon: Palette, color: "#3b82f6" },
+    { id: "memory", name: "Memory Match", desc: "Find the pairs", Icon: Brain, color: "#ec4899" },
+    { id: "emoji", name: "Emoji Song", desc: "Guess the melody", Icon: Music2, color: "#a855f7" },
+    { id: "color", name: "Focus Test", desc: "Ink color match", Icon: Palette, color: "#3b82f6" },
 ]
 
 export default function FunGames({ onComplete }) {
@@ -466,9 +478,7 @@ export default function FunGames({ onComplete }) {
 
     useEffect(() => {
         const saved = localStorage.getItem("game_scores")
-        if (saved) {
-            try { setScores(JSON.parse(saved)) } catch { }
-        }
+        if (saved) { try { setScores(JSON.parse(saved)) } catch { } }
     }, [])
 
     const saveScore = (gameId, value) => {
@@ -481,28 +491,28 @@ export default function FunGames({ onComplete }) {
     const allCompleted = Object.values(scores).every(v => v !== null)
 
     return (
-        <motion.div className="min-h-screen flex flex-col items-center pt-10 pb-12 px-4 relative overflow-hidden"
+        <motion.div className="min-h-screen flex flex-col items-center pt-10 pb-12 px-4 relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-pink-950"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             
             <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');`}</style>
 
-            <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute w-80 h-80 rounded-full bg-pink-500/10 top-10 -left-20 blur-[60px]" />
-                <div className="absolute w-80 h-80 rounded-full bg-purple-500/10 bottom-10 -right-20 blur-[60px]" />
+            <div className="fixed inset-0 pointer-events-none opacity-40">
+                <div className="absolute w-[500px] h-[500px] rounded-full bg-pink-500/20 -top-20 -left-20 blur-[120px]" />
+                <div className="absolute w-[500px] h-[500px] rounded-full bg-indigo-500/20 -bottom-20 -right-20 blur-[120px]" />
             </div>
 
             <div className="relative z-10 w-full max-w-sm mx-auto" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                <div className="text-center mb-6">
-                    <GlowIcon color="#ec4899" size={48}>
-                        <Trophy size={18} color="#ec4899" />
-                    </GlowIcon>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mt-2">
-                        GAMING ZONE
+                <div className="text-center mb-8">
+                    <div className="flex justify-center mb-2">
+                        <GlowIcon color="#ec4899" size={56}>
+                            <Trophy size={24} color="#ec4899" />
+                        </GlowIcon>
+                    </div>
+                    <h1 className="text-4xl font-black bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent italic tracking-tighter">
+                        GAMING ARCADE
                     </h1>
-                    <div className="inline-flex items-center gap-2 mt-2 px-4 py-1 rounded-full bg-pink-500/10 border border-pink-500/30">
-                        <Sparkles size={12} className="text-pink-400" />
-                        <span className="text-white font-bold text-sm">{totalScore} POINTS</span>
-                        <Sparkles size={12} className="text-pink-400" />
+                    <div className="inline-flex items-center gap-2 mt-3 px-6 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+                        <span className="text-white/80 font-black text-[10px] tracking-widest uppercase">{totalScore} TOTAL POINTS</span>
                     </div>
                 </div>
 
@@ -516,56 +526,47 @@ export default function FunGames({ onComplete }) {
                                     animate={{ x: 0, opacity: 1 }}
                                     transition={{ delay: idx * 0.05 }}
                                     onClick={() => setActiveGame(game.id)}
-                                    className="w-full flex items-center gap-4 p-4 rounded-2xl backdrop-blur-sm"
-                                    style={{
-                                        background: "rgba(15,5,30,0.6)",
-                                        border: scores[game.id] !== null ? "1px solid rgba(34,197,94,0.4)" : "1px solid rgba(168,85,247,0.2)"
-                                    }}
-                                    whileHover={{ scale: 1.01 }}
-                                    whileTap={{ scale: 0.99 }}
+                                    className="w-full flex items-center gap-4 p-5 rounded-[24px] backdrop-blur-xl border border-white/10 bg-white/5"
+                                    whileHover={{ scale: 1.02, background: "rgba(255,255,255,0.08)" }}
+                                    whileTap={{ scale: 0.98 }}
                                 >
-                                    <GlowIcon color={game.color} size={40}>
-                                        <game.Icon size={16} color={game.color} />
+                                    <GlowIcon color={game.color} size={44}>
+                                        <game.Icon size={18} color={game.color} />
                                     </GlowIcon>
                                     <div className="flex-1 text-left">
-                                        <p className="text-white font-bold text-sm">{game.name}</p>
-                                        <p className="text-purple-400 text-xs">{game.desc}</p>
+                                        <p className="text-white font-black text-sm tracking-tight">{game.name}</p>
+                                        <p className="text-white/30 text-[10px] font-bold uppercase tracking-widest">{game.desc}</p>
                                     </div>
                                     {scores[game.id] !== null ? (
-                                        <span className="text-green-400 font-bold text-lg">{scores[game.id]}</span>
+                                        <span className="text-green-400 font-black text-lg">{scores[game.id]}</span>
                                     ) : (
-                                        <ChevronRight size={14} color="#7c3aed" />
+                                        <ChevronRight size={16} className="text-white/20" />
                                     )}
                                 </motion.button>
                             ))}
 
                             {allCompleted && (
-                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center pt-4">
-                                    <p className="text-white font-bold mb-2">🎉 All games completed! 🎉</p>
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center pt-8">
                                     <motion.button
                                         onClick={() => onComplete(totalScore)}
-                                        className="inline-flex items-center gap-2 text-white font-bold px-8 py-3 rounded-full shadow-lg"
-                                        style={{ background: "linear-gradient(135deg,#ec4899,#8b5cf6)" }}
+                                        className="w-full py-4 bg-gradient-to-r from-pink-500 to-indigo-600 text-white font-black rounded-[20px] shadow-2xl shadow-pink-500/20 tracking-tighter text-lg"
                                         whileHover={{ scale: 1.03 }}
                                         whileTap={{ scale: 0.97 }}
                                     >
-                                        CONTINUE <ArrowRight size={16} />
+                                        CONTINUE ADVENTURE <ArrowRight size={20} className="inline ml-1" />
                                     </motion.button>
                                 </motion.div>
                             )}
                         </motion.div>
                     ) : (
-                        <motion.div key="game" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col items-center gap-3">
-                            <button
-                                onClick={() => setActiveGame(null)}
-                                className="self-start text-xs text-purple-400 hover:text-white mb-1"
-                            >
-                                ← BACK
+                        <motion.div key="game" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col items-center gap-4">
+                            <button onClick={() => setActiveGame(null)} className="self-start text-[10px] font-black text-white/20 hover:text-white uppercase tracking-widest mb-2 flex items-center gap-1">
+                                <ArrowRight size={10} className="rotate-180" /> Back to Arcade
                             </button>
-                            {activeGame === "memory" && <MemoryGame onScore={s => { saveScore("memory", s); setTimeout(() => setActiveGame(null), 1500) }} />}
-                            {/* YAHAN AB EMOJI SONG GUESS AAYEGA */}
+                            
+                            {activeGame === "memory" && <MemoryGame onScore={s => { saveScore("memory", s); setTimeout(() => setActiveGame(null), 2000) }} />}
                             {activeGame === "emoji" && <EmojiSongGame onScore={s => { saveScore("emoji", s); setTimeout(() => setActiveGame(null), 2000) }} />}
-                            {activeGame === "color" && <ColorMatchGame onScore={s => { saveScore("color", s); setTimeout(() => setActiveGame(null), 1500) }} />}
+                            {activeGame === "color" && <ColorMatchGame onScore={s => { saveScore("color", s); setTimeout(() => setActiveGame(null), 2000) }} />}
                         </motion.div>
                     )}
                 </AnimatePresence>
