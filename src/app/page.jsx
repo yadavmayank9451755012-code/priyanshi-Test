@@ -15,28 +15,31 @@ import { motion } from "motion/react"
 export default function BirthdayApp() {
   const [currentScreen, setCurrentScreen] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
-  // Add this if you were getting an error for setMusicStarted previously
-  const [musicStarted, setMusicStarted] = useState(false) 
+  const [musicStarted, setMusicStarted] = useState(false)
+  const [gameScore, setGameScore] = useState(0)
 
   const birthdayDate = new Date("2026-06-11T00:00:00")
-  const [isBirthdayOver, setisBirthdayOver] = useState(new Date().getTime() >= birthdayDate.getTime())
+  const [isBirthdayOver, setIsBirthdayOver] = useState(new Date().getTime() >= birthdayDate.getTime())
 
+  // 🔥 Loader 4 sec baad close hoga ONLY agar game complete nahi hua
+  // Agar game complete hoga toh Loader khud se close hoga via onLoadingComplete
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 999999999999)
+    let timer
+    if (isLoading) {
+      timer = setTimeout(() => {
+        // Agar 4 sec mein game complete nahi hua toh forcefully close karo
+        setIsLoading(false)
+      }, 4000)
+    }
     return () => clearTimeout(timer)
-  }, [])
+  }, [isLoading])
 
-  // YAHAN SEQUENCE SET KIYA HAI
   const screens = [
     !isBirthdayOver
-      ? <Countdown key="countdown" onComplete={() => setisBirthdayOver(true)} birthdayDate={birthdayDate} />
+      ? <Countdown key="countdown" onComplete={() => setIsBirthdayOver(true)} birthdayDate={birthdayDate} />
       : <Celebration key="celebration" onNext={() => setCurrentScreen(1)} onMusicStart={() => setMusicStarted(true)} />,
     <HappyBirthday key="happy" onNext={() => setCurrentScreen(2)} />,
     <PhotoGallery key="gallery" onNext={() => setCurrentScreen(3)} />,
-    
-    // Yahan onNext missig tha, add kar diya aur next screens bhi laga diye!
     <Letter key="letter" onNext={() => setCurrentScreen(4)} />,
     <Wishes key="wishes" onNext={() => setCurrentScreen(5)} />,
     <MessageBoard key="messageboard" />,
@@ -45,7 +48,6 @@ export default function BirthdayApp() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-950/30 via-black to-purple-950/30 overflow-hidden relative">
 
-      {/* Radial gradients for background */}
       <div className="fixed inset-0 z-0 blur-[120px] opacity-20" style={{
         backgroundImage: "radial-gradient(circle at 20% 25%, rgba(255, 99, 165, 0.6), transparent 40%)",
       }} />
@@ -59,13 +61,21 @@ export default function BirthdayApp() {
       }} />
 
       <AnimatePresence mode="wait">
-        {isLoading ? <Loader key="loader" /> : (
-          <>
-            <AnimatePresence mode="wait">{screens[currentScreen]}</AnimatePresence>
-          </>)}
+        {isLoading ? (
+          <Loader 
+            key="loader" 
+            onLoadingComplete={(score) => {
+              setGameScore(score)
+              console.log("🎮 Game completed with score:", score)
+              // 🔥 IMPORTANT: Game complete hone par Loader band karo
+              setIsLoading(false)
+            }} 
+          />
+        ) : (
+          <AnimatePresence mode="wait">{screens[currentScreen]}</AnimatePresence>
+        )}
       </AnimatePresence>
 
-      {/* Watermark */}
       <motion.div
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
