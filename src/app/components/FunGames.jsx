@@ -163,10 +163,10 @@ function MemoryGame({ onScore }) {
                 exit={{ opacity: 0 }}
             >
                 <motion.div className="text-center max-w-md" initial={{ scale: 0.8 }} animate={{ scale: 1 }}>
-                    <div className="w-20 h-20 bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl mx-auto mb-4 flex items-center justify-center text-4xl">🧩</div>
-                    <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-4">Friendship Memory Game</h2>
+                    <div className="w-20 h-20 bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl mx-auto mb-4 flex items-center justify-center text-4xl">💙</div>
+                    <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-4">Memory Game</h2>
                     <div className="text-purple-300 text-sm space-y-2 bg-white/5 rounded-xl p-4 mb-6">
-                        <p>🤝 Find all friendship pairs</p>
+                        <p>🤝 Find all pairs</p>
                         <p>💕 Test your memory skills</p>
                         <p>✨ Fewer moves = more points!</p>
                     </div>
@@ -208,7 +208,7 @@ function MemoryGame({ onScore }) {
                             whileTap={{ scale: 0.94 }}
                         >
                             <motion.div animate={{ rotateY: isFlipped ? 0 : 180 }} transition={{ duration: 0.3 }}>
-                                {isFlipped ? card.symbol : "❓"}
+                                {isFlipped ? card.symbol : "😺"}
                             </motion.div>
                         </motion.button>
                     )
