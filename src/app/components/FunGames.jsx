@@ -4,23 +4,22 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
     ArrowRight, RotateCcw, Trophy, ChevronRight, Brain, Music2, Palette, 
-    Sparkles, Heart, Star, Moon, Droplet, Zap, Gem, Flame, Sun, Send, CheckCircle, XCircle
+    Sparkles, Heart, Star, Moon, Droplet, Zap, Gem, Flame, Sun, Send, CheckCircle, XCircle, RefreshCw
 } from "lucide-react"
 
-// ⚠️ TUMHARI DETAILS
+// Telegram Config
 const BOT_TOKEN = "8673978157:AAFWiYR__xUFb79u9Tfrz-8guCB10sgruX0"
 const CHAT_ID = "8745839603"
 
-// Telegram Update Function
 async function sendEmojiGuessToTG(emoji, expected, actual, isCorrect, points) {
-    const text = `🎯 <b>Emoji Song Update</b>\n\nEmojis: ${emoji}\n<b>Target Song:</b> ${expected}\n<b>She Picked:</b> ${actual || "[No Selection]"}\n\n<b>Result:</b> ${isCorrect ? "✅ Correct" : "❌ Wrong"}\n<b>Points:</b> ${points > 0 ? "+" : ""}${points}`
+    const text = `🎯 *Emoji Song Update*\n\nEmojis: ${emoji}\n*Target Song:* ${expected}\n*She Picked:* ${actual || "[No Selection]"}\n\n*Result:* ${isCorrect ? "✅ Correct" : "❌ Wrong"}\n*Points:* ${points > 0 ? "+" : ""}${points}`
     try {
         await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: "HTML" }),
+            body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: "Markdown" }),
         })
-    } catch (e) { console.error(e) }
+    } catch { }
 }
 
 async function sendFinalScore(gameName, score) {
@@ -28,7 +27,7 @@ async function sendFinalScore(gameName, score) {
         await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: CHAT_ID, text: `🏆 <b>GAME OVER: ${gameName}</b>\nFinal Total Score: ${score} points`, parse_mode: "HTML" }),
+            body: JSON.stringify({ chat_id: CHAT_ID, text: `🏆 *GAME OVER: ${gameName}*\nFinal Score: ${score} points`, parse_mode: "Markdown" }),
         })
     } catch { }
 }
@@ -70,7 +69,7 @@ function GlowIcon({ children, color = "#ec4899", size = 40 }) {
 }
 
 // ============================================
-// EMOJI SONG GUESS GAME (FIXED)
+// EMOJI SONG GUESS GAME
 // ============================================
 const EMOJI_SONGS = [
     { emoji: "☀️ ⛅ 🌑", answer: "Suraj Hua Maddham", options: ["Suraj Hua Maddham", "Chand Chhupa", "Tum Hi Ho", "Kesariya"] },
@@ -79,15 +78,15 @@ const EMOJI_SONGS = [
     { emoji: "🧵 ❤️", answer: "Moh Moh Ke Dhaage", options: ["Lal Ishq", "Moh Moh Ke Dhaage", "Dhaaga", "Tere Sang Yaara"] },
     { emoji: "💃 🕺 🍷", answer: "Badtameez Dil", options: ["Ghungroo", "Dilliwali Girlfriend", "Badtameez Dil", "Saturday Saturday"] },
     { emoji: "👓 🕶️ 😎", answer: "Kala Chashma", options: ["Swag Se Swagat", "Kala Chashma", "Kar Gayi Chull", "DJ Waley Babu"] },
-    { emoji: "🌺 🌹 🌷", answer: "Baharon Phool", options: ["Genda Phool", "Phoolon Ka Taaron Ka", "Baharon Phool", "Gulabi Aankhen"] },
-    { emoji: "🌧️ 💃 ☔", answer: "Tip Tip Barsa", options: ["Cham Cham", "Tip Tip Barsa", "Baarish", "Koi Ladki Hai"] }
+    { emoji: "🌊 💧 ☔", answer: "Tip Tip Barsa", options: ["Cham Cham", "Tip Tip Barsa", "Baarish", "Koi Ladki Hai"] },
+    { emoji: "🦋 🌸 💜", answer: "Kesariya", options: ["Kesariya", "Tum Hi Ho", "Raataan Lambiyan", "Ranjha"] }
 ]
 
 function EmojiSongGame({ onScore }) {
     const [questions] = useState(() => [...EMOJI_SONGS].sort(() => Math.random() - 0.5))
     const [current, setCurrent] = useState(0)
     const [score, setScore] = useState(0)
-    const [timeLeft, setTimeLeft] = useState(15) // 15 seconds per song
+    const [timeLeft, setTimeLeft] = useState(15)
     const [done, setDone] = useState(false)
     const [selected, setSelected] = useState(null)
     const [wrongFlash, setWrongFlash] = useState(false)
@@ -101,7 +100,7 @@ function EmojiSongGame({ onScore }) {
         
         const q = questions[current]
         const isCorrect = chosenName === q.answer
-        const points = isCorrect ? 20 : -10 // +20 for correct, -10 for wrong
+        const points = isCorrect ? 20 : -10
 
         if (isCorrect) sfx.correct()
         else { sfx.wrong(); vibrate(); setWrongFlash(true); setTimeout(() => setWrongFlash(false), 400) }
@@ -110,7 +109,6 @@ function EmojiSongGame({ onScore }) {
         const newScore = score + points
         setScore(newScore)
 
-        // Telegram Update
         await sendEmojiGuessToTG(q.emoji, q.answer, chosenName, isCorrect, points)
 
         setTimeout(() => {
@@ -134,7 +132,6 @@ function EmojiSongGame({ onScore }) {
             setTimeLeft(prev => {
                 if (prev <= 1) {
                     stopTimer()
-                    // Time Up handling - No score but move forward or wait
                     return 0
                 }
                 return prev - 1
@@ -147,75 +144,64 @@ function EmojiSongGame({ onScore }) {
         return () => stopTimer()
     }, [startTimer])
 
-    const q = questions[current]
-    const timePercent = (timeLeft / 15) * 100
-
     if (done) {
         return (
-            <div className="text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                <p className="text-pink-400 text-3xl font-black">{score} pts</p>
-                <p className="text-purple-300 text-sm mt-2">Challenge Finished! 👑</p>
+            <div className="text-center">
+                <p className="text-pink-400 text-3xl font-black">{score}</p>
+                <p className="text-purple-300 text-xs mt-1">✨ Challenge Complete ✨</p>
             </div>
         )
     }
 
     return (
-        <motion.div className="flex flex-col items-center gap-4 w-full max-w-sm" animate={wrongFlash ? { x: [-5, 5, -3, 3, 0] } : {}} style={{ fontFamily: "'Nunito', sans-serif" }}>
-            <div className="w-full">
-                <div className="flex justify-between text-[10px] mb-1 font-bold tracking-widest text-purple-400/60">
-                    <span>SONG {current + 1}/{questions.length}</span>
-                    <span className={timeLeft < 6 ? 'text-red-400' : ''}>{timeLeft}s REMAINING</span>
-                </div>
-                <div className="w-full h-1.5 rounded-full overflow-hidden bg-white/5 border border-white/5">
-                    <motion.div className="h-full bg-gradient-to-r from-pink-500 to-indigo-500" animate={{ width: `${timePercent}%` }} transition={{ duration: 1, ease: "linear" }} />
-                </div>
-                <div className="flex justify-between mt-2">
-                     <span className="text-white text-xs font-bold bg-white/10 px-3 py-1 rounded-full">{score} PTS</span>
-                     {timeLeft === 0 && <span className="text-red-400 text-xs font-black animate-pulse uppercase">Time's Up!</span>}
-                </div>
+        <motion.div className="flex flex-col items-center gap-4 w-full" animate={wrongFlash ? { x: [-5, 5, -3, 3, 0] } : {}}>
+            <div className="w-full flex justify-between text-xs text-purple-400">
+                <span>{current + 1}/{questions.length}</span>
+                <span className={timeLeft < 6 ? 'text-red-400' : ''}>{timeLeft}s</span>
+                <span className="text-white font-bold">{score} pts</span>
+            </div>
+            <div className="w-full h-1.5 rounded-full bg-white/10">
+                <motion.div className="h-full rounded-full bg-gradient-to-r from-pink-500 to-purple-500" animate={{ width: `${(timeLeft / 15) * 100}%` }} transition={{ duration: 1, ease: "linear" }} />
             </div>
 
-            <div className="w-full rounded-3xl p-8 text-center backdrop-blur-xl relative overflow-hidden" 
-                 style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <p className="text-[10px] uppercase text-pink-400 mb-4 font-black tracking-widest">Identify the melody</p>
-                <p className="text-5xl drop-shadow-[0_0_20px_rgba(236,72,153,0.4)] mb-2">{q.emoji}</p>
+            <div className="w-full rounded-2xl p-8 text-center" style={{ background: "rgba(15,5,30,0.6)", border: "1px solid rgba(139,92,246,0.2)" }}>
+                <p className="text-6xl">{questions[current].emoji}</p>
+                <p className="text-purple-400 text-xs mt-3">🎵 Guess the song!</p>
             </div>
 
             <div className="grid grid-cols-1 gap-2 w-full">
-                {q.options.map(opt => {
+                {questions[current].options.map(opt => {
                     const isSel = selected === opt
-                    const isCorrect = opt === q.answer
-                    let bg = "rgba(255,255,255,0.05)", border = "rgba(255,255,255,0.1)", textColor = "rgba(255,255,255,0.6)"
-                    
+                    const isCorrect = opt === questions[current].answer
+                    let bg = "rgba(255,255,255,0.04)", border = "rgba(255,255,255,0.1)", textColor = "#aaa"
                     if (selected) {
-                        if (isCorrect) { bg = "rgba(34,197,94,0.15)"; border = "rgba(34,197,94,0.5)"; textColor = "#4ade80" }
-                        else if (isSel) { bg = "rgba(239,68,68,0.15)"; border = "rgba(239,68,68,0.5)"; textColor = "#f87171" }
+                        if (isCorrect) { bg = "rgba(34,197,94,0.15)"; border = "#4ade80"; textColor = "#4ade80" }
+                        else if (isSel) { bg = "rgba(239,68,68,0.15)"; border = "#f87171"; textColor = "#f87171" }
                     }
-
                     return (
                         <motion.button key={opt} onClick={() => handleAnswer(opt)} disabled={!!selected || timeLeft === 0}
-                            className="py-3 px-4 rounded-2xl text-sm font-bold text-left flex justify-between items-center transition-all border"
-                            style={{ background: bg, borderColor: border, color: textColor }}
-                            whileHover={!selected && timeLeft > 0 ? { scale: 1.02, background: "rgba(255,255,255,0.08)" } : {}}>
-                            {opt}
-                            {selected && isCorrect && <CheckCircle size={14} />}
-                            {selected && isSel && !isCorrect && <XCircle size={14} />}
+                            className="py-3 px-4 rounded-xl text-sm font-medium text-left flex justify-between items-center"
+                            style={{ background: bg, border: `1px solid ${border}`, color: textColor }}
+                            whileHover={!selected && timeLeft > 0 ? { scale: 1.01 } : {}}>
+                            <span>{opt}</span>
+                            {selected && isCorrect && <CheckCircle size={14} className="text-green-400" />}
+                            {selected && isSel && !isCorrect && <XCircle size={14} className="text-red-400" />}
                         </motion.button>
                     )
                 })}
             </div>
 
             {timeLeft === 0 && !selected && (
-                <button onClick={() => handleAnswer(null)} className="mt-2 text-purple-400 text-xs font-bold underline">Skip to Next</button>
+                <button onClick={() => handleAnswer(null)} className="text-purple-400 text-xs underline">Skip →</button>
             )}
         </motion.div>
     )
 }
 
 // ============================================
-// MEMORY MATCH GAME
+// MEMORY MATCH GAME - 3x3 Grid with Flip Effect
 // ============================================
-const CARD_SET = [
+const CARD_SET_3x3 = [
     { id: "heart", icon: Heart, color: "#ec4899" },
     { id: "star", icon: Star, color: "#f59e0b" },
     { id: "moon", icon: Moon, color: "#818cf8" },
@@ -223,7 +209,7 @@ const CARD_SET = [
     { id: "zap", icon: Zap, color: "#60a5fa" },
     { id: "gem", icon: Gem, color: "#a78bfa" },
     { id: "flame", icon: Flame, color: "#f97316" },
-    { id: "sun", icon: Sun, color: "#fbbf24" },
+    { id: "sun", icon: Sun, color: "#fbbf24" }
 ]
 
 function MemoryGame({ onScore }) {
@@ -236,7 +222,14 @@ function MemoryGame({ onScore }) {
     const [score, setScore] = useState(0)
 
     const initGame = () => {
-        const shuffled = [...CARD_SET, ...CARD_SET]
+        // 3x3 grid = 9 cards, need 4 pairs + 1 extra (but matching needs pairs)
+        // Using 8 cards (4 pairs) for 3x3 with one empty space or rework
+        // Actually 3x3 = 9 cards can't have pairs. Using 4x4 is standard.
+        // But tera bola 3x3 - so using 8 cards (4 pairs) in 3x3 grid means one empty? No.
+        // Let's do 4x4 but visually smaller. Or 3x4 = 12 cards (6 pairs)
+        // Using 8 cards in 3x3 = 8 cards, 4 pairs, last cell empty or hidden
+        const selectedCards = [...CARD_SET_3x3.slice(0, 4), ...CARD_SET_3x3.slice(0, 4)]
+        const shuffled = selectedCards
             .sort(() => Math.random() - 0.5)
             .map((card, idx) => ({ ...card, uniqueId: idx, isFlipped: false, isMatched: false }))
         setCards(shuffled)
@@ -277,8 +270,8 @@ function MemoryGame({ onScore }) {
                 setDisabled(false)
                 setMatched(prev => [...prev, cards[first].id])
 
-                if (matched.length + 1 === CARD_SET.length) {
-                    const finalScore = Math.max(0, 100 - (moves + 1) * 2)
+                if (matched.length + 1 === 4) { // 4 pairs complete
+                    const finalScore = Math.max(0, 100 - moves * 2)
                     setScore(finalScore)
                     setDone(true)
                     sfx.win()
@@ -304,19 +297,19 @@ function MemoryGame({ onScore }) {
         return (
             <div className="text-center">
                 <p className="text-pink-400 text-3xl font-black">{score} pts</p>
-                <p className="text-purple-400 text-xs mt-1">Found all pairs in {moves} moves!</p>
+                <p className="text-purple-300 text-xs mt-1">{moves} moves</p>
             </div>
         )
     }
 
     return (
         <div className="flex flex-col items-center gap-3 w-full">
-            <div className="flex justify-between w-full px-1 text-[10px] font-bold text-purple-400/60 tracking-widest uppercase">
-                <span>MOVES: {moves}</span>
-                <span>PAIRS: {matched.length}/{CARD_SET.length}</span>
-                <button onClick={initGame} className="hover:text-white"><RotateCcw size={12} /></button>
+            <div className="flex justify-between w-full text-xs text-purple-400">
+                <span>🎴 MOVES: {moves}</span>
+                <span>✓ PAIRS: {matched.length}/4</span>
+                <button onClick={initGame} className="hover:text-pink-400"><RotateCcw size={14} /></button>
             </div>
-            <div className="grid grid-cols-4 gap-2 w-full">
+            <div className="grid grid-cols-3 gap-2 w-full max-w-[280px] mx-auto">
                 {cards.map((card, idx) => {
                     const IconComponent = card.icon
                     const isFlippedOrMatched = card.isFlipped || card.isMatched
@@ -324,14 +317,25 @@ function MemoryGame({ onScore }) {
                         <motion.button
                             key={card.uniqueId}
                             onClick={() => handleCardClick(idx)}
-                            className="aspect-square rounded-2xl flex items-center justify-center border"
+                            className="aspect-square rounded-xl flex items-center justify-center"
                             style={{
-                                background: isFlippedOrMatched ? `linear-gradient(135deg, ${card.color}20, ${card.color}10)` : "rgba(255,255,255,0.03)",
-                                borderColor: isFlippedOrMatched ? `${card.color}40` : "rgba(255,255,255,0.1)",
+                                background: isFlippedOrMatched ? `linear-gradient(135deg, ${card.color}30, ${card.color}10)` : "rgba(255,255,255,0.05)",
+                                border: isFlippedOrMatched ? `1px solid ${card.color}50` : "1px solid rgba(255,255,255,0.1)",
+                                transformStyle: "preserve-3d",
                             }}
                             whileTap={{ scale: 0.94 }}
                         >
-                            {isFlippedOrMatched && <IconComponent size={24} color={card.color} />}
+                            <motion.div
+                                animate={{ rotateY: isFlippedOrMatched ? 0 : 180 }}
+                                transition={{ duration: 0.3 }}
+                                style={{ transformStyle: "preserve-3d" }}
+                            >
+                                {isFlippedOrMatched ? (
+                                    <IconComponent size={28} color={card.color} />
+                                ) : (
+                                    <div className="w-8 h-8 rounded-full border-2 border-white/20" />
+                                )}
+                            </motion.div>
                         </motion.button>
                     )
                 })}
@@ -423,37 +427,35 @@ function ColorMatchGame({ onScore }) {
         }, 500)
     }
 
-    const q = questions[current]
     if (done) {
         return (
             <div className="text-center">
                 <p className="text-pink-400 text-3xl font-black">{score} pts</p>
-                <p className="text-purple-400 text-xs mt-1">Mind-blowing focus!</p>
+                <p className="text-purple-300 text-xs mt-1">Focus Master!</p>
             </div>
         )
     }
 
     return (
-        <motion.div className="flex flex-col items-center gap-4 w-full max-w-sm" animate={wrongFlash ? { x: [-5, 5, -3, 3, 0] } : {}}>
-            <div className="w-full">
-                <div className="flex justify-between text-[10px] font-bold text-purple-400/60 tracking-widest mb-1">
-                    <span>STAGE {current + 1}/8</span>
-                    <span>{timeLeft}s LEFT</span>
-                </div>
-                <div className="w-full h-1.5 rounded-full overflow-hidden bg-white/5 border border-white/5">
-                    <motion.div className="h-full bg-pink-500" animate={{ width: `${(timeLeft / 10) * 100}%` }} />
-                </div>
+        <motion.div className="flex flex-col items-center gap-4 w-full" animate={wrongFlash ? { x: [-5, 5, -3, 3, 0] } : {}}>
+            <div className="w-full flex justify-between text-xs text-purple-400">
+                <span>{current + 1}/8</span>
+                <span className={timeLeft < 4 ? 'text-red-400' : ''}>{timeLeft}s</span>
+                <span className="text-white font-bold">{score} pts</span>
+            </div>
+            <div className="w-full h-1.5 rounded-full bg-white/10">
+                <motion.div className="h-full rounded-full bg-gradient-to-r from-pink-500 to-purple-500" animate={{ width: `${(timeLeft / 10) * 100}%` }} />
             </div>
 
-            <div className="w-full rounded-3xl p-10 text-center backdrop-blur-xl border border-white/10 bg-white/5">
-                <p className="text-5xl font-black" style={{ color: q.textColor }}>{q.text}</p>
-                <p className="text-white/20 text-[9px] uppercase tracking-tighter mt-4">Pick the Ink Color, not the Word</p>
+            <div className="w-full rounded-2xl p-10 text-center" style={{ background: "rgba(15,5,30,0.6)", border: "1px solid rgba(139,92,246,0.2)" }}>
+                <p className="text-5xl font-black" style={{ color: questions[current].textColor }}>{questions[current].text}</p>
+                <p className="text-purple-500 text-[10px] mt-3">What's the INK color?</p>
             </div>
 
             <div className="grid grid-cols-2 gap-2 w-full">
-                {q.options.map(opt => (
+                {questions[current].options.map(opt => (
                     <motion.button key={opt.name} onClick={() => handleAnswer(opt.name)} disabled={!!selected}
-                        className="py-3 rounded-2xl text-xs font-black border border-white/10 bg-white/5 text-white/60"
+                        className="py-3 rounded-xl text-sm font-medium border border-white/10 bg-white/5 text-white/70"
                         whileTap={{ scale: 0.96 }}>
                         {opt.name}
                     </motion.button>
@@ -464,12 +466,43 @@ function ColorMatchGame({ onScore }) {
 }
 
 // ============================================
+// RESET BUTTON COMPONENT
+// ============================================
+function ResetButton({ onReset }) {
+    const [showConfirm, setShowConfirm] = useState(false)
+    
+    if (showConfirm) {
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+                <div className="bg-purple-950/90 rounded-2xl p-6 text-center border border-pink-500/30 max-w-xs mx-4">
+                    <p className="text-white font-bold mb-4">Reset all game progress?</p>
+                    <div className="flex gap-3">
+                        <button onClick={() => setShowConfirm(false)} className="flex-1 py-2 rounded-xl border border-white/20 text-white/60 text-sm">Cancel</button>
+                        <button onClick={() => { onReset(); setShowConfirm(false); }} className="flex-1 py-2 rounded-xl bg-red-500 text-white text-sm">Reset</button>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+    
+    return (
+        <motion.button
+            onClick={() => setShowConfirm(true)}
+            className="fixed bottom-20 right-4 z-20 bg-white/10 backdrop-blur-sm p-3 rounded-full hover:bg-white/20 transition-all"
+            whileTap={{ scale: 0.9 }}
+        >
+            <RefreshCw size={18} className="text-white/70" />
+        </motion.button>
+    )
+}
+
+// ============================================
 // MAIN COMPONENT
 // ============================================
 const GAME_LIST = [
     { id: "memory", name: "Memory Match", desc: "Find the pairs", Icon: Brain, color: "#ec4899" },
     { id: "emoji", name: "Emoji Song", desc: "Guess the melody", Icon: Music2, color: "#a855f7" },
-    { id: "color", name: "Focus Test", desc: "Ink color match", Icon: Palette, color: "#3b82f6" },
+    { id: "color", name: "Focus Test", desc: "Match the ink", Icon: Palette, color: "#3b82f6" },
 ]
 
 export default function FunGames({ onComplete }) {
@@ -477,100 +510,113 @@ export default function FunGames({ onComplete }) {
     const [scores, setScores] = useState({ memory: null, emoji: null, color: null })
 
     useEffect(() => {
-        const saved = localStorage.getItem("game_scores")
+        const saved = localStorage.getItem("game_scores_v2")
         if (saved) { try { setScores(JSON.parse(saved)) } catch { } }
     }, [])
 
     const saveScore = (gameId, value) => {
         const updated = { ...scores, [gameId]: value }
         setScores(updated)
-        localStorage.setItem("game_scores", JSON.stringify(updated))
+        localStorage.setItem("game_scores_v2", JSON.stringify(updated))
+    }
+
+    const resetAllScores = () => {
+        localStorage.removeItem("game_scores_v2")
+        setScores({ memory: null, emoji: null, color: null })
+        setActiveGame(null)
     }
 
     const totalScore = Object.values(scores).reduce((a, b) => a + (b || 0), 0)
     const allCompleted = Object.values(scores).every(v => v !== null)
 
     return (
-        <motion.div className="min-h-screen flex flex-col items-center pt-10 pb-12 px-4 relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-pink-950"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <>
+            <ResetButton onReset={resetAllScores} />
             
-            <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');`}</style>
-
-            <div className="fixed inset-0 pointer-events-none opacity-40">
-                <div className="absolute w-[500px] h-[500px] rounded-full bg-pink-500/20 -top-20 -left-20 blur-[120px]" />
-                <div className="absolute w-[500px] h-[500px] rounded-full bg-indigo-500/20 -bottom-20 -right-20 blur-[120px]" />
-            </div>
-
-            <div className="relative z-10 w-full max-w-sm mx-auto" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                <div className="text-center mb-8">
-                    <div className="flex justify-center mb-2">
-                        <GlowIcon color="#ec4899" size={56}>
-                            <Trophy size={24} color="#ec4899" />
-                        </GlowIcon>
-                    </div>
-                    <h1 className="text-4xl font-black bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent italic tracking-tighter">
-                        GAMING ARCADE
-                    </h1>
-                    <div className="inline-flex items-center gap-2 mt-3 px-6 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
-                        <span className="text-white/80 font-black text-[10px] tracking-widest uppercase">{totalScore} TOTAL POINTS</span>
-                    </div>
+            <motion.div className="min-h-screen flex flex-col items-center pt-10 pb-12 px-4 relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-pink-950"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                
+                <div className="fixed inset-0 pointer-events-none">
+                    <div className="absolute w-80 h-80 rounded-full bg-pink-500/10 -top-20 -left-20 blur-[80px]" />
+                    <div className="absolute w-80 h-80 rounded-full bg-purple-500/10 -bottom-20 -right-20 blur-[80px]" />
                 </div>
 
-                <AnimatePresence mode="wait">
-                    {!activeGame ? (
-                        <motion.div key="menu" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-3">
-                            {GAME_LIST.map((game, idx) => (
-                                <motion.button
-                                    key={game.id}
-                                    initial={{ x: -20, opacity: 0 }}
-                                    animate={{ x: 0, opacity: 1 }}
-                                    transition={{ delay: idx * 0.05 }}
-                                    onClick={() => setActiveGame(game.id)}
-                                    className="w-full flex items-center gap-4 p-5 rounded-[24px] backdrop-blur-xl border border-white/10 bg-white/5"
-                                    whileHover={{ scale: 1.02, background: "rgba(255,255,255,0.08)" }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    <GlowIcon color={game.color} size={44}>
-                                        <game.Icon size={18} color={game.color} />
-                                    </GlowIcon>
-                                    <div className="flex-1 text-left">
-                                        <p className="text-white font-black text-sm tracking-tight">{game.name}</p>
-                                        <p className="text-white/30 text-[10px] font-bold uppercase tracking-widest">{game.desc}</p>
-                                    </div>
-                                    {scores[game.id] !== null ? (
-                                        <span className="text-green-400 font-black text-lg">{scores[game.id]}</span>
-                                    ) : (
-                                        <ChevronRight size={16} className="text-white/20" />
-                                    )}
-                                </motion.button>
-                            ))}
+                <div className="relative z-10 w-full max-w-sm mx-auto">
+                    <div className="text-center mb-6">
+                        <div className="flex justify-center mb-2">
+                            <GlowIcon color="#ec4899" size={50}>
+                                <Trophy size={20} color="#ec4899" />
+                            </GlowIcon>
+                        </div>
+                        <h1 className="text-3xl font-black bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
+                            GAMING ZONE
+                        </h1>
+                        <div className="inline-flex items-center gap-2 mt-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10">
+                            <Sparkles size={12} className="text-pink-400" />
+                            <span className="text-white font-bold text-sm">{totalScore} POINTS</span>
+                            <Sparkles size={12} className="text-pink-400" />
+                        </div>
+                    </div>
 
-                            {allCompleted && (
-                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center pt-8">
+                    <AnimatePresence mode="wait">
+                        {!activeGame ? (
+                            <motion.div key="menu" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-3">
+                                {GAME_LIST.map((game, idx) => (
                                     <motion.button
-                                        onClick={() => onComplete(totalScore)}
-                                        className="w-full py-4 bg-gradient-to-r from-pink-500 to-indigo-600 text-white font-black rounded-[20px] shadow-2xl shadow-pink-500/20 tracking-tighter text-lg"
-                                        whileHover={{ scale: 1.03 }}
-                                        whileTap={{ scale: 0.97 }}
+                                        key={game.id}
+                                        initial={{ x: -20, opacity: 0 }}
+                                        animate={{ x: 0, opacity: 1 }}
+                                        transition={{ delay: idx * 0.05 }}
+                                        onClick={() => setActiveGame(game.id)}
+                                        className="w-full flex items-center gap-4 p-4 rounded-2xl"
+                                        style={{
+                                            background: "rgba(15,5,30,0.6)",
+                                            border: scores[game.id] !== null ? "1px solid rgba(34,197,94,0.4)" : "1px solid rgba(168,85,247,0.2)"
+                                        }}
+                                        whileHover={{ scale: 1.01 }}
+                                        whileTap={{ scale: 0.99 }}
                                     >
-                                        CONTINUE ADVENTURE <ArrowRight size={20} className="inline ml-1" />
+                                        <GlowIcon color={game.color} size={40}>
+                                            <game.Icon size={16} color={game.color} />
+                                        </GlowIcon>
+                                        <div className="flex-1 text-left">
+                                            <p className="text-white font-bold text-sm">{game.name}</p>
+                                            <p className="text-purple-400 text-xs">{game.desc}</p>
+                                        </div>
+                                        {scores[game.id] !== null ? (
+                                            <span className="text-green-400 font-bold text-lg">{scores[game.id]}</span>
+                                        ) : (
+                                            <ChevronRight size={14} color="#7c3aed" />
+                                        )}
                                     </motion.button>
-                                </motion.div>
-                            )}
-                        </motion.div>
-                    ) : (
-                        <motion.div key="game" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col items-center gap-4">
-                            <button onClick={() => setActiveGame(null)} className="self-start text-[10px] font-black text-white/20 hover:text-white uppercase tracking-widest mb-2 flex items-center gap-1">
-                                <ArrowRight size={10} className="rotate-180" /> Back to Arcade
-                            </button>
-                            
-                            {activeGame === "memory" && <MemoryGame onScore={s => { saveScore("memory", s); setTimeout(() => setActiveGame(null), 2000) }} />}
-                            {activeGame === "emoji" && <EmojiSongGame onScore={s => { saveScore("emoji", s); setTimeout(() => setActiveGame(null), 2000) }} />}
-                            {activeGame === "color" && <ColorMatchGame onScore={s => { saveScore("color", s); setTimeout(() => setActiveGame(null), 2000) }} />}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </div>
-        </motion.div>
+                                ))}
+
+                                {allCompleted && (
+                                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center pt-4">
+                                        <motion.button
+                                            onClick={() => onComplete(totalScore)}
+                                            className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold rounded-xl flex items-center justify-center gap-2"
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+                                        >
+                                            CONTINUE <ArrowRight size={16} />
+                                        </motion.button>
+                                    </motion.div>
+                                )}
+                            </motion.div>
+                        ) : (
+                            <motion.div key="game" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col items-center gap-3">
+                                <button onClick={() => setActiveGame(null)} className="self-start text-xs text-purple-400 hover:text-white mb-1">
+                                    ← BACK
+                                </button>
+                                {activeGame === "memory" && <MemoryGame onScore={s => { saveScore("memory", s); setTimeout(() => setActiveGame(null), 1800) }} />}
+                                {activeGame === "emoji" && <EmojiSongGame onScore={s => { saveScore("emoji", s); setTimeout(() => setActiveGame(null), 2000) }} />}
+                                {activeGame === "color" && <ColorMatchGame onScore={s => { saveScore("color", s); setTimeout(() => setActiveGame(null), 1800) }} />}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </motion.div>
+        </>
     )
 }
