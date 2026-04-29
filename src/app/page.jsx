@@ -24,7 +24,7 @@ export default function BirthdayApp() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false)
-    }, 4000)
+    }, 999999999999)
     return () => clearTimeout(timer)
   }, [])
 
