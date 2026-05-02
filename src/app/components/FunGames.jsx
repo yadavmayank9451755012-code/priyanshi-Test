@@ -271,7 +271,7 @@ export default function FunGames({ onComplete }) {
                                 ))}
                             </div>
 
-                            <p className="text-white font-bold text-sm mb-8 italic">"Complete the lyrics when the timer stops!"</p>
+                            <p className="text-white font-bold text-sm mb-8 italic">"Complete the lyrics...Start Singing When progress bar comes..!!!"</p>
 
                             <button onClick={() => {
                                 if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
