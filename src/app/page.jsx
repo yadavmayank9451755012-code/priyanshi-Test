@@ -1,8 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { AnimatePresence } from "motion/react"
-import { motion } from "framer-motion"
+import { useState, useRef } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 
 // Import all components
 import Loader from "./components/Loader"
@@ -16,84 +15,74 @@ import Wishes from "./components/Wishes"
 import MessageBoard from "./components/MessageBoard"
 
 export default function BirthdayApp() {
-  // Main flow states
   const [currentScreen, setCurrentScreen] = useState(0)
   const [showInitialLoader, setShowInitialLoader] = useState(true)
   const [showFunGames, setShowFunGames] = useState(false)
   const [finalGameScore, setFinalGameScore] = useState(0)
-  
-  // Birthday logic
-  const birthdayDate = new Date("2026-04-11T00:00:00")
-  const [isBirthdayOver, setIsBirthdayOver] = useState(new Date().getTime() >= birthdayDate.getTime())
-  const [musicStarted, setMusicStarted] = useState(false)
 
-  // Auto close Loader after 4 seconds (original behavior)
-  useEffect(() => {
-    if (showInitialLoader) {
-      const timer = setTimeout(() => {
-        setShowInitialLoader(false)
-        setShowFunGames(true)
-      }, 4000)
-      return () => clearTimeout(timer)
-    }
-  }, [showInitialLoader])
+  // Audio Reference Background Control
+  const audioRef = useRef(null)
 
-  // Handle FunGames completion
-  const handleGamesComplete = (score) => {
-    setFinalGameScore(score)
-    setShowFunGames(false)
-    // Move to celebration or countdown based on birthday
-    setCurrentScreen(0)
+  // 1. Loader pe Continue click karne pe
+  const handleLoaderComplete = () => {
+    // Play song 1
+    const audio = new Audio("/images/song1.mp3")
+    audio.loop = true
+    audio.play().catch(e => console.log("Audio play blocked", e))
+    audioRef.current = audio
+
+    setShowInitialLoader(false)
+    setShowFunGames(true)
   }
 
-  // Screens sequence after games/loader
+  // 2. Games complete hone pe
+  const handleGamesComplete = (score) => {
+    setFinalGameScore(score)
+    setShowFunGames(false) // Ye seedha Countdown page (screens[0]) pe le jayega
+  }
+
+  // 3. Countdown page se Next karne pe
+  const handleCountdownComplete = () => {
+    // Change song to song2.mp3
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
+    const audio2 = new Audio("/images/song2.mp3")
+    audio2.loop = true
+    audio2.play().catch(e => console.log("Audio play blocked", e))
+    audioRef.current = audio2
+
+    setCurrentScreen(1) // Move to celebration
+  }
+
+  // Set Birthday Date here
+  const birthdayDate = new Date("2026-06-11T00:00:00") // 11 June set kiya hai as per chat
+
   const screens = [
-    !isBirthdayOver
-      ? <Countdown key="countdown" onComplete={() => setIsBirthdayOver(true)} birthdayDate={birthdayDate} />
-      : <Celebration key="celebration" onNext={() => setCurrentScreen(1)} onMusicStart={() => setMusicStarted(true)} finalScore={finalGameScore} />,
-    <HappyBirthday key="happy" onNext={() => setCurrentScreen(2)} />,
-    <PhotoGallery key="gallery" onNext={() => setCurrentScreen(3)} />,
-    <Letter key="letter" onNext={() => setCurrentScreen(4)} />,
-    <Wishes key="wishes" onNext={() => setCurrentScreen(5)} />,
+    <Countdown key="countdown" onNext={handleCountdownComplete} birthdayDate={birthdayDate} />,
+    <Celebration key="celebration" onNext={() => setCurrentScreen(2)} onMusicStart={() => {}} finalScore={finalGameScore} />,
+    <HappyBirthday key="happy" onNext={() => setCurrentScreen(3)} />,
+    <PhotoGallery key="gallery" onNext={() => setCurrentScreen(4)} />,
+    <Letter key="letter" onNext={() => setCurrentScreen(5)} />,
+    <Wishes key="wishes" onNext={() => setCurrentScreen(6)} />,
     <MessageBoard key="messageboard" />,
   ]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-950/30 via-black to-purple-950/30 overflow-hidden relative">
-
-      {/* Background radial gradients */}
-      <div className="fixed inset-0 z-0 blur-[120px] opacity-20" style={{
-        backgroundImage: "radial-gradient(circle at 20% 25%, rgba(255, 99, 165, 0.6), transparent 40%)",
-      }} />
-
-      <div className="fixed inset-0 z-0 blur-[120px] opacity-20" style={{
-        backgroundImage: "radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.6), transparent 40%)",
-      }} />
-
-      <div className="fixed inset-0 z-0 blur-[160px] opacity-10" style={{
-        backgroundImage: "radial-gradient(circle at 50% 50%, rgba(228, 193, 255, 0.4), transparent 40%)",
-      }} />
+      <div className="fixed inset-0 z-0 blur-[120px] opacity-20" style={{ backgroundImage: "radial-gradient(circle at 20% 25%, rgba(255, 99, 165, 0.6), transparent 40%)" }} />
+      <div className="fixed inset-0 z-0 blur-[120px] opacity-20" style={{ backgroundImage: "radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.6), transparent 40%)" }} />
 
       <AnimatePresence mode="wait">
-        {/* Initial Loader (4 sec) */}
-        {showInitialLoader && <Loader key="initial-loader" onComplete={() => {}} />}
-        
-        {/* Fun Games (Memory + Song + Color Match) */}
+        {showInitialLoader && <Loader key="initial-loader" onComplete={handleLoaderComplete} />}
         {showFunGames && <FunGames key="fun-games" onComplete={handleGamesComplete} />}
-        
-        {/* Main Birthday Screens Sequence */}
         {!showInitialLoader && !showFunGames && (
           <AnimatePresence mode="wait">{screens[currentScreen]}</AnimatePresence>
         )}
       </AnimatePresence>
 
-      {/* Watermark */}
-      <motion.div
-        initial={{ x: 100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 1, delay: 1 }}
-        className="fixed bottom-4 right-4 text-[13px] text-white/40 pointer-events-none z-50 font-light"
-      >
+      <motion.div initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 1, delay: 1 }} className="fixed bottom-4 right-4 text-[13px] text-white/40 pointer-events-none z-50 font-light">
         @rao.mayankkk
       </motion.div>
     </div>
