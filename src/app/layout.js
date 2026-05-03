@@ -1,16 +1,15 @@
 import "./globals.css";
-import MusicPlayer from "./MusicPlayer";
 
 export const metadata = {
   title: "Happy Birthday!",
-  description: "..."
+  description: "A special surprise..."
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="antialiased">
-        <MusicPlayer />   {/* 👈 yaha add karo */}
+        {/* MusicPlayer capsule removed completely */}
         {children}
       </body>
     </html>
