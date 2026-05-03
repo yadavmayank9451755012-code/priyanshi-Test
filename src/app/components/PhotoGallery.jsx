@@ -1,23 +1,23 @@
 "use client"
 
-import { motion } from "motion/react"
+import { motion } from "framer-motion"
 import { Camera, ArrowRight } from "lucide-react"
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { EffectCube, Pagination } from 'swiper/modules'
+import { EffectCube, Autoplay } from 'swiper/modules' // Pagination hata diya, Autoplay add kiya
 import 'swiper/css'
 import 'swiper/css/effect-cube'
-import 'swiper/css/pagination'
+// Pagination ka CSS bhi hata diya
 
 export default function PhotoGallery({ onNext }) {
 
     const photos = [
-  { id: 1, src: "/images/1.jpg" },
-  { id: 2, src: "/images/2.jpg" },
-  { id: 3, src: "/images/3.jpg" },
-  { id: 4, src: "/images/4.jpg" },
-  { id: 5, src: "/images/5.jpg" },
-  { id: 6, src: "/images/6.jpg" }
-]
+        { id: 1, src: "/images/1.jpg" },
+        { id: 2, src: "/images/2.jpg" },
+        { id: 3, src: "/images/3.jpg" },
+        { id: 4, src: "/images/4.jpg" },
+        { id: 5, src: "/images/5.jpg" },
+        { id: 6, src: "/images/6.jpg" }
+    ]
 
     return (
         <motion.div
@@ -45,26 +45,30 @@ export default function PhotoGallery({ onNext }) {
                 </motion.div>
 
                 <h1 className="text-4xl md:text-6xl py-1 md:py-2 font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 mb-6">
-                Purely Her✨️
-
+                    Purely Her ✨
                 </h1>
                 <p className="text-xl text-purple-300">Beauty in its simplest and most authentic form. 📸</p>
             </motion.div>
 
-            {/* Cube Gallery */}
+            {/* Infinite Cube Gallery */}
             <div className="w-full max-w-sm mx-auto">
                 <Swiper
                     effect={'cube'}
                     grabCursor={true}
+                    loop={true} // 👈 Ye lagaya infinite loop ke liye
+                    autoplay={{
+                        delay: 2500, // 2.5 seconds me khud ghoomega
+                        disableOnInteraction: false, // Touch karne ke baad bhi autoplay rukega nahi
+                    }}
                     cubeEffect={{
                         shadow: true,
                         slideShadows: true,
                         shadowOffset: 20,
                         shadowScale: 0.94,
                     }}
-                    pagination={true}
-                    modules={[EffectCube, Pagination]}
-                    className="mySwiper h-[350px] md:h-[450px]" // adjust height as needed
+                    // pagination={true} 👈 Ye hata diya
+                    modules={[EffectCube, Autoplay]} // Pagination hataya, Autoplay lagaya
+                    className="mySwiper h-[350px] md:h-[450px]"
                 >
                     {photos.map((photo, index) => (
                         <SwiperSlide key={photo.id}>
