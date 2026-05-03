@@ -23,7 +23,7 @@ export default function BirthdayApp() {
   const [finalGameScore, setFinalGameScore] = useState(0)
   
   // Birthday logic
-  const birthdayDate = new Date("2026-06-11T00:00:00")
+  const birthdayDate = new Date("2026-04-11T00:00:00")
   const [isBirthdayOver, setIsBirthdayOver] = useState(new Date().getTime() >= birthdayDate.getTime())
   const [musicStarted, setMusicStarted] = useState(false)
 
