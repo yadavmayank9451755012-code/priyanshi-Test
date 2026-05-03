@@ -57,7 +57,7 @@ export default function BirthdayApp() {
   }
 
   // Set Birthday Date here
-  const birthdayDate = new Date("2026-06-11T00:00:00") // 11 June set kiya hai as per chat
+  const birthdayDate = new Date("2026-05-03T20:25:00") // 11 June set kiya hai as per chat
 
   const screens = [
     <Countdown key="countdown" onNext={handleCountdownComplete} birthdayDate={birthdayDate} />,
