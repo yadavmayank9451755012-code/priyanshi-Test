@@ -1,14 +1,18 @@
 "use client"
 
-import { useState } from "react"
-import { motion, AnimatePresence, useMotionValue, useAnimationFrame } from "framer-motion"
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { Camera, ArrowRight, X } from "lucide-react"
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay } from 'swiper/modules'
+import 'swiper/css'
 
 export default function PhotoGallery({ onNext }) {
     const [selectedImg, setSelectedImg] = useState(null)
-    
+    const [randomPhotos, setRandomPhotos] = useState([])
+
     // 12 Images Array (3.jpg removed)
-    const photos = [
+    const initialPhotos = [
         { id: 1, src: "/images/1.jpg" },
         { id: 2, src: "/images/2.jpg" },
         { id: 4, src: "/images/4.jpg" },
@@ -23,25 +27,11 @@ export default function PhotoGallery({ onNext }) {
         { id: 13, src: "/images/13.jpg" },
     ]
 
-    // ==========================================
-    // 3D CONTINUOUS ROTATION LOGIC
-    // ==========================================
-    const rotation = useMotionValue(0)
-    const [isDragging, setIsDragging] = useState(false)
-
-    // Ye apne aap dheere dheere ghumayega
-    useAnimationFrame((t, delta) => {
-        if (!isDragging && !selectedImg) { // Agar image open nahi hai aur drag nahi ho raha
-            rotation.set(rotation.get() - delta * 0.015) // Speed ekdum slow aur smooth
-        }
-    })
-
-    // Drag (swipe) karne ka logic with High Sensitivity
-    const handleDragStart = () => setIsDragging(true)
-    const handleDragEnd = () => setIsDragging(false)
-    const handleDrag = (_, info) => {
-        rotation.set(rotation.get() + info.delta.x * 0.5) // 0.5 multiplier for good sensitivity
-    }
+    // Component load hote hi photos ko RANDOMIZE (shuffle) kar dega
+    useEffect(() => {
+        const shuffled = [...initialPhotos].sort(() => Math.random() - 0.5)
+        setRandomPhotos(shuffled)
+    }, [])
 
     return (
         <motion.div
@@ -58,9 +48,10 @@ export default function PhotoGallery({ onNext }) {
             </div>
 
             <motion.div
-                className="text-center mb-8 z-10 mt-4"
+                className="text-center mb-8 z-10"
                 initial={{ y: -30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
             >
                 <motion.div className="mb-4 inline-block" animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity }}>
                     <div className="p-4 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-2xl">
@@ -68,6 +59,7 @@ export default function PhotoGallery({ onNext }) {
                     </div>
                 </motion.div>
 
+                {/* 🌟 CLASSY HEADING 🌟 */}
                 <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 mb-2">
                     Purely Her
                 </h1>
@@ -77,44 +69,44 @@ export default function PhotoGallery({ onNext }) {
             </motion.div>
 
             {/* ======================================= */}
-            {/* 12-SIDED 3D CAROUSEL (The Magic) */}
+            {/* INFINITE RANDOM SLIDER (NO CUBE, NO DOTS) */}
             {/* ======================================= */}
-            <div className="w-full h-[350px] md:h-[450px] flex items-center justify-center relative z-10 [perspective:1200px] overflow-visible">
-                <motion.div
-                    className="relative w-[140px] h-[220px] md:w-[180px] md:h-[280px] [transform-style:preserve-3d] cursor-grab active:cursor-grabbing"
-                    style={{ rotateY: rotation }}
-                    drag="x"
-                    dragElastic={0.1}
-                    onDragStart={handleDragStart}
-                    onDragEnd={handleDragEnd}
-                    onDrag={handleDrag}
-                >
-                    {photos.map((photo, i) => {
-                        const angle = i * 30 // 360 degrees / 12 photos = 30 degrees per photo
-                        return (
-                            <motion.div
-                                key={photo.id}
-                                className="absolute inset-0 rounded-2xl overflow-hidden border border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)] bg-white/10 backdrop-blur-sm"
-                                style={{
-                                    // 260px is the radius (distance from COM). Math: width/2 / tan(15deg)
-                                    transform: `rotateY(${angle}deg) translateZ(260px)`,
-                                    WebkitTransform: `rotateY(${angle}deg) translateZ(260px)`, // For iOS Safari
-                                }}
-                                onClick={() => setSelectedImg(photo.src)}
-                            >
-                                <img
-                                    src={photo.src || "/placeholder.svg"}
-                                    alt="Memory"
-                                    className="w-full h-full object-cover pointer-events-none grayscale-[15%] hover:grayscale-0 transition-all duration-500"
-                                />
-                            </motion.div>
-                        )
-                    })}
-                </motion.div>
+            <div className="w-full max-w-[300px] md:max-w-[380px] mx-auto z-10">
+                {randomPhotos.length > 0 && (
+                    <Swiper
+                        grabCursor={true}
+                        loop={true} // Infinite Loop
+                        spaceBetween={20} // Har photo ke beech thoda gap
+                        speed={800} // Smooth slide transition speed
+                        autoplay={{
+                            delay: 2500, // Har 2.5 second baad next photo aayegi
+                            disableOnInteraction: false,
+                        }}
+                        modules={[Autoplay]} // Sirf Autoplay, Pagination hata di
+                        className="w-full h-[400px] md:h-[500px] rounded-[2rem] shadow-[0_0_40px_rgba(255,255,255,0.05)] border border-white/10 bg-white/5 backdrop-blur-md"
+                    >
+                        {randomPhotos.map((photo, index) => (
+                            <SwiperSlide key={photo.id} className="w-full h-full p-2">
+                                <motion.div 
+                                    className="w-full h-full rounded-[1.5rem] overflow-hidden cursor-pointer"
+                                    whileHover={{ scale: 0.98 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => setSelectedImg(photo.src)}
+                                >
+                                    <img
+                                        src={photo.src}
+                                        alt={`Memory ${index + 1}`}
+                                        className="w-full h-full object-cover grayscale-[10%] hover:grayscale-0 transition-all duration-500"
+                                    />
+                                </motion.div>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                )}
             </div>
 
             {/* Bottom Section */}
-            <motion.div className="mt-16 flex flex-col items-center gap-6 z-10" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <motion.div className="mt-12 flex flex-col items-center gap-6 z-10" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
                 <div className="flex items-center gap-2 text-white/40 text-[10px] tracking-[0.3em] uppercase font-bold">
                     <div className="w-8 h-[1px] bg-white/20" />
                     <span>Moments with you</span>
