@@ -9,11 +9,21 @@ import 'swiper/css/effect-cube'
 
 export default function PhotoGallery({ onNext }) {
 
-    // 13 Images Array Generate kar diya
-    const photos = Array.from({ length: 13 }, (_, i) => ({
-        id: i + 1,
-        src: `/images/${i + 1}.jpg`
-    }))
+    // ✅ Explicit array - 12 Images total (3.jpg removed)
+    const photos = [
+        { id: 1, src: "/images/1.jpg" },
+        { id: 2, src: "/images/2.jpg" },
+        { id: 4, src: "/images/4.jpg" },
+        { id: 5, src: "/images/5.jpg" },
+        { id: 6, src: "/images/6.jpg" },
+        { id: 7, src: "/images/7.jpg" },
+        { id: 8, src: "/images/8.jpg" },
+        { id: 9, src: "/images/9.jpg" },
+        { id: 10, src: "/images/10.jpg" },
+        { id: 11, src: "/images/11.jpg" },
+        { id: 12, src: "/images/12.jpg" },
+        { id: 13, src: "/images/13.jpg" },
+    ]
 
     return (
         <motion.div
@@ -23,7 +33,7 @@ export default function PhotoGallery({ onNext }) {
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.8 }}
         >
-            {/* Background Glows */}
+            {/* Background Aesthetic Glows */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-pink-500/10 blur-[120px] rounded-full" />
                 <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-indigo-500/10 blur-[120px] rounded-full" />
@@ -69,10 +79,11 @@ export default function PhotoGallery({ onNext }) {
                     effect={'cube'}
                     grabCursor={true}
                     loop={true}
-                    speed={3500} // 👈 Very Slow & Smooth
+                    speed={6000} // 👈 Ekdum Dheemi aur dreamy speed (6 seconds)
+                    touchRatio={2.5} // 👈 High Sensitivity (halke se touch par react karega)
                     autoplay={{
-                        delay: 0, // 👈 Continuous
-                        disableOnInteraction: false,
+                        delay: 0, // Continuous motion
+                        disableOnInteraction: false, // Touch karne ke baad wapas slowly ghoomne lagega
                     }}
                     cubeEffect={{
                         shadow: true,
@@ -85,11 +96,11 @@ export default function PhotoGallery({ onNext }) {
                 >
                     {photos.map((photo, index) => (
                         <SwiperSlide key={photo.id}>
-                            <div className="w-full h-full p-1 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 overflow-hidden">
+                            <div className="w-full h-full p-1 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.05)]">
                                 <img
                                     src={photo.src || "/placeholder.svg"}
                                     alt={`Memory ${index + 1}`}
-                                    className="w-full h-full object-cover rounded-2xl grayscale-[20%] hover:grayscale-0 transition-all duration-500"
+                                    className="w-full h-full object-cover rounded-2xl grayscale-[15%] hover:grayscale-0 transition-all duration-500"
                                 />
                             </div>
                         </SwiperSlide>
