@@ -157,7 +157,7 @@ const QUESTIONS = [
         q: "Faltu jokes pe Priyanshi ka response?",
         options: [
             { text: "Zor se hasna", reply: "Andar se hasi aati hai par dikhati nahi ho." },
-            { text "'Kaisi baatein karte ho' 🙄", reply: "Ye 'Kaisi baatein karte ho' sunne ke liye hi toh main jokes maarta hoon 😂" },
+            { text: "Kaisi baatein karte ho' 🙄", reply: "Ye 'Kaisi baatein karte ho' sunne ke liye hi toh main jokes maarta hoon 😂" },
             { text: "Seen chhod dena", reply: "Seen pe chhodna toh aadat si ban gayi hai na?" }
         ]
     },
