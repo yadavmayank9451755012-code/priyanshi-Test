@@ -1,408 +1,195 @@
-import { useState, useEffect } from "react";
+"use client"
 
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Heart, ArrowRight } from "lucide-react"
+
+// Premium Sparkles Data
 const sparkles = [
-  { top: "8%", left: "12%", size: 14, color: "#f9a8d4", delay: 0 },
-  { top: "6%", left: "50%", size: 18, color: "#f43f5e", delay: 0.3 },
-  { top: "14%", left: "88%", size: 12, color: "#f9a8d4", delay: 0.6 },
-  { top: "35%", left: "5%", size: 16, color: "#fde68a", delay: 0.2 },
-  { top: "42%", left: "92%", size: 20, color: "#fde68a", delay: 0.8 },
-  { top: "55%", left: "8%", size: 12, color: "#f9a8d4", delay: 1.0 },
-  { top: "60%", left: "85%", size: 18, color: "#fde68a", delay: 0.4 },
-  { top: "75%", left: "15%", size: 14, color: "#fde68a", delay: 1.2 },
-  { top: "28%", left: "75%", size: 10, color: "#f9a8d4", delay: 0.5 },
-  { top: "50%", left: "50%", size: 8, color: "#fde68a", delay: 0.9 },
-];
+  { top: "10%", left: "15%", size: 14, color: "#fcd34d", delay: 0 },
+  { top: "8%", left: "80%", size: 18, color: "#f9a8d4", delay: 0.3 },
+  { top: "25%", left: "88%", size: 12, color: "#ffffff", delay: 0.6 },
+  { top: "40%", left: "8%", size: 16, color: "#fcd34d", delay: 0.2 },
+  { top: "45%", left: "90%", size: 20, color: "#f9a8d4", delay: 0.8 },
+  { top: "60%", left: "10%", size: 12, color: "#ffffff", delay: 1.0 },
+  { top: "70%", left: "85%", size: 18, color: "#fcd34d", delay: 0.4 },
+  { top: "85%", left: "20%", size: 14, color: "#f9a8d4", delay: 1.2 },
+  { top: "30%", left: "75%", size: 10, color: "#ffffff", delay: 0.5 },
+]
 
-function SparkleIcon({ size, color }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
-      <path d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" />
-    </svg>
-  );
-}
+export default function Loader({ onComplete }) {
+  const [showButton, setShowButton] = useState(false)
+  const [progress, setProgress] = useState(0)
 
-function HeartIcon() {
-  return (
-    <svg width="22" height="20" viewBox="0 0 24 22" fill="#f43f5e">
-      <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z" />
-    </svg>
-  );
-}
-
-export default function LoadingScreen() {
-  const [visible, setVisible] = useState(false);
-  const [progress, setProgress] = useState(0);
-
+  // 4 Second Progress & Button Timer
   useEffect(() => {
-    setVisible(true);
     const interval = setInterval(() => {
       setProgress((p) => {
         if (p >= 100) {
-          clearInterval(interval);
-          return 100;
+          clearInterval(interval)
+          return 100
         }
-        return p + 1;
-      });
-    }, 40);
-    return () => clearInterval(interval);
-  }, []);
+        return p + 1
+      })
+    }, 40) // 40ms * 100 = 4000ms (4 seconds)
+
+    const timer = setTimeout(() => {
+      setShowButton(true)
+    }, 4000)
+
+    return () => {
+      clearInterval(interval)
+      clearTimeout(timer)
+    }
+  }, [])
+
+  // ==========================================
+  // 🌟 PREMIUM NAVY BLUE 3D THEME 🌟
+  // ==========================================
+  const bgBase = "bg-[#162433]"
+  const cardBg = "bg-[#1B2A3A]"
+  
+  // 3D Neumorphism Shadows
+  const puffyOut = "shadow-[12px_12px_24px_#111b25,-12px_-12px_24px_#25394f]"
+  const puffyBtn = `bg-white text-[#162433] transition-all duration-300 rounded-[24px] shadow-[8px_8px_16px_#111b25,-8px_-8px_16px_#25394f] active:shadow-[inset_4px_4px_8px_#cbd5e1,inset_-4px_-4px_8px_#ffffff] font-extrabold flex items-center justify-center gap-3 px-10 py-4 uppercase tracking-[0.15em] text-[14px]`
 
   return (
-    <div style={styles.wrapper}>
+    <div className={`min-h-screen relative w-full flex flex-col items-center overflow-hidden ${bgBase} font-sans pt-12 pb-8`}>
+      
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400&family=Great+Vibes&display=swap');
-
-        @keyframes sparkleAnim {
-          0%, 100% { opacity: 0.2; transform: scale(0.8) rotate(0deg); }
-          50% { opacity: 1; transform: scale(1.3) rotate(20deg); }
-        }
-        @keyframes floatUp {
-          0% { opacity: 0; transform: translateY(30px); }
-          100% { opacity: 1; transform: translateY(0px); }
-        }
-        @keyframes fadeSlideDown {
-          0% { opacity: 0; transform: translateY(-20px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes heartBeat {
-          0%, 100% { transform: scale(1); }
-          30% { transform: scale(1.25); }
-          60% { transform: scale(0.95); }
-        }
-        @keyframes shimmer {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        @keyframes imageReveal {
-          0% { opacity: 0; transform: scale(0.92) translateY(40px); }
-          100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        @keyframes blobFloat {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-8px) rotate(1.5deg); }
-        }
-        @keyframes progressFill {
-          from { width: 0%; }
-        }
-        @keyframes dotBlink {
-          0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
-          40% { opacity: 1; transform: scale(1.2); }
-        }
-        @keyframes btnPulse {
-          0%, 100% { box-shadow: 0 4px 30px rgba(71,85,115,0.25); }
-          50% { box-shadow: 0 4px 40px rgba(71,85,115,0.45); }
-        }
-        .sparkle-item {
-          animation: sparkleAnim 2.5s ease-in-out infinite;
-        }
-        .heart-icon {
-          animation: heartBeat 1.6s ease-in-out infinite;
-        }
-        .title-line1 {
-          animation: fadeSlideDown 0.8s cubic-bezier(.22,1,.36,1) 0.1s both;
-        }
-        .title-line2 {
-          animation: fadeSlideDown 0.8s cubic-bezier(.22,1,.36,1) 0.25s both;
-        }
-        .title-script {
-          animation: fadeSlideDown 0.8s cubic-bezier(.22,1,.36,1) 0.4s both;
-        }
-        .divider {
-          animation: fadeSlideDown 0.6s ease 0.55s both;
-        }
-        .wait-text {
-          animation: fadeSlideDown 0.6s ease 0.65s both;
-        }
-        .photo-blob {
-          animation: imageReveal 1s cubic-bezier(.22,1,.36,1) 0.5s both, blobFloat 6s ease-in-out 1.5s infinite;
-        }
-        .continue-btn {
-          animation: floatUp 0.8s cubic-bezier(.22,1,.36,1) 0.9s both, btnPulse 3s ease-in-out 2s infinite;
-        }
-        .continue-btn:hover {
-          transform: scale(1.04);
-          transition: transform 0.2s ease;
-        }
-        .leaf-deco {
-          animation: fadeSlideDown 1.2s ease 1.2s both;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
       `}</style>
 
-      {/* Background */}
-      <div style={styles.background} />
+      {/* Elegant Background Glows */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-[20%] left-[50%] -translate-x-1/2 w-[60%] h-[40%] bg-pink-500/5 blur-[100px] rounded-full" />
+      </div>
 
-      {/* Sparkles */}
-      {sparkles.map((s, i) => (
-        <div
-          key={i}
-          className="sparkle-item"
-          style={{
-            position: "absolute",
-            top: s.top,
-            left: s.left,
-            animationDelay: `${s.delay}s`,
-            zIndex: 2,
-            pointerEvents: "none",
-          }}
+      {/* Animated Sparkles */}
+      <div className="absolute inset-0 pointer-events-none z-10">
+        {sparkles.map((s, i) => (
+          <motion.div
+            key={i}
+            className="absolute"
+            style={{ top: s.top, left: s.left }}
+            animate={{ opacity: [0.2, 1, 0.2], scale: [0.8, 1.3, 0.8], rotate: [0, 20, 0] }}
+            transition={{ duration: 2.5, repeat: Infinity, delay: s.delay, ease: "easeInOut" }}
+          >
+            <svg width={s.size} height={s.size} viewBox="0 0 24 24" fill={s.color}>
+              <path d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" />
+            </svg>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* ======================================= */}
+      {/* 1. TOP SECTION (Heart & Text) */}
+      {/* ======================================= */}
+      <div className="relative z-20 flex flex-col items-center text-center w-full px-6">
+        <motion.div animate={{ scale: [1, 1.2, 0.95, 1] }} transition={{ duration: 1.6, repeat: Infinity }} className="mb-4">
+          <Heart className="w-8 h-8 text-pink-400 fill-pink-400 drop-shadow-[0_0_10px_rgba(244,114,182,0.6)]" />
+        </motion.div>
+
+        <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} 
+            className="font-elegant font-black text-4xl md:text-5xl text-white leading-tight tracking-tight drop-shadow-md">
+            Preparing
+        </motion.h1>
+        <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} 
+            className="font-elegant font-black text-4xl md:text-5xl text-white leading-tight tracking-tight drop-shadow-md">
+            Something
+        </motion.h1>
+        
+        {/* Cursive Special Text */}
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-1">
+          <span style={{ fontFamily: "'Great Vibes', cursive" }} className="text-5xl md:text-6xl text-pink-300 tracking-wide drop-shadow-lg">
+            Special
+          </span>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: "40px" }} transition={{ delay: 0.6 }} 
+            className="h-[2px] bg-white/20 rounded-full mt-6 mb-4" />
+      </div>
+
+      {/* ======================================= */}
+      {/* 2. CENTER SECTION (3D Photo Blob) */}
+      {/* ======================================= */}
+      <motion.div 
+        className="relative z-20 w-full flex justify-center mt-6 flex-1 max-h-[400px]"
+        initial={{ opacity: 0, scale: 0.9, y: 30 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.5, type: "spring" }}
+      >
+        <motion.div 
+            // 👈 3D NEUMORPHIC SHADOW ADDED TO BLOB
+            className={`w-[260px] h-[320px] md:w-[300px] md:h-[360px] border-[6px] border-[#1B2A3A] overflow-hidden ${puffyOut}`}
+            animate={{ 
+                borderRadius: [
+                    "60% 40% 55% 45% / 50% 55% 45% 50%", 
+                    "40% 60% 45% 55% / 45% 50% 55% 50%", 
+                    "60% 40% 55% 45% / 50% 55% 45% 50%"
+                ],
+                y: [0, -12, 0]
+            }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         >
-          <SparkleIcon size={s.size} color={s.color} />
-        </div>
-      ))}
-
-      {/* Leaf decoration bottom-left */}
-      <div className="leaf-deco" style={styles.leafDeco}>
-        <svg width="80" height="90" viewBox="0 0 80 90" fill="none">
-          <path d="M10 80 Q20 40 60 10 Q40 50 10 80Z" fill="rgba(180,195,210,0.18)" />
-          <path d="M5 85 Q30 50 70 20 Q45 58 5 85Z" fill="rgba(180,195,210,0.12)" />
-        </svg>
-      </div>
-
-      {/* Top: Heart + Title */}
-      <div style={styles.topSection}>
-        <div className="heart-icon" style={{ marginBottom: 8 }}>
-          <HeartIcon />
-        </div>
-
-        <h1 className="title-line1" style={styles.titleLine1}>Preparing</h1>
-        <h1 className="title-line2" style={styles.titleLine2}>Something</h1>
-        <div className="title-script" style={styles.scriptWrap}>
-          <span style={styles.scriptText}>Special</span>
-        </div>
-
-        <div className="divider" style={styles.divider} />
-
-        {/* Wait text with animated dots */}
-        <div className="wait-text" style={styles.waitRow}>
-          <SparkleIcon size={10} color="#f9c74f" />
-          <span style={styles.waitText}>Please wait</span>
-          {[0, 0.2, 0.4].map((d, i) => (
-            <span
-              key={i}
-              style={{
-                ...styles.dot,
-                animationDelay: `${d}s`,
-                animation: `dotBlink 1.4s ease-in-out ${d}s infinite`,
-              }}
-            >.</span>
-          ))}
-          <SparkleIcon size={10} color="#f9c74f" />
-        </div>
-      </div>
-
-      {/* Center: Blob + Photo */}
-      <div className="photo-blob" style={styles.blobContainer}>
-        <div style={styles.blobShape}>
           <img
-            src="images/10.jpg"
+            src="/images/10.jpg" // 👈 Fixed Photo
             alt="Special person"
-            style={styles.photo}
-            onError={(e) => {
-              // Fallback gradient if image not found
-              e.target.style.display = "none";
-              e.target.parentNode.style.background =
-                "linear-gradient(135deg, #c9d6e3 0%, #e8ecf0 100%)";
-            }}
+            className="w-full h-full object-cover object-center"
           />
-        </div>
+          {/* Subtle inner shadow overlay */}
+          <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.4)] pointer-events-none" />
+        </motion.div>
+      </motion.div>
+
+      {/* ======================================= */}
+      {/* 3. BOTTOM SECTION (Progress / Button) */}
+      {/* ======================================= */}
+      <div className="relative z-20 w-full flex flex-col items-center mt-8 px-6 min-h-[80px]">
+        <AnimatePresence mode="wait">
+          {!showButton ? (
+            <motion.div 
+                key="loading"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }}
+                className="w-full max-w-[260px] flex flex-col items-center"
+            >
+              {/* Wait text */}
+              <div className="flex items-center gap-2 text-[#94a3b8] text-[13px] font-bold tracking-[0.15em] uppercase mb-4">
+                Please wait
+                <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>.</motion.span>
+                <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.5, delay: 0.2, repeat: Infinity }}>.</motion.span>
+                <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.5, delay: 0.4, repeat: Infinity }}>.</motion.span>
+              </div>
+
+              {/* 3D Progress Bar */}
+              <div className="w-full h-2 bg-[#1B2A3A] rounded-full overflow-hidden shadow-[inset_2px_2px_4px_#111b25,inset_-2px_-2px_4px_#25394f]">
+                <div 
+                    className="h-full rounded-full bg-gradient-to-r from-pink-400 to-indigo-400"
+                    style={{ width: `${progress}%`, transition: "width 0.1s linear" }} 
+                />
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div 
+                key="button"
+                initial={{ opacity: 0, y: 20, scale: 0.9 }} 
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                className="w-full flex justify-center"
+            >
+              {/* 👈 3D PREMIUM REDIRECTION BUTTON */}
+              <button 
+                onClick={onComplete} 
+                className={puffyBtn}
+              >
+                <span>Continue</span>
+                <ArrowRight size={18} strokeWidth={3} />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Progress bar */}
-      <div style={styles.progressWrap}>
-        <div style={styles.progressTrack}>
-          <div
-            style={{
-              ...styles.progressBar,
-              width: `${progress}%`,
-              transition: "width 0.1s linear",
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Continue Button */}
-      <div style={styles.btnWrap}>
-        <button className="continue-btn" style={styles.continueBtn}>
-          <span style={styles.btnText}>Continue</span>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
     </div>
-  );
+  )
 }
-
-const styles = {
-  wrapper: {
-    position: "relative",
-    width: "100%",
-    maxWidth: 420,
-    minHeight: "100vh",
-    margin: "0 auto",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    overflow: "hidden",
-    background: "#eef1f6",
-    fontFamily: "'DM Sans', sans-serif",
-    userSelect: "none",
-  },
-  background: {
-    position: "absolute",
-    inset: 0,
-    background: "linear-gradient(170deg, #dde3ed 0%, #eaecf3 40%, #f0f2f7 100%)",
-    zIndex: 0,
-  },
-  topSection: {
-    position: "relative",
-    zIndex: 3,
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    paddingTop: 52,
-    paddingBottom: 0,
-  },
-  titleLine1: {
-    fontFamily: "'Playfair Display', serif",
-    fontWeight: 700,
-    fontSize: 42,
-    color: "#1e2a3a",
-    margin: "0",
-    lineHeight: 1.1,
-    letterSpacing: "-0.5px",
-  },
-  titleLine2: {
-    fontFamily: "'Playfair Display', serif",
-    fontWeight: 700,
-    fontSize: 42,
-    color: "#1e2a3a",
-    margin: "0",
-    lineHeight: 1.1,
-    letterSpacing: "-0.5px",
-  },
-  scriptWrap: {
-    marginTop: 2,
-  },
-  scriptText: {
-    fontFamily: "'Great Vibes', cursive",
-    fontSize: 52,
-    color: "#f06292",
-    lineHeight: 1.1,
-    display: "block",
-    letterSpacing: "1px",
-  },
-  divider: {
-    width: 40,
-    height: 2,
-    background: "rgba(120,140,170,0.35)",
-    borderRadius: 2,
-    margin: "12px auto 10px",
-  },
-  waitRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: 6,
-    color: "#8a96a8",
-    fontSize: 14,
-    fontWeight: 400,
-    letterSpacing: "0.3px",
-  },
-  waitText: {
-    color: "#8a96a8",
-    fontSize: 14,
-    letterSpacing: "0.5px",
-  },
-  dot: {
-    color: "#8a96a8",
-    fontSize: 18,
-    lineHeight: 1,
-    display: "inline-block",
-  },
-  blobContainer: {
-    position: "relative",
-    zIndex: 3,
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    marginTop: 10,
-  },
-  blobShape: {
-    width: 320,
-    height: 380,
-    borderRadius: "60% 40% 55% 45% / 50% 55% 45% 50%",
-    overflow: "hidden",
-    background: "linear-gradient(135deg, #c9d6e3 0%, #dce4ef 100%)",
-    boxShadow: "0 20px 60px rgba(100,120,160,0.18), 0 4px 20px rgba(100,120,160,0.12)",
-    position: "relative",
-  },
-  photo: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    objectPosition: "center top",
-    display: "block",
-  },
-  progressWrap: {
-    position: "relative",
-    zIndex: 3,
-    width: "75%",
-    marginTop: 16,
-  },
-  progressTrack: {
-    width: "100%",
-    height: 3,
-    background: "rgba(150,170,200,0.2)",
-    borderRadius: 4,
-    overflow: "hidden",
-  },
-  progressBar: {
-    height: "100%",
-    background: "linear-gradient(90deg, #f9a8d4, #f43f5e, #f9a8d4)",
-    backgroundSize: "200% 100%",
-    animation: "shimmer 2s linear infinite",
-    borderRadius: 4,
-  },
-  btnWrap: {
-    position: "relative",
-    zIndex: 3,
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    paddingBottom: 40,
-    marginTop: 20,
-  },
-  continueBtn: {
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-    background: "linear-gradient(135deg, #4a5a72 0%, #374560 100%)",
-    color: "white",
-    border: "none",
-    borderRadius: 50,
-    paddingLeft: 36,
-    paddingRight: 28,
-    paddingTop: 17,
-    paddingBottom: 17,
-    fontSize: 16,
-    fontFamily: "'DM Sans', sans-serif",
-    fontWeight: 400,
-    letterSpacing: "0.5px",
-    cursor: "pointer",
-    outline: "none",
-    width: "72%",
-    justifyContent: "center",
-  },
-  btnText: {
-    flex: 1,
-    textAlign: "center",
-  },
-  leafDeco: {
-    position: "absolute",
-    bottom: 60,
-    left: -10,
-    zIndex: 2,
-    opacity: 0.7,
-    pointerEvents: "none",
-  },
-};
