@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Heart, ArrowRight } from "lucide-react"
+import { Heart, ArrowRight, Sparkles } from "lucide-react" // 👈 Yahan Sparkles add kar diya hai!
 
 export default function Loader({ onComplete }) {
     const [showButton, setShowButton] = useState(false)
@@ -16,7 +16,6 @@ export default function Loader({ onComplete }) {
 
     return (
         <motion.div
-            // 👇 Shift to New Minimalist Light Background
             className="min-h-screen relative overflow-hidden bg-[#f4f6f8] flex flex-col justify-center font-sans"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -27,21 +26,15 @@ export default function Loader({ onComplete }) {
             {/* 🌊 IMAGE & BLENDING OVERLAY 🌊 */}
             {/* ======================================= */}
             <div className="absolute inset-0 z-0">
-                {/* Photo: Right align and cover */}
                 <img
                     src="/images/10.jpg"
                     alt="Background"
-                    // 👇 Mix-blend-mode to integrate into white background elegantly
                     className="absolute right-0 top-0 h-full w-[80%] object-cover object-[70%_20%] opacity-50 mix-blend-multiply"
                 />
                 
-                {/* Soft fade from LEFT to off-white so text is easily readable */}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#f4f6f8] via-[#f4f6f8]/90 to-transparent w-full md:w-[70%]" />
-                
-                {/* Soft fade from BOTTOM to off-white */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#f4f6f8] via-[#f4f6f8]/40 to-transparent" />
 
-                {/* SVG Curve - Switched to match new background color */}
                 <svg 
                     className="absolute bottom-0 w-full h-[20vh] md:h-[30vh] text-[#f4f6f8]" 
                     preserveAspectRatio="none" 
@@ -61,7 +54,6 @@ export default function Loader({ onComplete }) {
                         key={i}
                         className="absolute w-[3px] h-[3px] rounded-full"
                         style={{
-                            // Mix of gold and soft pink for minimalist aesthetic
                             backgroundColor: i % 2 === 0 ? '#fcd34d' : '#f9a8d4',
                             left: `${Math.random() * 100}%`,
                             top: `${Math.random() * 100}%`,
@@ -84,14 +76,12 @@ export default function Loader({ onComplete }) {
                     transition={{ duration: 1, delay: 0.2 }}
                     className="flex flex-col items-start w-full"
                 >
-                    {/* 👇 RETAINED H1, but in Naya Elegant Style (Dark text, elegant font) */}
                     <h1 className="text-4xl md:text-5xl font-elegant font-bold leading-[1.2] tracking-tight text-[#2d3748] mb-5">
                         Preparing<br/>
                         Something<br/>
                         Special
                     </h1>
                     
-                    {/* 👇 RETAINED Beating Heart (Softened Pink) */}
                     <motion.div 
                         animate={{ scale: [1, 1.15, 1] }} 
                         transition={{ duration: 1.5, repeat: Infinity }}
@@ -100,7 +90,6 @@ export default function Loader({ onComplete }) {
                         <Heart className="w-5 h-5 text-pink-400 fill-pink-400 drop-shadow-[0_0_8px_rgba(249,168,212,0.6)]" />
                     </motion.div>
 
-                    {/* Status Text / Button Layer */}
                     <div className="h-16 w-full ml-1 mt-1">
                         <AnimatePresence mode="wait">
                             {showButton ? (
@@ -112,7 +101,6 @@ export default function Loader({ onComplete }) {
                                     whileHover={{ scale: 1.03 }}
                                     whileTap={{ scale: 0.98 }}
                                     onClick={onComplete}
-                                    // 👇 NAYA PREMIUM BUTTON STYLE (Solid Slate Blue)
                                     className="inline-flex items-center gap-3 px-10 py-4 bg-[#4a637c] rounded-full text-white font-semibold tracking-wide shadow-md hover:bg-[#3b5064] transition-all duration-300 text-sm md:text-base"
                                 >
                                     Continue <ArrowRight size={18} strokeWidth={2.5} />
@@ -120,7 +108,6 @@ export default function Loader({ onComplete }) {
                             ) : (
                                 <motion.p
                                     key="text"
-                                    // 👇 Softened "Please wait" text color
                                     className="text-[#718096] text-sm md:text-base font-medium tracking-wide flex items-center gap-2"
                                     animate={{ opacity: [0.5, 1, 0.5] }}
                                     exit={{ opacity: 0 }}
