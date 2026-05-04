@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Camera, ArrowRight, X } from "lucide-react"
+import { Camera, ArrowRight, X, Sparkles } from "lucide-react"
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay } from 'swiper/modules'
 import 'swiper/css'
@@ -27,66 +27,58 @@ export default function PhotoGallery({ onNext }) {
         { id: 13, src: "/images/13.jpg" },
     ]
 
-    // Component load hote hi photos ko RANDOMIZE (shuffle) kar dega
     useEffect(() => {
         const shuffled = [...initialPhotos].sort(() => Math.random() - 0.5)
         setRandomPhotos(shuffled)
     }, [])
 
+    // ==========================================
+    // 🌟 PREMIUM NAVY BLUE THEME 🌟
+    // ==========================================
+    const bgBase = "bg-[#162433]"
+    const cardBg = "bg-[#1B2A3A]"
+    const puffyBtnPrimary = `bg-white text-[#162433] transition-all duration-300 rounded-[20px] shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f] active:shadow-[inset_4px_4px_8px_#cbd5e1,inset_-4px_-4px_8px_#ffffff] font-extrabold flex items-center justify-center gap-3 px-10 py-5`
+
     return (
         <motion.div
-            className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-black"
+            className={`min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden ${bgBase}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.8 }}
         >
-            {/* Background Glows */}
+            {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-pink-500/10 blur-[120px] rounded-full" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-indigo-500/10 blur-[120px] rounded-full" />
+                <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-white/5 blur-[120px] rounded-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-blue-400/5 blur-[120px] rounded-full" />
             </div>
 
-            <motion.div
-                className="text-center mb-8 z-10"
-                initial={{ y: -30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-            >
-                <motion.div className="mb-4 inline-block" animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity }}>
-                    <div className="p-4 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-2xl">
-                        <Camera className="w-8 h-8 text-pink-400" />
-                    </div>
-                </motion.div>
-
-                {/* 🌟 CLASSY HEADING 🌟 */}
-                <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 mb-2">
+            <motion.div className="text-center mb-8 z-10" initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+                <div className={`w-16 h-16 ${cardBg} rounded-full flex items-center justify-center mx-auto mb-4 shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f]`}>
+                    <Camera className="w-8 h-8 text-white" />
+                </div>
+                <h1 className="text-4xl md:text-5xl font-elegant font-black text-white mb-2 tracking-wide">
                     Purely Her
                 </h1>
-                <p className="text-xs md:text-sm text-purple-300/80 font-medium tracking-[0.2em] uppercase italic">
-                    Tap any photo to view
+                <p className="text-[#94a3b8] text-[11px] font-bold tracking-[0.2em] uppercase flex items-center justify-center gap-2">
+                    <Sparkles className="w-3 h-3 text-white" /> Tap any photo to view
                 </p>
             </motion.div>
 
-            {/* ======================================= */}
-            {/* INFINITE RANDOM SLIDER (NO CUBE, NO DOTS) */}
-            {/* ======================================= */}
+            {/* INFINITE RANDOM SLIDER */}
             <div className="w-full max-w-[300px] md:max-w-[380px] mx-auto z-10">
                 {randomPhotos.length > 0 && (
                     <Swiper
                         grabCursor={true}
-                        loop={true} // Infinite Loop
-                        spaceBetween={20} // Har photo ke beech thoda gap
-                        speed={800} // Smooth slide transition speed
-                        autoplay={{
-                            delay: 2500, // Har 2.5 second baad next photo aayegi
-                            disableOnInteraction: false,
-                        }}
-                        modules={[Autoplay]} // Sirf Autoplay, Pagination hata di
-                        className="w-full h-[400px] md:h-[500px] rounded-[2rem] shadow-[0_0_40px_rgba(255,255,255,0.05)] border border-white/10 bg-white/5 backdrop-blur-md"
+                        loop={true}
+                        spaceBetween={20}
+                        speed={800}
+                        autoplay={{ delay: 2500, disableOnInteraction: false }}
+                        modules={[Autoplay]}
+                        className={`w-full h-[400px] md:h-[480px] rounded-[2rem] shadow-[10px_10px_20px_#111b25,-10px_-10px_20px_#25394f] border border-white/5 ${cardBg} p-2`}
                     >
                         {randomPhotos.map((photo, index) => (
-                            <SwiperSlide key={photo.id} className="w-full h-full p-2">
+                            <SwiperSlide key={photo.id} className="w-full h-full">
                                 <motion.div 
                                     className="w-full h-full rounded-[1.5rem] overflow-hidden cursor-pointer"
                                     whileHover={{ scale: 0.98 }}
@@ -95,7 +87,7 @@ export default function PhotoGallery({ onNext }) {
                                 >
                                     <img
                                         src={photo.src}
-                                        alt={`Memory ${index + 1}`}
+                                        alt={`Memory`}
                                         className="w-full h-full object-cover grayscale-[10%] hover:grayscale-0 transition-all duration-500"
                                     />
                                 </motion.div>
@@ -106,27 +98,13 @@ export default function PhotoGallery({ onNext }) {
             </div>
 
             {/* Bottom Section */}
-            <motion.div className="mt-12 flex flex-col items-center gap-6 z-10" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-                <div className="flex items-center gap-2 text-white/40 text-[10px] tracking-[0.3em] uppercase font-bold">
-                    <div className="w-8 h-[1px] bg-white/20" />
-                    <span>Moments with you</span>
-                    <div className="w-8 h-[1px] bg-white/20" />
-                </div>
-
-                <button
-                    onClick={onNext}
-                    className="group relative px-10 py-4 bg-white text-black font-black rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] active:scale-95"
-                >
-                    <div className="flex items-center space-x-3 relative z-10">
-                        <span className="text-sm tracking-tight">ONE LAST THING</span>
-                        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                    </div>
+            <motion.div className="mt-12 flex flex-col items-center z-10 w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                <button onClick={onNext} className={`w-full max-w-[300px] text-[13px] uppercase tracking-[0.15em] ${puffyBtnPrimary}`}>
+                    One Last Thing <ArrowRight size={18} strokeWidth={3} />
                 </button>
             </motion.div>
 
-            {/* ======================================= */}
-            {/* FULL SCREEN LIGHTBOX (MODAL) */}
-            {/* ======================================= */}
+            {/* FULL SCREEN LIGHTBOX */}
             <AnimatePresence>
                 {selectedImg && (
                     <motion.div
@@ -134,13 +112,13 @@ export default function PhotoGallery({ onNext }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setSelectedImg(null)}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 md:p-8"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-[#162433]/95 backdrop-blur-xl p-4 md:p-8"
                     >
                         <button 
-                            className="absolute top-6 right-6 z-50 text-white bg-white/10 hover:bg-white/20 p-3 rounded-full backdrop-blur-md transition-all active:scale-90"
+                            className="absolute top-6 right-6 z-50 text-white bg-white/10 hover:bg-white/20 p-4 rounded-full backdrop-blur-md transition-all active:scale-90"
                             onClick={() => setSelectedImg(null)}
                         >
-                            <X className="w-6 h-6" />
+                            <X className="w-6 h-6" strokeWidth={3} />
                         </button>
                         
                         <motion.img
@@ -150,13 +128,12 @@ export default function PhotoGallery({ onNext }) {
                             transition={{ type: "spring", stiffness: 300, damping: 25 }}
                             src={selectedImg}
                             alt="Full View"
-                            className="max-w-full max-h-full object-contain rounded-[2rem] shadow-[0_0_50px_rgba(236,72,153,0.3)] border border-white/10"
-                            onClick={(e) => e.stopPropagation()} // Taaki image pe click karne se band na ho
+                            className="max-w-full max-h-full object-contain rounded-[2rem] shadow-[0_0_50px_rgba(255,255,255,0.1)] border border-white/10"
+                            onClick={(e) => e.stopPropagation()}
                         />
                     </motion.div>
                 )}
             </AnimatePresence>
-
         </motion.div>
     )
 }
