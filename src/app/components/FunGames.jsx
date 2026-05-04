@@ -157,7 +157,7 @@ const QUESTIONS = [
         q: "Faltu jokes pe Priyanshi ka response?",
         options: [
             { text: "Zor se hasna", reply: "Andar se hasi aati hai par dikhati nahi ho." },
-            { text: "'Kaisi baatein karte ho' 🙄", reply: "Ye 'Kaisi baatein karte ho' sunne ke liye hi toh main jokes maarta hoon 😂" },
+            { text "'Kaisi baatein karte ho' 🙄", reply: "Ye 'Kaisi baatein karte ho' sunne ke liye hi toh main jokes maarta hoon 😂" },
             { text: "Seen chhod dena", reply: "Seen pe chhodna toh aadat si ban gayi hai na?" }
         ]
     },
@@ -189,13 +189,12 @@ const QUESTIONS = [
 
 export default function FunGames({ onComplete }) {
     const [currentQ, setCurrentQ] = useState(0)
-    const [gameState, setGameState] = useState("start") // start, playing, popup, finished
+    const [gameState, setGameState] = useState("start") 
     const [selectedOpt, setSelectedOpt] = useState(null)
     const [otherText, setOtherText] = useState("")
     const [reasonText, setReasonText] = useState("")
     const [isMounted, setIsMounted] = useState(false)
 
-    // LOCAL STORAGE PERSISTENCE
     useEffect(() => {
         setIsMounted(true)
         const saved = localStorage.getItem("priyanshi_conversation")
@@ -219,7 +218,6 @@ export default function FunGames({ onComplete }) {
     const handleSubmit = () => {
         const qData = QUESTIONS[currentQ]
         const choice = selectedOpt === "other" ? `Other: ${otherText}` : qData.options[selectedOpt].text
-        
         setGameState("popup")
         sendTGUpdate(currentQ + 1, qData.q, choice, reasonText)
     }
@@ -238,31 +236,29 @@ export default function FunGames({ onComplete }) {
     }
 
     // ==========================================
-    // BENJAMIN MOORE COLOR PALETTE & NEUMORPHISM
+    // LUXURY INTERIOR COLOR PALETTE (NEUMORPHISM)
     // ==========================================
-    // BM 2129-30 Blue Note (Background/Cards) : #212c3b
-    // BM OC-17 White Dove (Text)              : #f0efe7
-    // BM HC-146 Wedgewood Gray (Accent/Unsel.): #7b8f9c
-    // BM HC-50 Georgian Brick (Highlight/Pink): #9e5043
+    // Base/Background (Jonesboro Cream vibe): #EAE3CD
+    // Dark Shadow: #C7C1AE
+    // Light Shadow (White Dove vibe): #FFFFFF
+    // Text Primary (Washington Blue vibe): #2A3D4C
+    // Accent (Aged Bronze vibe): #6B6254
     
-    // Shadows for 3D Puffy effect on Dark Background
-    const puffyCard = "bg-[#212c3b] rounded-[32px] shadow-[6px_6px_14px_#171f29,-6px_-6px_14px_#2b394d] border border-[#303e52]"
-    const puffyBtn = "transition-all duration-300 rounded-[20px] shadow-[4px_4px_10px_#171f29,-4px_-4px_10px_#2b394d] active:shadow-[inset_4px_4px_10px_#171f29,inset_-4px_-4px_10px_#2b394d] border border-[#2a384a]"
-    const puffyInput = "bg-[#1d2633] rounded-2xl shadow-[inset_4px_4px_8px_#131a23,inset_-4px_-4px_8px_#29384b] border border-[#2a384a]"
+    // Classes for 3D Puffy Effect
+    const puffyCard = "bg-[#EAE3CD] rounded-[32px] shadow-[8px_8px_16px_#c7c1ae,-8px_-8px_16px_#ffffff] border border-[#f5f1e6]"
+    const puffyBtnDefault = "bg-[#EAE3CD] text-[#2A3D4C] transition-all duration-300 rounded-[20px] shadow-[4px_4px_10px_#c7c1ae,-4px_-4px_10px_#ffffff] active:shadow-[inset_4px_4px_10px_#c7c1ae,inset_-4px_-4px_10px_#ffffff]"
+    const puffyBtnSelected = "bg-[#2A3D4C] text-[#EAE3CD] transition-all duration-300 rounded-[20px] shadow-[inset_4px_4px_8px_#1c2933,inset_-4px_-4px_8px_#385165]"
+    const puffyInput = "bg-[#EAE3CD] rounded-2xl shadow-[inset_4px_4px_8px_#c7c1ae,inset_-4px_-4px_8px_#ffffff] border-none text-[#2A3D4C] placeholder-[#6B6254]/60"
 
-    // Determine the reply to show in Popup
     const getMyThought = () => {
         if (selectedOpt === "other") return "Badi alag soch hai tumhari... Mujhe laga nahi tha tum ye type karogi! ✨"
         return QUESTIONS[currentQ].options[selectedOpt]?.reply || ""
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#212c3b] text-[#f0efe7] font-['Nunito'] relative overflow-hidden">
-            <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap');`}</style>
-
-            {/* Subtle background glow for extra aesthetic */}
-            <div className="absolute top-[10%] left-[20%] w-64 h-64 bg-[#7b8f9c]/10 rounded-full blur-[80px] pointer-events-none" />
-            <div className="absolute bottom-[10%] right-[20%] w-64 h-64 bg-[#9e5043]/10 rounded-full blur-[80px] pointer-events-none" />
+        // Changed bg to Jonesboro Cream
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#EAE3CD] text-[#2A3D4C] font-['Nunito'] relative overflow-hidden">
+            <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');`}</style>
 
             <div className="w-full max-w-md z-10">
                 <AnimatePresence mode="wait">
@@ -270,12 +266,12 @@ export default function FunGames({ onComplete }) {
                     {/* START SCREEN */}
                     {gameState === "start" && (
                         <motion.div key="start" className={`p-8 text-center ${puffyCard}`} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}>
-                            <div className="w-20 h-20 bg-[#212c3b] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[inset_4px_4px_8px_#171f29,inset_-4px_-4px_8px_#2b394d] border border-[#303e52]">
-                                <Heart className="w-10 h-10 text-[#9e5043] fill-[#9e5043]/50" />
+                            <div className="w-20 h-20 bg-[#EAE3CD] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[inset_4px_4px_8px_#c7c1ae,inset_-4px_-4px_8px_#ffffff]">
+                                <Heart className="w-10 h-10 text-[#6B6254] fill-[#6B6254]/20" />
                             </div>
-                            <h1 className="text-3xl font-extrabold mb-3 text-[#f0efe7] tracking-tighter italic">Conversation Mode</h1>
-                            <p className="text-[#7b8f9c] mb-8 text-sm">Priyanshi, isme koi sahi ya galat jawab nahi hai. Bas wo choose karna jo tumhe sach feel ho. ✨</p>
-                            <button onClick={() => setGameState("playing")} className={`w-full py-4 text-[#f0efe7] font-extrabold uppercase tracking-widest ${puffyBtn} hover:text-[#9e5043]`}>
+                            <h1 className="text-3xl font-black mb-3 text-[#2A3D4C] tracking-tighter italic">Conversation Mode</h1>
+                            <p className="text-[#6B6254] mb-8 text-sm font-bold">Priyanshi, isme koi sahi ya galat jawab nahi hai. Bas wo choose karna jo tumhe sach feel ho. ✨</p>
+                            <button onClick={() => setGameState("playing")} className={`w-full py-4 font-black uppercase tracking-widest ${puffyBtnDefault}`}>
                                 Chalo Shuru Karein
                             </button>
                         </motion.div>
@@ -284,45 +280,48 @@ export default function FunGames({ onComplete }) {
                     {/* PLAYING SCREEN */}
                     {gameState === "playing" && (
                         <motion.div key="playing" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 ${puffyCard}`}>
+                            
                             <div className="flex justify-between items-center mb-6 px-1">
-                                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#7b8f9c]">Step {currentQ + 1} / {QUESTIONS.length}</span>
-                                <div className="w-24 h-1.5 bg-[#171f29] rounded-full overflow-hidden shadow-[inset_1px_1px_3px_#0e1319]">
-                                    <div className="h-full bg-[#9e5043] transition-all duration-500" style={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }} />
+                                <span className="text-[10px] font-black uppercase tracking-widest text-[#6B6254]">Step {currentQ + 1} / {QUESTIONS.length}</span>
+                                {/* Progress Bar */}
+                                <div className="w-24 h-2 bg-[#EAE3CD] rounded-full overflow-hidden shadow-[inset_2px_2px_4px_#c7c1ae,inset_-2px_-2px_4px_#ffffff]">
+                                    <div className="h-full bg-[#2A3D4C] transition-all duration-500" style={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }} />
                                 </div>
                             </div>
 
-                            <h2 className="text-lg font-bold mb-6 text-[#f0efe7] leading-relaxed">{QUESTIONS[currentQ].q}</h2>
+                            <h2 className="text-lg font-bold mb-8 text-[#2A3D4C] leading-relaxed">{QUESTIONS[currentQ].q}</h2>
 
                             <div className="space-y-4 mb-6">
                                 {QUESTIONS[currentQ].options.map((opt, idx) => {
                                     const isSelected = selectedOpt === idx;
                                     return (
                                         <button key={idx} onClick={() => handleOptionSelect(idx)}
-                                            className={`w-full p-4 text-left font-semibold ${puffyBtn} ${isSelected ? 'text-[#9e5043] shadow-[inset_4px_4px_10px_#171f29,inset_-4px_-4px_10px_#2b394d] border-[#9e5043]/50' : 'text-[#f0efe7]/90'}`}>
+                                            className={`w-full p-4 text-left font-bold ${isSelected ? puffyBtnSelected : puffyBtnDefault}`}>
                                             {opt.text}
                                         </button>
                                     )
                                 })}
                                 <button onClick={() => setSelectedOpt("other")}
-                                    className={`w-full p-4 text-left font-semibold ${puffyBtn} ${selectedOpt === "other" ? 'text-[#9e5043] shadow-[inset_4px_4px_10px_#171f29,inset_-4px_-4px_10px_#2b394d] border-[#9e5043]/50' : 'text-[#f0efe7]/70'}`}>
+                                    className={`w-full p-4 text-left font-bold ${selectedOpt === "other" ? puffyBtnSelected : puffyBtnDefault}`}>
                                     Something else...
                                 </button>
                             </div>
 
                             {selectedOpt === "other" && (
                                 <motion.input initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-                                    className={`w-full p-4 mb-4 outline-none text-sm text-[#f0efe7] placeholder-[#7b8f9c] ${puffyInput}`}
+                                    className={`w-full p-4 mb-4 outline-none text-sm font-bold ${puffyInput}`}
                                     placeholder="Apna jawab likho yahan..." value={otherText} onChange={(e) => setOtherText(e.target.value)} />
                             )}
 
-                            <div className="mt-8 border-t border-[#303e52] pt-6">
-                                <label className="text-[10px] font-extrabold uppercase tracking-widest text-[#7b8f9c] mb-3 block">Tell me why? (Optional)</label>
-                                <textarea className={`w-full p-4 h-24 outline-none text-sm resize-none text-[#f0efe7] placeholder-[#7b8f9c] ${puffyInput}`}
+                            <div className="mt-8 pt-4">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-[#6B6254] mb-3 block">Tell me why? (Optional)</label>
+                                <textarea className={`w-full p-4 h-24 outline-none text-sm font-bold resize-none ${puffyInput}`}
                                     placeholder="Iska koi khas reason?..." value={reasonText} onChange={(e) => setReasonText(e.target.value)} />
                             </div>
 
                             <button disabled={selectedOpt === null} onClick={handleSubmit}
-                                className={`w-full py-4 mt-6 font-extrabold uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${selectedOpt !== null ? `${puffyBtn} text-[#f0efe7] hover:text-[#9e5043]` : 'bg-[#171f29] text-[#7b8f9c]/50 rounded-[20px] cursor-not-allowed border border-[#212c3b]'}`}>
+                                className={`w-full py-4 mt-6 font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 
+                                ${selectedOpt !== null ? puffyBtnDefault : 'bg-[#EAE3CD] text-[#c7c1ae] rounded-[20px] cursor-not-allowed shadow-[inset_2px_2px_4px_#c7c1ae,inset_-2px_-2px_4px_#ffffff]'}`}>
                                 Send Response <Send className="w-4 h-4" />
                             </button>
                         </motion.div>
@@ -331,12 +330,12 @@ export default function FunGames({ onComplete }) {
                     {/* MAYANK'S REPLY POPUP */}
                     {gameState === "popup" && (
                         <motion.div key="popup" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-8 text-center ${puffyCard}`}>
-                            <div className="w-16 h-16 bg-[#212c3b] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[inset_4px_4px_8px_#171f29,inset_-4px_-4px_8px_#2b394d] border border-[#303e52]">
-                                <MessageCircle className="w-8 h-8 text-[#7b8f9c]" />
+                            <div className="w-16 h-16 bg-[#EAE3CD] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[inset_4px_4px_8px_#c7c1ae,inset_-4px_-4px_8px_#ffffff]">
+                                <MessageCircle className="w-8 h-8 text-[#6B6254]" />
                             </div>
-                            <h3 className="text-xs font-extrabold uppercase text-[#7b8f9c] mb-4 tracking-widest">My Thought</h3>
-                            <p className="text-lg font-semibold text-[#f0efe7] italic mb-10 leading-relaxed">"{getMyThought()}"</p>
-                            <button onClick={nextQuestion} className={`w-full py-4 text-[#f0efe7] font-extrabold uppercase tracking-widest ${puffyBtn} hover:text-[#7b8f9c]`}>
+                            <h3 className="text-xs font-black uppercase text-[#6B6254] mb-4 tracking-widest">My Thought</h3>
+                            <p className="text-lg font-bold text-[#2A3D4C] italic mb-10 leading-relaxed">"{getMyThought()}"</p>
+                            <button onClick={nextQuestion} className={`w-full py-4 font-black uppercase tracking-widest ${puffyBtnDefault}`}>
                                 Next Question
                             </button>
                         </motion.div>
@@ -345,17 +344,17 @@ export default function FunGames({ onComplete }) {
                     {/* FINISHED SCREEN */}
                     {gameState === "finished" && (
                         <motion.div key="finished" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-8 text-center ${puffyCard}`}>
-                            <div className="w-20 h-20 bg-[#212c3b] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[inset_4px_4px_8px_#171f29,inset_-4px_-4px_8px_#2b394d] border border-[#303e52]">
-                                <Sparkles className="w-10 h-10 text-[#9e5043]" />
+                            <div className="w-20 h-20 bg-[#EAE3CD] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[inset_4px_4px_8px_#c7c1ae,inset_-4px_-4px_8px_#ffffff]">
+                                <Sparkles className="w-10 h-10 text-[#6B6254]" />
                             </div>
-                            <h2 className="text-2xl font-extrabold mb-3 text-[#f0efe7] tracking-tighter">Sab Mil Gaya! ✨</h2>
-                            <p className="text-[#7b8f9c] mb-10 text-sm leading-relaxed">Tumhare saare answers mere paas pahunch gaye hain. Acha laga ye jaan kar ki tum kya sochti ho.</p>
+                            <h2 className="text-2xl font-black mb-3 text-[#2A3D4C] tracking-tighter">Sab Mil Gaya! ✨</h2>
+                            <p className="text-[#6B6254] font-bold mb-10 text-sm leading-relaxed">Tumhare saare answers mere paas pahunch gaye hain. Acha laga ye jaan kar ki tum kya sochti ho.</p>
                             
-                            <button onClick={() => { localStorage.clear(); window.location.reload(); }} className="mb-6 text-[10px] font-extrabold text-[#7b8f9c] hover:text-[#f0efe7] uppercase tracking-widest flex items-center justify-center gap-2 mx-auto transition-colors">
-                                <RotateCcw size={12}/> Reset Everything
+                            <button onClick={() => { localStorage.clear(); window.location.reload(); }} className="mb-6 text-[10px] font-black text-[#6B6254] hover:text-[#2A3D4C] uppercase tracking-widest flex items-center justify-center gap-2 mx-auto transition-colors">
+                                <RotateCcw size={14}/> Reset Everything
                             </button>
                             
-                            <button onClick={() => onComplete(100)} className={`w-full py-4 text-[#f0efe7] font-extrabold uppercase tracking-widest ${puffyBtn} hover:text-[#9e5043]`}>
+                            <button onClick={() => onComplete(100)} className={`w-full py-4 font-black uppercase tracking-widest ${puffyBtnDefault}`}>
                                 Proceed to Surprise
                             </button>
                         </motion.div>
