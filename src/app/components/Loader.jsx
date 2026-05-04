@@ -28,7 +28,7 @@ export default function Loader({ onComplete }) {
             <div className="absolute inset-0 z-0">
                 {/* Photo: Right align and cover */}
                 <img
-                    src="/girl.jpg"
+                    src="/images/10.jpg"
                     alt="Background"
                     className="w-full h-full object-cover object-[70%_20%] opacity-80"
                 />
