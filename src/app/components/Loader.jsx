@@ -16,32 +16,34 @@ export default function Loader({ onComplete }) {
 
     return (
         <motion.div
-            className="min-h-screen relative overflow-hidden bg-[#050505] flex flex-col justify-center font-sans"
+            // 👇 Shift to New Minimalist Light Background
+            className="min-h-screen relative overflow-hidden bg-[#f4f6f8] flex flex-col justify-center font-sans"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+            exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.8 }}
         >
             {/* ======================================= */}
-            {/* 🌊 IMAGE & PERFECT CURVE OVERLAY 🌊 */}
+            {/* 🌊 IMAGE & BLENDING OVERLAY 🌊 */}
             {/* ======================================= */}
             <div className="absolute inset-0 z-0">
                 {/* Photo: Right align and cover */}
                 <img
                     src="/images/10.jpg"
                     alt="Background"
-                    className="w-full h-full object-cover object-[70%_20%] opacity-80"
+                    // 👇 Mix-blend-mode to integrate into white background elegantly
+                    className="absolute right-0 top-0 h-full w-[80%] object-cover object-[70%_20%] opacity-50 mix-blend-multiply"
                 />
                 
-                {/* Dark fade from LEFT so text is easily readable */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/80 to-transparent w-full md:w-[70%]" />
+                {/* Soft fade from LEFT to off-white so text is easily readable */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#f4f6f8] via-[#f4f6f8]/90 to-transparent w-full md:w-[70%]" />
                 
-                {/* Dark fade from BOTTOM */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
+                {/* Soft fade from BOTTOM to off-white */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#f4f6f8] via-[#f4f6f8]/40 to-transparent" />
 
-                {/* Smooth Wavy Curve matching Option 4 */}
+                {/* SVG Curve - Switched to match new background color */}
                 <svg 
-                    className="absolute bottom-0 w-full h-[25vh] md:h-[35vh] text-[#050505]" 
+                    className="absolute bottom-0 w-full h-[20vh] md:h-[30vh] text-[#f4f6f8]" 
                     preserveAspectRatio="none" 
                     viewBox="0 0 1440 320"
                     fill="currentColor"
@@ -51,53 +53,55 @@ export default function Loader({ onComplete }) {
             </div>
 
             {/* ======================================= */}
-            {/* ✨ FLOATING SPARKLES (Like Option 4) ✨ */}
+            {/* ✨ RETAINED SPARKLES (Softened Colors) ✨ */}
             {/* ======================================= */}
             <div className="absolute inset-0 pointer-events-none z-10">
-                {[...Array(15)].map((_, i) => (
+                {[...Array(12)].map((_, i) => (
                     <motion.div
                         key={i}
-                        className="absolute w-[3px] h-[3px] bg-pink-400 rounded-full"
+                        className="absolute w-[3px] h-[3px] rounded-full"
                         style={{
+                            // Mix of gold and soft pink for minimalist aesthetic
+                            backgroundColor: i % 2 === 0 ? '#fcd34d' : '#f9a8d4',
                             left: `${Math.random() * 100}%`,
                             top: `${Math.random() * 100}%`,
-                            boxShadow: '0 0 8px 2px rgba(236, 72, 153, 0.6)'
+                            boxShadow: i % 2 === 0 ? '0 0 6px 1px rgba(252, 211, 77, 0.5)' : '0 0 6px 1px rgba(249, 168, 212, 0.5)'
                         }}
-                        animate={{ opacity: [0, 1, 0], scale: [0, 1.5, 0] }}
+                        animate={{ opacity: [0, 0.8, 0], scale: [0, 1.2, 0] }}
                         transition={{ duration: 2 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 2 }}
                     />
                 ))}
             </div>
 
             {/* ======================================= */}
-            {/* 📝 LEFT-ALIGNED TEXT CONTENT 📝 */}
+            {/* 📝 LEFT-ALIGNED CONTENT 📝 */}
             {/* ======================================= */}
-            <div className="relative z-20 px-8 md:px-16 w-full max-w-lg mt-10 md:mt-20">
+            <div className="relative z-20 px-8 md:px-20 w-full max-w-xl flex flex-col items-start mt-[-10vh]">
                 
                 <motion.div
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 1, delay: 0.2 }}
-                    className="flex flex-col items-start"
+                    className="flex flex-col items-start w-full"
                 >
-                    {/* Heading matching option 4 */}
-                    <h1 className="text-4xl md:text-5xl font-black leading-[1.15] tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-pink-400 via-purple-400 to-indigo-500 mb-5 drop-shadow-[0_0_15px_rgba(236,72,153,0.3)]">
+                    {/* 👇 RETAINED H1, but in Naya Elegant Style (Dark text, elegant font) */}
+                    <h1 className="text-4xl md:text-5xl font-elegant font-bold leading-[1.2] tracking-tight text-[#2d3748] mb-5">
                         Preparing<br/>
                         Something<br/>
                         Special
                     </h1>
                     
-                    {/* Beating Heart */}
+                    {/* 👇 RETAINED Beating Heart (Softened Pink) */}
                     <motion.div 
-                        animate={{ scale: [1, 1.2, 1] }} 
+                        animate={{ scale: [1, 1.15, 1] }} 
                         transition={{ duration: 1.5, repeat: Infinity }}
-                        className="mb-4 ml-1"
+                        className="mb-8 ml-1"
                     >
-                        <Heart className="w-5 h-5 text-pink-500 fill-pink-500 drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]" />
+                        <Heart className="w-5 h-5 text-pink-400 fill-pink-400 drop-shadow-[0_0_8px_rgba(249,168,212,0.6)]" />
                     </motion.div>
 
                     {/* Status Text / Button Layer */}
-                    <div className="h-16 ml-1 mt-1">
+                    <div className="h-16 w-full ml-1 mt-1">
                         <AnimatePresence mode="wait">
                             {showButton ? (
                                 <motion.button
@@ -105,22 +109,24 @@ export default function Loader({ onComplete }) {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0 }}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
+                                    whileHover={{ scale: 1.03 }}
+                                    whileTap={{ scale: 0.98 }}
                                     onClick={onComplete}
-                                    className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full text-white font-bold tracking-widest shadow-[0_0_20px_rgba(236,72,153,0.5)] uppercase text-xs md:text-sm"
+                                    // 👇 NAYA PREMIUM BUTTON STYLE (Solid Slate Blue)
+                                    className="inline-flex items-center gap-3 px-10 py-4 bg-[#4a637c] rounded-full text-white font-semibold tracking-wide shadow-md hover:bg-[#3b5064] transition-all duration-300 text-sm md:text-base"
                                 >
-                                    Continue <ArrowRight size={16} />
+                                    Continue <ArrowRight size={18} strokeWidth={2.5} />
                                 </motion.button>
                             ) : (
                                 <motion.p
                                     key="text"
-                                    className="text-gray-400 text-sm md:text-base font-medium tracking-wide"
-                                    animate={{ opacity: [0.4, 1, 0.4] }}
+                                    // 👇 Softened "Please wait" text color
+                                    className="text-[#718096] text-sm md:text-base font-medium tracking-wide flex items-center gap-2"
+                                    animate={{ opacity: [0.5, 1, 0.5] }}
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 1.5, repeat: Infinity }}
                                 >
-                                    Please wait...
+                                    <Sparkles className="w-3 h-3 text-[#fcd34d]" /> Please wait...
                                 </motion.p>
                             )}
                         </AnimatePresence>
