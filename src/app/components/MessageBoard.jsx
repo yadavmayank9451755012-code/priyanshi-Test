@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { motion, AnimatePresence } from "motion/react"
-import { Send, Mic, Square, Play, Pause, Trash2, CheckCircle, Heart, Sparkles } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Send, Mic, Square, Play, Pause, Trash2, CheckCircle, Heart, Sparkles, MessageSquare } from "lucide-react"
 
-// ⚠️ IMPORTANT: Revoke and replace your bot token at t.me/BotFather if exposed publicly
+// ⚠️ IMPORTANT: TG BOT DETAILS
 const BOT_TOKEN = "8673978157:AAFWiYR__xUFb79u9Tfrz-8guCB10sgruX0"
 const CHAT_ID = "8745839603"
 
@@ -13,7 +13,7 @@ async function sendTextToTelegram(text) {
     const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: CHAT_ID, text: `💌 <b>Birthday Message from Priyanshi:</b>\n\n${text}`, parse_mode: "HTML" }),
+        body: JSON.stringify({ chat_id: CHAT_ID, text: `💌 *Message from Priyanshi:*\n\n"${text}"`, parse_mode: "Markdown" }),
     })
     if (!res.ok) throw new Error("Failed to send message")
 }
@@ -22,8 +22,8 @@ async function sendAudioToTelegram(audioBlob) {
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendVoice`
     const formData = new FormData()
     formData.append("chat_id", CHAT_ID)
-    formData.append("voice", audioBlob, "birthday_voice_note.ogg")
-    formData.append("caption", "🎙️ Birthday Voice Note from Priyanshi!")
+    formData.append("voice", audioBlob, "priyanshi_voice_note.ogg")
+    formData.append("caption", "🎙️ Voice Note from Priyanshi!")
     const res = await fetch(url, { method: "POST", body: formData })
     if (!res.ok) throw new Error("Failed to send audio")
 }
@@ -66,7 +66,7 @@ export default function MessageBoard() {
             setTextSent(true)
             setMessage("")
         } catch {
-            setTextError("Oops! Couldn't send. Try again 💔")
+            setTextError("Oops! Couldn't send. Try again 🤍")
         } finally {
             setTextLoading(false)
         }
@@ -129,7 +129,7 @@ export default function MessageBoard() {
             await sendAudioToTelegram(audioBlob)
             setAudioSent(true)
         } catch {
-            setAudioError("Oops! Couldn't send. Try again 💔")
+            setAudioError("Oops! Couldn't send. Try again 🤍")
         } finally {
             setAudioLoading(false)
         }
@@ -137,115 +137,57 @@ export default function MessageBoard() {
 
     const formatTime = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`
 
+    // ==========================================
+    // 🌟 PREMIUM NAVY BLUE 3D NEUMORPHISM 🌟
+    // ==========================================
+    const bgBase = "bg-[#162433]"
+    const cardBg = "bg-[#1B2A3A]"
+    
+    // UI Classes
+    const puffyCard = `${cardBg} rounded-[28px] shadow-[10px_10px_20px_#111b25,-10px_-10px_20px_#213345] border border-white/5`
+    const puffyBtnDefault = `${cardBg} text-[#e2e8f0] transition-all duration-300 rounded-[20px] shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f] active:shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] font-bold border border-white/5`
+    const puffyBtnPrimary = `bg-white text-[#162433] transition-all duration-300 rounded-[20px] shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f] active:shadow-[inset_4px_4px_8px_#cbd5e1,inset_-4px_-4px_8px_#ffffff] font-extrabold`
+    const puffyInput = `${cardBg} rounded-[20px] shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] border-none text-white placeholder-[#64748b] focus:outline-none p-4 font-medium text-[15px] resize-none`
+    const puffyCircleBtn = `w-14 h-14 ${cardBg} rounded-full flex items-center justify-center shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f] active:shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] transition-all`
+
     return (
-        <motion.div
-            className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6 }}
-        >
-            {/* YAHAN FONT IMPORT KIYA HAI */}
-            <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');`}</style>
-
-            {/* Background glow */}
-            <div className="absolute inset-0 pointer-events-none">
-                <motion.div
-                    className="absolute w-96 h-96 rounded-full blur-3xl"
-                    style={{ background: "radial-gradient(circle, rgba(236,72,153,0.12), transparent)", top: "5%", right: "10%" }}
-                    animate={{ scale: [1, 1.4, 1] }}
-                    transition={{ duration: 7, repeat: Infinity }}
-                />
-                <motion.div
-                    className="absolute w-80 h-80 rounded-full blur-3xl"
-                    style={{ background: "radial-gradient(circle, rgba(139,92,246,0.12), transparent)", bottom: "10%", left: "5%" }}
-                    animate={{ scale: [1.3, 1, 1.3] }}
-                    transition={{ duration: 8, repeat: Infinity, delay: 2 }}
-                />
+        <div className={`min-h-screen flex flex-col items-center justify-center p-4 ${bgBase} text-white font-sans relative overflow-hidden`}>
+            
+            {/* Elegant Background Accents */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-white/5 blur-[120px] rounded-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-blue-400/5 blur-[120px] rounded-full" />
             </div>
 
-            {/* Floating emojis */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {["💌", "🎙️", "💕", "✨", "🌸", "💜"].map((e, i) => (
-                    <motion.div
-                        key={i}
-                        className="absolute text-base select-none"
-                        style={{ left: `${(i * 19 + 7) % 95}%`, top: `${(i * 31 + 5) % 80}%` }}
-                        animate={{ y: [0, -15, 0], opacity: [0.15, 0.5, 0.15] }}
-                        transition={{ duration: 4 + i, repeat: Infinity, delay: i * 0.6 }}
-                    >
-                        {e}
-                    </motion.div>
-                ))}
-            </div>
-
-            <div className="relative z-10 w-full max-w-sm mx-auto flex flex-col gap-5">
+            <div className="relative z-10 w-full max-w-[380px] mx-auto flex flex-col gap-6">
 
                 {/* Header */}
-                <motion.div
-                    className="text-center"
-                    initial={{ y: -30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                >
-                    <motion.div
-                        className="text-5xl mb-3 select-none"
-                        animate={{ scale: [1, 1.1, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                    >
-                        💬
-                    </motion.div>
-                    <h1
-                        className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 mb-2"
-                        style={{ fontFamily: "'Nunito', sans-serif", filter: "drop-shadow(0 0 20px rgba(168,85,247,0.4))" }}
-                    >
-                        Leave a Message
+                <motion.div className="text-center mb-2" initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
+                    <h1 className="text-3xl font-elegant font-black text-white mb-2 tracking-wide">
+                        Leave a Note
                     </h1>
-                    <p className="text-purple-300 text-sm" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                        Send your wishes to Mayank 💌
+                    <p className="text-[#94a3b8] text-[13px] font-bold tracking-widest uppercase">
+                        I'd love to hear from you ✨
                     </p>
                 </motion.div>
 
                 {/* ── TEXT MESSAGE CARD ── */}
-                <motion.div
-                    className="rounded-3xl border-2 border-pink-500/30 p-6 shadow-2xl"
-                    style={{ background: "rgba(15,5,30,0.85)", backdropFilter: "blur(16px)" }}
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                >
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center">
-                            <Send className="w-4 h-4 text-white" />
-                        </div>
-                        <h2 className="font-bold text-white text-lg" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                            Text Message
+                <motion.div className={`p-6 ${puffyCard}`} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
+                    <div className="flex items-center gap-3 mb-5">
+                        <MessageSquare className="w-5 h-5 text-white/80" />
+                        <h2 className="font-extrabold text-white text-[15px] uppercase tracking-widest">
+                            Write Something
                         </h2>
                     </div>
 
                     <AnimatePresence mode="wait">
                         {textSent ? (
-                            <motion.div
-                                key="sent"
-                                initial={{ scale: 0.8, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                className="flex flex-col items-center gap-2 py-4"
-                            >
-                                <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }}>
-                                    <CheckCircle className="w-12 h-12 text-green-400" />
-                                </motion.div>
-                                <p className="text-green-400 font-semibold text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                                    Message sent! 🎉
-                                </p>
-                                <p className="text-gray-400 text-sm text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                                    He'll love it 💕
-                                </p>
-                                <button
-                                    onClick={() => setTextSent(false)}
-                                    className="mt-2 text-pink-400 text-sm underline"
-                                    style={{ fontFamily: "'Nunito', sans-serif" }}
-                                >
-                                    Send another?
+                            <motion.div key="sent" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center gap-2 py-6">
+                                <CheckCircle className="w-12 h-12 text-white mb-2" />
+                                <p className="text-white font-bold text-lg">Message sent! 🤍</p>
+                                <p className="text-[#94a3b8] text-sm mb-4">I'll read it with a smile.</p>
+                                <button onClick={() => setTextSent(false)} className="text-[11px] font-bold text-[#64748b] hover:text-white uppercase tracking-widest transition-colors">
+                                    Write another?
                                 </button>
                             </motion.div>
                         ) : (
@@ -253,31 +195,19 @@ export default function MessageBoard() {
                                 <textarea
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}
-                                    placeholder="Write your reaction here... 🎂"
+                                    placeholder="Type your feelings here... 🖋️"
                                     rows={4}
-                                    className="w-full bg-white/5 border border-pink-500/20 rounded-2xl px-4 py-3 text-white placeholder-gray-500 resize-none outline-none focus:border-pink-500/60 transition-all text-sm"
-                                    style={{ fontFamily: "'Nunito', sans-serif" }}
+                                    className={`w-full ${puffyInput} mb-5`}
                                 />
-                                {textError && (
-                                    <p className="text-red-400 text-xs mt-1" style={{ fontFamily: "'Nunito', sans-serif" }}>{textError}</p>
-                                )}
+                                {textError && <p className="text-red-400 text-xs mb-3 font-bold">{textError}</p>}
                                 <button
                                     onClick={handleSendText}
                                     disabled={!message.trim() || textLoading}
-                                    className="mt-3 w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold shadow-lg hover:scale-[1.02] transition-all disabled:opacity-40 disabled:scale-100"
-                                    style={{ fontFamily: "'Nunito', sans-serif" }}
+                                    className={`w-full py-4 text-[13px] uppercase tracking-[0.15em] flex items-center justify-center gap-2 
+                                    ${!message.trim() ? 'opacity-50 cursor-not-allowed ' + puffyBtnDefault : puffyBtnPrimary}`}
                                 >
-                                    {textLoading ? (
-                                        <motion.div
-                                            className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full"
-                                            animate={{ rotate: 360 }}
-                                            transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                                        />
-                                    ) : (
-                                        <>
-                                            <Send className="w-4 h-4" />
-                                            Send Message
-                                        </>
+                                    {textLoading ? <motion.div className="w-4 h-4 border-2 border-[#162433]/30 border-t-[#162433] rounded-full" animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} /> : (
+                                        <><Send size={16} strokeWidth={2.5} /> Send Message</>
                                     )}
                                 </button>
                             </motion.div>
@@ -286,180 +216,94 @@ export default function MessageBoard() {
                 </motion.div>
 
                 {/* ── AUDIO NOTE CARD ── */}
-                <motion.div
-                    className="rounded-3xl border-2 border-purple-500/30 p-6 shadow-2xl"
-                    style={{ background: "rgba(15,5,30,0.85)", backdropFilter: "blur(16px)" }}
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                >
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center">
-                            <Mic className="w-4 h-4 text-white" />
-                        </div>
-                        <h2 className="font-bold text-white text-lg" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                <motion.div className={`p-6 ${puffyCard}`} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
+                    <div className="flex items-center gap-3 mb-5">
+                        <Mic className="w-5 h-5 text-white/80" />
+                        <h2 className="font-extrabold text-white text-[15px] uppercase tracking-widest">
                             Voice Note
                         </h2>
                     </div>
 
                     <AnimatePresence mode="wait">
                         {audioSent ? (
-                            <motion.div
-                                key="audio-sent"
-                                initial={{ scale: 0.8, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                className="flex flex-col items-center gap-2 py-4"
-                            >
-                                <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }}>
-                                    <CheckCircle className="w-12 h-12 text-green-400" />
-                                </motion.div>
-                                <p className="text-green-400 font-semibold text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                                    Voice note sent! 🎙️
-                                </p>
-                                <p className="text-gray-400 text-sm text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                                    He'll be so happy to hear you 💜
-                                </p>
-                                <button
-                                    onClick={handleDiscardAudio}
-                                    className="mt-2 text-purple-400 text-sm underline"
-                                    style={{ fontFamily: "'Nunito', sans-serif" }}
-                                >
+                            <motion.div key="audio-sent" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center gap-2 py-6">
+                                <CheckCircle className="w-12 h-12 text-white mb-2" />
+                                <p className="text-white font-bold text-lg">Voice note sent! 🎙️</p>
+                                <p className="text-[#94a3b8] text-sm mb-4">Hearing your voice is the best gift.</p>
+                                <button onClick={handleDiscardAudio} className="text-[11px] font-bold text-[#64748b] hover:text-white uppercase tracking-widest transition-colors">
                                     Record another?
                                 </button>
                             </motion.div>
                         ) : !audioUrl ? (
-                            <motion.div key="record" className="flex flex-col items-center gap-4">
+                            <motion.div key="record" className="flex flex-col items-center gap-4 py-2">
                                 {!recording ? (
                                     <>
-                                        <p className="text-gray-400 text-sm text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                                            Record a voice message for Mayank 🎙️
-                                        </p>
-                                        <motion.button
-                                            onClick={startRecording}
-                                            className="w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-2xl"
-                                            whileHover={{ scale: 1.08 }}
-                                            whileTap={{ scale: 0.95 }}
-                                            animate={{ boxShadow: ["0 0 0px rgba(168,85,247,0.4)", "0 0 30px rgba(168,85,247,0.7)", "0 0 0px rgba(168,85,247,0.4)"] }}
-                                            transition={{ duration: 2, repeat: Infinity }}
-                                        >
-                                            <Mic className="w-8 h-8 text-white" />
-                                        </motion.button>
-                                        <p className="text-purple-300 text-xs" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                                            Tap to start recording
-                                        </p>
+                                        <p className="text-[#94a3b8] text-[13px] font-bold mb-2">Record a message for me</p>
+                                        <button onClick={startRecording} className={`w-20 h-20 rounded-full flex items-center justify-center bg-white text-[#162433] shadow-[0_0_20px_rgba(255,255,255,0.2)] active:scale-95 transition-all`}>
+                                            <Mic size={28} strokeWidth={2.5} />
+                                        </button>
+                                        <p className="text-[#64748b] text-[10px] font-bold uppercase tracking-widest mt-2">Tap to record</p>
                                     </>
                                 ) : (
                                     <>
-                                        {/* Recording waveform */}
-                                        <div className="flex items-center gap-1 h-10">
-                                            {Array.from({ length: 16 }).map((_, i) => (
-                                                <motion.div
-                                                    key={i}
-                                                    className="w-1.5 rounded-full bg-gradient-to-t from-pink-500 to-purple-400"
-                                                    animate={{ height: [6, 20 + Math.random() * 20, 6] }}
-                                                    transition={{ duration: 0.5 + Math.random() * 0.3, repeat: Infinity, delay: i * 0.05 }}
-                                                />
+                                        {/* Elegant White Waveform */}
+                                        <div className="flex items-center gap-1.5 h-12 mb-2">
+                                            {Array.from({ length: 12 }).map((_, i) => (
+                                                <motion.div key={i} className="w-1.5 rounded-full bg-white" animate={{ height: [8, 24 + Math.random() * 20, 8] }} transition={{ duration: 0.5 + Math.random() * 0.3, repeat: Infinity, delay: i * 0.05 }} />
                                             ))}
                                         </div>
-                                        <p className="text-pink-400 font-bold text-lg" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                                            {formatTime(recordTime)}
-                                        </p>
-                                        <motion.button
-                                            onClick={stopRecording}
-                                            className="w-16 h-16 rounded-full bg-gradient-to-r from-red-500 to-rose-500 flex items-center justify-center shadow-xl"
-                                            whileHover={{ scale: 1.08 }}
-                                            whileTap={{ scale: 0.95 }}
-                                            animate={{ scale: [1, 1.05, 1] }}
-                                            transition={{ duration: 0.8, repeat: Infinity }}
-                                        >
-                                            <Square className="w-6 h-6 text-white fill-current" />
-                                        </motion.button>
-                                        <p className="text-gray-400 text-xs" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                                            Tap to stop
-                                        </p>
+                                        <p className="text-white font-black text-xl mb-2">{formatTime(recordTime)}</p>
+                                        
+                                        <button onClick={stopRecording} className={`w-16 h-16 rounded-full flex items-center justify-center bg-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95 transition-all`}>
+                                            <Square size={20} fill="currentColor" />
+                                        </button>
+                                        <p className="text-[#64748b] text-[10px] font-bold uppercase tracking-widest mt-2">Tap to stop</p>
                                     </>
                                 )}
-                                {audioError && (
-                                    <p className="text-red-400 text-xs text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>{audioError}</p>
-                                )}
+                                {audioError && <p className="text-red-400 text-xs mt-2 font-bold">{audioError}</p>}
                             </motion.div>
                         ) : (
-                            <motion.div key="preview" className="flex flex-col items-center gap-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                            <motion.div key="preview" className="flex flex-col gap-5 w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                                 <audio ref={audioRef} src={audioUrl} className="hidden" />
 
-                                {/* Playback UI */}
-                                <div className="w-full bg-white/5 rounded-2xl p-4 flex items-center gap-4">
-                                    <button
-                                        onClick={handlePlayPause}
-                                        className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-lg flex-shrink-0"
-                                    >
-                                        {playing ? <Pause className="w-5 h-5 text-white" /> : <Play className="w-5 h-5 text-white ml-0.5" />}
+                                {/* Premium Playback UI */}
+                                <div className={`w-full p-4 rounded-[20px] shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] flex items-center gap-4`}>
+                                    <button onClick={handlePlayPause} className={`w-10 h-10 rounded-full flex items-center justify-center bg-white text-[#162433] shadow-md active:scale-95 flex-shrink-0`}>
+                                        {playing ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" className="ml-1" />}
                                     </button>
                                     <div className="flex-1">
-                                        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                                            <motion.div
-                                                className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-                                                animate={playing ? { width: ["0%", "100%"] } : {}}
-                                                transition={playing ? { duration: recordTime || 5, ease: "linear" } : {}}
-                                            />
+                                        <div className="h-1.5 bg-[#111b25] rounded-full overflow-hidden shadow-[inset_1px_1px_2px_#000]">
+                                            <motion.div className="h-full bg-white rounded-full" animate={playing ? { width: ["0%", "100%"] } : {}} transition={playing ? { duration: recordTime || 5, ease: "linear" } : {}} />
                                         </div>
-                                        <p className="text-gray-400 text-xs mt-1" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                                            {formatTime(recordTime)} recorded
-                                        </p>
                                     </div>
-                                    <button
-                                        onClick={handleDiscardAudio}
-                                        className="text-red-400 hover:text-red-300 transition-colors"
-                                    >
-                                        <Trash2 className="w-5 h-5" />
-                                    </button>
+                                    <span className="text-[#94a3b8] text-[11px] font-black">{formatTime(recordTime)}</span>
                                 </div>
 
-                                {audioError && (
-                                    <p className="text-red-400 text-xs text-center" style={{ fontFamily: "'Nunito', sans-serif" }}>{audioError}</p>
-                                )}
-
-                                <button
-                                    onClick={handleSendAudio}
-                                    disabled={audioLoading}
-                                    className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-bold shadow-lg hover:scale-[1.02] transition-all disabled:opacity-40 disabled:scale-100"
-                                    style={{ fontFamily: "'Nunito', sans-serif" }}
-                                >
-                                    {audioLoading ? (
-                                        <motion.div
-                                            className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full"
-                                            animate={{ rotate: 360 }}
-                                            transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                                        />
-                                    ) : (
-                                        <>
-                                            <Send className="w-4 h-4" />
-                                            Send Voice Note
-                                        </>
-                                    )}
-                                </button>
+                                <div className="flex items-center gap-3">
+                                    <button onClick={handleDiscardAudio} className={`w-14 h-14 rounded-xl flex items-center justify-center bg-[#1B2A3A] text-red-400 shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f] active:shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] transition-all`}>
+                                        <Trash2 size={20} />
+                                    </button>
+                                    <button disabled={audioLoading} onClick={handleSendAudio} className={`flex-1 py-4 text-[13px] uppercase tracking-[0.15em] flex items-center justify-center gap-2 ${puffyBtnPrimary}`}>
+                                        {audioLoading ? <motion.div className="w-4 h-4 border-2 border-[#162433]/30 border-t-[#162433] rounded-full" animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} /> : (
+                                            <><Send size={16} strokeWidth={2.5} /> Send Voice</>
+                                        )}
+                                    </button>
+                                </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
                 </motion.div>
 
                 {/* Footer */}
-                <motion.div
-                    className="text-center pb-4"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.7 }}
-                >
-                    <motion.p
-                        className="text-purple-400 text-sm"
-                        style={{ fontFamily: "'Nunito', sans-serif" }}
-                        animate={{ opacity: [0.5, 1, 0.5] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                    >
-                        Made with 💕 just for You ARTIST 🎨 💐
-                    </motion.p>
+                <motion.div className="text-center pb-6 pt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                    <p className="text-[#64748b] text-[10px] font-bold tracking-[0.2em] uppercase">
+                        Made with <Heart className="inline w-3 h-3 mx-1 text-white fill-white" /> just for You
+                    </p>
+                    <p className="text-[#475569] text-[9px] font-bold tracking-[0.3em] uppercase mt-1">
+                        ARTIST 🎨 💐
+                    </p>
                 </motion.div>
             </div>
-        </motion.div>
+        </div>
     )
 }
