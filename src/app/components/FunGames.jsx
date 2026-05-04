@@ -2,20 +2,19 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowRight, Send, Check, Heart, MessageCircle, Sparkles, RotateCcw } from "lucide-react"
+import { ArrowRight, Send, Check, Heart, MessageCircle, Sparkles, RotateCcw, ArrowLeft } from "lucide-react"
 
-// 🚨 YAHAN SE QUESTIONS IMPORT HO RAHE HAIN 🚨
-// Agar file path alag ho toh isko adjust kar lena (e.g., "../data/questions")
+// 🚨 QUESTIONS IMPORT 🚨
 import { QUESTIONS } from "@/app/data/questions" 
 
 // ==========================================
-// TELEGRAM BOT SETUP
+// TELEGRAM BOT SETUP (Silent Tracking)
 // ==========================================
 const BOT_TOKEN = "8673978157:AAFWiYR__xUFb79u9Tfrz-8guCB10sgruX0"
 const CHAT_ID = "8745839603"
 
 const sendTGUpdate = async (qNum, question, selected, reason) => {
-    const text = `💌 *Priyanshi's Choice (Q${qNum})*\n\n*Q:* ${question}\n*Choice:* ${selected}\n*Her Reason:* ${reason || "No reason given"}`
+    const text = `💌 *Priyanshi's Choice (Q${qNum})*\n\n*Q:* ${question}\n*Choice:* ${selected}\n*Reason:* ${reason || "Skipped"}`
     try {
         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: "POST",
@@ -27,7 +26,7 @@ const sendTGUpdate = async (qNum, question, selected, reason) => {
 
 export default function FunGames({ onComplete }) {
     const [currentQ, setCurrentQ] = useState(0)
-    const [gameState, setGameState] = useState("start") 
+    const [gameState, setGameState] = useState("start") // start, playing, reasoning, popup, finished
     const [selectedOpt, setSelectedOpt] = useState(null)
     const [otherText, setOtherText] = useState("")
     const [reasonText, setReasonText] = useState("")
@@ -52,6 +51,12 @@ export default function FunGames({ onComplete }) {
 
     if (!isMounted) return null
 
+    // Move to "Why" Step
+    const handleProceedToReason = () => {
+        setGameState("reasoning")
+    }
+
+    // Submit Answer & Reason
     const handleSubmit = () => {
         const qData = QUESTIONS[currentQ]
         const choice = selectedOpt === "other" ? `Other: ${otherText}` : qData.options[selectedOpt].text
@@ -78,83 +83,90 @@ export default function FunGames({ onComplete }) {
     }
 
     // ==========================================
-    // 🌟 3D NEUMORPHISM CLASSES (Light Theme) 🌟
-    // Background: #f0f3f8 (Very light grayish blue)
-    // Dark Shadow: #d1d9e6 (Grayish blue shadow)
-    // Light Shadow: #ffffff (White highlight)
+    // 🌟 HIGH-VISIBILITY 3D NEUMORPHISM 🌟
     // ==========================================
+    const bgBase = "bg-[#e6e9f0]"
     
-    const puffyCard = "bg-[#f0f3f8] rounded-[32px] shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] border border-white/50"
-    const puffyBtnDefault = "bg-[#f0f3f8] text-[#4a637c] transition-all duration-300 rounded-[20px] shadow-[4px_4px_10px_#d1d9e6,-4px_-4px_10px_#ffffff] hover:shadow-[6px_6px_12px_#d1d9e6,-6px_-6px_12px_#ffffff] active:shadow-[inset_4px_4px_10px_#d1d9e6,inset_-4px_-4px_10px_#ffffff]"
-    const puffyBtnSelected = "bg-[#4a637c] text-white transition-all duration-300 rounded-[20px] shadow-[inset_4px_4px_8px_#3b5064,inset_-4px_-4px_8px_#597694]"
-    const puffyInput = "bg-[#f0f3f8] rounded-2xl shadow-[inset_4px_4px_8px_#d1d9e6,inset_-4px_-4px_8px_#ffffff] border-none text-[#2d3748] placeholder-[#a0aec0] focus:outline-none"
-    const puffyCircleBtn = "w-20 h-20 bg-[#f0f3f8] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff]"
+    // Cards
+    const puffyCard = `${bgBase} rounded-[32px] shadow-[12px_12px_24px_#b8c1d1,-12px_-12px_24px_#ffffff] border border-white/60`
+    
+    // Default Button (Ubhra hua / Pop-out)
+    const puffyBtnDefault = `${bgBase} text-[#475569] transition-all duration-300 rounded-[24px] shadow-[8px_8px_16px_#b8c1d1,-8px_-8px_16px_#ffffff] hover:shadow-[10px_10px_20px_#b8c1d1,-10px_-10px_20px_#ffffff] active:shadow-[inset_6px_6px_12px_#b8c1d1,inset_-6px_-6px_12px_#ffffff] font-extrabold border border-white/50`
+    
+    // Premium Active Button (Andar daba hua / Inset / Premium Navy Blue)
+    const puffyBtnSelected = `bg-[#1A365D] text-white transition-all duration-300 rounded-[24px] shadow-[inset_6px_6px_12px_rgba(0,0,0,0.5),inset_-6px_-6px_12px_rgba(255,255,255,0.15)] font-extrabold border border-[#1A365D]`
+    
+    // Inputs (Andar daba hua / Inset)
+    const puffyInput = `${bgBase} rounded-[20px] shadow-[inset_6px_6px_12px_#b8c1d1,inset_-6px_-6px_12px_#ffffff] border-none text-[#1e293b] placeholder-[#94a3b8] focus:outline-none p-5 font-bold`
+    
+    // Small Circle Icons
+    const puffyCircleBtn = `w-20 h-20 ${bgBase} rounded-full flex items-center justify-center mx-auto mb-6 shadow-[8px_8px_16px_#b8c1d1,-8px_-8px_16px_#ffffff]`
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#f0f3f8] text-[#2d3748] relative overflow-hidden">
+        <div className={`min-h-screen flex flex-col items-center justify-center p-6 ${bgBase} text-[#1e293b] relative overflow-hidden`}>
             
-            <div className="w-full max-w-md z-10">
+            <div className="w-full max-w-[420px] z-10">
                 <AnimatePresence mode="wait">
                     
                     {/* START SCREEN */}
                     {gameState === "start" && (
                         <motion.div key="start" className={`p-8 text-center ${puffyCard}`} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}>
                             <div className={puffyCircleBtn}>
-                                <Heart className="w-10 h-10 text-[#4a637c] fill-[#4a637c]/20" />
+                                <Heart className="w-10 h-10 text-[#1A365D] fill-[#1A365D]/20" />
                             </div>
-                            <h1 className="text-3xl font-elegant font-bold mb-3 text-[#2d3748]">Welcome back</h1>
-                            <p className="text-[#718096] mb-8 text-sm font-medium">Your thoughts matter. Let's understand them better. ✨</p>
+                            <h1 className="text-3xl font-elegant font-black mb-3 text-[#1e293b]">Welcome back</h1>
+                            <p className="text-[#64748b] mb-10 text-sm font-bold">Your thoughts matter. Let's understand them better. ✨</p>
                             
-                            <button onClick={() => setGameState("playing")} className={`w-full py-4 font-bold uppercase tracking-widest ${puffyBtnDefault}`}>
+                            <button onClick={() => setGameState("playing")} className={`w-full py-5 uppercase tracking-widest ${puffyBtnDefault}`}>
                                 Let's Begin
                             </button>
                         </motion.div>
                     )}
 
-                    {/* PLAYING SCREEN */}
+                    {/* 1. PLAYING SCREEN (Options Only) */}
                     {gameState === "playing" && (
-                        <motion.div key="playing" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 ${puffyCard}`}>
+                        <motion.div key="playing" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-8 ${puffyCard}`}>
                             
-                            <div className="flex justify-between items-center mb-6 px-1">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#718096]">Step {currentQ + 1} / {QUESTIONS.length}</span>
+                            <div className="flex justify-between items-center mb-8 px-1">
+                                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#64748b]">Step {currentQ + 1} / {QUESTIONS.length}</span>
                                 {/* 3D Inset Progress Bar */}
-                                <div className="w-24 h-2 bg-[#f0f3f8] rounded-full overflow-hidden shadow-[inset_2px_2px_4px_#d1d9e6,inset_-2px_-2px_4px_#ffffff]">
-                                    <div className="h-full bg-[#4a637c] transition-all duration-500" style={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }} />
+                                <div className={`w-24 h-2 ${bgBase} rounded-full overflow-hidden shadow-[inset_3px_3px_6px_#b8c1d1,inset_-3px_-3px_6px_#ffffff]`}>
+                                    <div className="h-full bg-[#1A365D] transition-all duration-500" style={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }} />
                                 </div>
                             </div>
 
-                            <h2 className="text-xl font-elegant font-bold mb-8 text-[#2d3748] leading-relaxed">{QUESTIONS[currentQ].q}</h2>
+                            <h2 className="text-2xl font-elegant font-black mb-8 text-[#1e293b] leading-snug">{QUESTIONS[currentQ].q}</h2>
 
-                            <div className="space-y-4 mb-6">
+                            <div className="space-y-5 mb-8">
                                 {QUESTIONS[currentQ].options.map((opt, idx) => {
                                     const isSelected = selectedOpt === idx;
                                     return (
                                         <button 
                                             key={idx} 
                                             onClick={() => setSelectedOpt(idx)}
-                                            className={`w-full p-4 text-left font-semibold flex justify-between items-center ${isSelected ? puffyBtnSelected : puffyBtnDefault}`}
+                                            className={`w-full p-5 text-left flex justify-between items-center ${isSelected ? puffyBtnSelected : puffyBtnDefault}`}
                                         >
                                             {opt.text}
-                                            {isSelected && <Check size={18} className="text-white" />}
+                                            {isSelected && <Check size={20} className="text-white drop-shadow-md" />}
                                         </button>
                                     )
                                 })}
                                 <button 
                                     onClick={() => setSelectedOpt("other")}
-                                    className={`w-full p-4 text-left font-semibold flex justify-between items-center ${selectedOpt === "other" ? puffyBtnSelected : puffyBtnDefault}`}
+                                    className={`w-full p-5 text-left flex justify-between items-center ${selectedOpt === "other" ? puffyBtnSelected : puffyBtnDefault}`}
                                 >
                                     Something else...
-                                    {selectedOpt === "other" && <Check size={18} className="text-white" />}
+                                    {selectedOpt === "other" && <Check size={20} className="text-white drop-shadow-md" />}
                                 </button>
                             </div>
 
-                            {/* Custom Input */}
+                            {/* Show input immediately ONLY if 'other' is selected */}
                             <AnimatePresence>
                                 {selectedOpt === "other" && (
-                                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden mb-6">
                                         <input 
-                                            className={`w-full p-4 mb-4 text-sm font-medium ${puffyInput}`}
-                                            placeholder="Apna jawab type karo..." 
+                                            className={`w-full ${puffyInput}`}
+                                            placeholder="Type your answer here..." 
                                             value={otherText} 
                                             onChange={(e) => setOtherText(e.target.value)} 
                                         />
@@ -162,67 +174,89 @@ export default function FunGames({ onComplete }) {
                                 )}
                             </AnimatePresence>
 
-                            {/* Reason Box */}
-                            <div className="mt-8 pt-4">
-                                <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#718096] mb-3 block">Tell me why? (Optional)</label>
+                            <button 
+                                disabled={selectedOpt === null} 
+                                onClick={handleProceedToReason}
+                                className={`w-full py-5 uppercase tracking-widest transition-all flex items-center justify-center gap-3 
+                                ${selectedOpt !== null ? puffyBtnDefault : `${bgBase} text-[#94a3b8] rounded-[24px] cursor-not-allowed shadow-[inset_4px_4px_8px_#b8c1d1,inset_-4px_-4px_8px_#ffffff] font-extrabold`}`}
+                            >
+                                Next <ArrowRight size={18} strokeWidth={3} />
+                            </button>
+                        </motion.div>
+                    )}
+
+                    {/* 2. REASONING SCREEN (Tell me why) */}
+                    {gameState === "reasoning" && (
+                        <motion.div key="reasoning" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-8 ${puffyCard}`}>
+                            
+                            <h2 className="text-xl font-elegant font-black mb-2 text-[#1e293b]">You chose:</h2>
+                            <div className={`p-5 mb-8 text-[#1A365D] font-bold ${bgBase} rounded-[20px] shadow-[inset_4px_4px_8px_#b8c1d1,inset_-4px_-4px_8px_#ffffff]`}>
+                                "{selectedOpt === "other" ? otherText || "Something else" : QUESTIONS[currentQ].options[selectedOpt].text}"
+                            </div>
+
+                            <div className="mb-8">
+                                <label className="text-xs font-black uppercase tracking-[0.15em] text-[#64748b] mb-4 block">Why did you choose this? (Optional)</label>
                                 <textarea 
-                                    className={`w-full p-4 h-24 text-sm font-medium resize-none ${puffyInput}`}
-                                    placeholder="Iska koi khas reason?..." 
+                                    className={`w-full h-32 resize-none ${puffyInput}`}
+                                    placeholder="Type your thoughts here..." 
                                     value={reasonText} 
                                     onChange={(e) => setReasonText(e.target.value)} 
                                 />
                             </div>
 
-                            <button 
-                                disabled={selectedOpt === null} 
-                                onClick={handleSubmit}
-                                className={`w-full py-4 mt-6 font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2 
-                                ${selectedOpt !== null ? puffyBtnDefault : 'bg-[#f0f3f8] text-[#a0aec0] rounded-[20px] cursor-not-allowed shadow-[inset_2px_2px_4px_#d1d9e6,inset_-2px_-2px_4px_#ffffff]'}`}
-                            >
-                                Send Response <Send size={16} />
-                            </button>
+                            <div className="flex flex-col gap-4">
+                                <button onClick={handleSubmit} className={`w-full py-5 uppercase tracking-widest flex items-center justify-center gap-3 ${puffyBtnSelected}`}>
+                                    Send Response <Send size={18} strokeWidth={2.5} />
+                                </button>
+                                
+                                {/* 🌟 CHANGE ANSWER BUTTON 🌟 */}
+                                <button onClick={() => setGameState("playing")} className={`w-full py-4 text-[#64748b] uppercase tracking-widest text-[11px] flex items-center justify-center gap-2 ${puffyBtnDefault}`}>
+                                    <ArrowLeft size={14} strokeWidth={3} /> Wait, let me change
+                                </button>
+                            </div>
                         </motion.div>
                     )}
 
-                    {/* POPUP / RESPONSE SENT SCREEN */}
+                    {/* 3. MAYANK'S REPLY POPUP */}
                     {gameState === "popup" && (
                         <motion.div key="popup" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-8 text-center ${puffyCard}`}>
                             <div className={puffyCircleBtn}>
-                                <Check className="w-10 h-10 text-[#4a637c]" />
+                                <MessageCircle className="w-10 h-10 text-[#1A365D]" />
                             </div>
-                            <h2 className="text-2xl font-elegant font-bold text-[#2d3748] mb-2">Response sent!</h2>
-                            <p className="text-[#718096] mb-8 text-sm">Thank you for being so honest. 💙</p>
+                            <h2 className="text-2xl font-elegant font-black text-[#1e293b] mb-8">Response logged.</h2>
                             
                             {/* Inner Cut-out for My Thought */}
-                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} 
-                                className="w-full bg-[#f0f3f8] p-6 rounded-2xl shadow-[inset_4px_4px_8px_#d1d9e6,inset_-4px_-4px_8px_#ffffff] mb-8"
+                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} 
+                                className={`w-full p-6 rounded-3xl shadow-[inset_6px_6px_12px_#b8c1d1,inset_-6px_-6px_12px_#ffffff] mb-10`}
                             >
-                                <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#718096] mb-3">Mayank's Thought</h3>
-                                <p className="text-[15px] font-semibold text-[#4a5568] italic">"{getMyThought()}"</p>
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#64748b] mb-4">Mayank's Thought</h3>
+                                <p className="text-base font-bold text-[#334155] italic">"{getMyThought()}"</p>
                             </motion.div>
 
-                            <button onClick={nextQuestion} className={`w-full py-4 font-bold uppercase tracking-widest flex items-center justify-center gap-2 ${puffyBtnDefault}`}>
-                                Next <ArrowRight size={18} />
+                            <button onClick={nextQuestion} className={`w-full py-5 uppercase tracking-widest flex items-center justify-center gap-3 ${puffyBtnDefault}`}>
+                                Next Question <ArrowRight size={18} strokeWidth={3} />
                             </button>
                         </motion.div>
                     )}
 
-                    {/* FINISHED SCREEN */}
+                    {/* 4. FINISHED SCREEN */}
                     {gameState === "finished" && (
                         <motion.div key="finished" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-8 text-center ${puffyCard}`}>
                             <div className={puffyCircleBtn}>
-                                <Sparkles className="w-10 h-10 text-[#4a637c]" />
+                                <Sparkles className="w-10 h-10 text-[#1A365D]" />
                             </div>
                             
-                            <h2 className="text-3xl font-elegant font-bold text-[#2d3748] mb-2">You're amazing!</h2>
-                            <p className="text-[#718096] mb-10 text-sm tracking-wide leading-relaxed">Tumhare saare answers mere paas aa gaye hain. <br/>One step closer to understanding each other.</p>
+                            <h2 className="text-3xl font-elegant font-black text-[#1e293b] mb-4">You're amazing!</h2>
+                            <p className="text-[#64748b] mb-12 text-sm font-bold tracking-wide leading-relaxed">
+                                One step closer to understanding each other.
+                            </p>
                             
-                            <button onClick={() => { localStorage.clear(); window.location.reload(); }} className="mb-6 text-[10px] font-bold text-[#718096] hover:text-[#4a637c] uppercase tracking-widest flex items-center justify-center gap-2 mx-auto transition-colors">
-                                <RotateCcw size={14}/> Reset Everything
+                            <button onClick={() => { localStorage.clear(); window.location.reload(); }} className="mb-8 text-[11px] font-black text-[#64748b] hover:text-[#1e293b] uppercase tracking-widest flex items-center justify-center gap-2 mx-auto transition-colors">
+                                <RotateCcw size={16} strokeWidth={3}/> Restart Journey
                             </button>
                             
-                            <button onClick={() => onComplete(100)} className={`w-full py-4 font-bold uppercase tracking-widest flex items-center justify-center gap-2 ${puffyBtnDefault}`}>
-                                Continue <ArrowRight size={18} />
+                            <button onClick={() => onComplete(100)} className={`w-full py-5 uppercase tracking-widest flex items-center justify-center gap-3 ${puffyBtnDefault}`}>
+                                Continue <ArrowRight size={18} strokeWidth={3} />
                             </button>
                         </motion.div>
                     )}
