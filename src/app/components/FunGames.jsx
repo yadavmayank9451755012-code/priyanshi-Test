@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Sparkles, MessageCircle, Send, RotateCcw, Heart } from "lucide-react"
+import { ArrowRight, Send, Check, Heart } from "lucide-react"
 
 // ==========================================
 // TELEGRAM BOT SETUP
@@ -22,7 +22,7 @@ const sendTGUpdate = async (qNum, question, selected, reason) => {
 }
 
 // ==========================================
-// 20 QUESTIONS DATA (With Individual Replies)
+// 20 QUESTIONS DATA (Minimalist Edition)
 // ==========================================
 const QUESTIONS = [
     {
@@ -157,7 +157,7 @@ const QUESTIONS = [
         q: "Faltu jokes pe Priyanshi ka response?",
         options: [
             { text: "Zor se hasna", reply: "Andar se hasi aati hai par dikhati nahi ho." },
-            { text: "Kaisi baatein karte ho' 🙄", reply: "Ye 'Kaisi baatein karte ho' sunne ke liye hi toh main jokes maarta hoon 😂" },
+            { text: "'Kaisi baatein karte ho' 🙄", reply: "Ye 'Kaisi baatein karte ho' sunne ke liye hi toh main jokes maarta hoon 😂" },
             { text: "Seen chhod dena", reply: "Seen pe chhodna toh aadat si ban gayi hai na?" }
         ]
     },
@@ -189,15 +189,16 @@ const QUESTIONS = [
 
 export default function FunGames({ onComplete }) {
     const [currentQ, setCurrentQ] = useState(0)
-    const [gameState, setGameState] = useState("start") 
+    const [gameState, setGameState] = useState("start") // start, playing, popup, finished
     const [selectedOpt, setSelectedOpt] = useState(null)
     const [otherText, setOtherText] = useState("")
     const [reasonText, setReasonText] = useState("")
     const [isMounted, setIsMounted] = useState(false)
 
+    // LOCAL STORAGE PERSISTENCE
     useEffect(() => {
         setIsMounted(true)
-        const saved = localStorage.getItem("priyanshi_conversation")
+        const saved = localStorage.getItem("priyanshi_journal")
         if (saved) {
             const parsed = JSON.parse(saved)
             if (parsed.index >= QUESTIONS.length) setGameState("finished")
@@ -207,13 +208,11 @@ export default function FunGames({ onComplete }) {
 
     useEffect(() => {
         if (isMounted) {
-            localStorage.setItem("priyanshi_conversation", JSON.stringify({ index: currentQ }))
+            localStorage.setItem("priyanshi_journal", JSON.stringify({ index: currentQ }))
         }
     }, [currentQ, isMounted])
 
     if (!isMounted) return null
-
-    const handleOptionSelect = (idx) => setSelectedOpt(idx)
 
     const handleSubmit = () => {
         const qData = QUESTIONS[currentQ]
@@ -235,127 +234,152 @@ export default function FunGames({ onComplete }) {
         }
     }
 
-    // ==========================================
-    // LUXURY INTERIOR COLOR PALETTE (NEUMORPHISM)
-    // ==========================================
-    // Base/Background (Jonesboro Cream vibe): #EAE3CD
-    // Dark Shadow: #C7C1AE
-    // Light Shadow (White Dove vibe): #FFFFFF
-    // Text Primary (Washington Blue vibe): #2A3D4C
-    // Accent (Aged Bronze vibe): #6B6254
-    
-    // Classes for 3D Puffy Effect
-    const puffyCard = "bg-[#EAE3CD] rounded-[32px] shadow-[8px_8px_16px_#c7c1ae,-8px_-8px_16px_#ffffff] border border-[#f5f1e6]"
-    const puffyBtnDefault = "bg-[#EAE3CD] text-[#2A3D4C] transition-all duration-300 rounded-[20px] shadow-[4px_4px_10px_#c7c1ae,-4px_-4px_10px_#ffffff] active:shadow-[inset_4px_4px_10px_#c7c1ae,inset_-4px_-4px_10px_#ffffff]"
-    const puffyBtnSelected = "bg-[#2A3D4C] text-[#EAE3CD] transition-all duration-300 rounded-[20px] shadow-[inset_4px_4px_8px_#1c2933,inset_-4px_-4px_8px_#385165]"
-    const puffyInput = "bg-[#EAE3CD] rounded-2xl shadow-[inset_4px_4px_8px_#c7c1ae,inset_-4px_-4px_8px_#ffffff] border-none text-[#2A3D4C] placeholder-[#6B6254]/60"
-
     const getMyThought = () => {
         if (selectedOpt === "other") return "Badi alag soch hai tumhari... Mujhe laga nahi tha tum ye type karogi! ✨"
         return QUESTIONS[currentQ].options[selectedOpt]?.reply || ""
     }
 
     return (
-        // Changed bg to Jonesboro Cream
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#EAE3CD] text-[#2A3D4C] font-['Nunito'] relative overflow-hidden">
-            <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');`}</style>
-
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#f4f6f8] text-[#2d3748] relative overflow-hidden">
+            
             <div className="w-full max-w-md z-10">
                 <AnimatePresence mode="wait">
                     
                     {/* START SCREEN */}
                     {gameState === "start" && (
-                        <motion.div key="start" className={`p-8 text-center ${puffyCard}`} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}>
-                            <div className="w-20 h-20 bg-[#EAE3CD] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[inset_4px_4px_8px_#c7c1ae,inset_-4px_-4px_8px_#ffffff]">
-                                <Heart className="w-10 h-10 text-[#6B6254] fill-[#6B6254]/20" />
-                            </div>
-                            <h1 className="text-3xl font-black mb-3 text-[#2A3D4C] tracking-tighter italic">Conversation Mode</h1>
-                            <p className="text-[#6B6254] mb-8 text-sm font-bold">Priyanshi, isme koi sahi ya galat jawab nahi hai. Bas wo choose karna jo tumhe sach feel ho. ✨</p>
-                            <button onClick={() => setGameState("playing")} className={`w-full py-4 font-black uppercase tracking-widest ${puffyBtnDefault}`}>
-                                Chalo Shuru Karein
+                        <motion.div key="start" className="h-[80vh] flex flex-col items-center justify-center text-center px-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+                            <h1 className="text-4xl font-elegant font-semibold text-[#2d3748] mb-2">Welcome back <Heart className="inline w-5 h-5 text-[#4a637c] fill-[#4a637c]" /></h1>
+                            <p className="text-[#718096] mb-12 text-sm tracking-wide">Your thoughts matter.<br/>Let's understand them better.</p>
+                            
+                            <button onClick={() => setGameState("playing")} className="w-full sm:w-[80%] bg-[#4a637c] text-white py-4 rounded-xl flex items-center justify-center gap-3 font-semibold tracking-wide transition-all hover:bg-[#3b5064] shadow-md hover:shadow-lg active:scale-95">
+                                Let's Begin <ArrowRight size={18} />
                             </button>
                         </motion.div>
                     )}
 
-                    {/* PLAYING SCREEN */}
+                    {/* PLAYING SCREEN (The exact UI from screenshot) */}
                     {gameState === "playing" && (
-                        <motion.div key="playing" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 ${puffyCard}`}>
+                        <motion.div key="playing" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="w-full py-8 px-4">
                             
-                            <div className="flex justify-between items-center mb-6 px-1">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-[#6B6254]">Step {currentQ + 1} / {QUESTIONS.length}</span>
-                                {/* Progress Bar */}
-                                <div className="w-24 h-2 bg-[#EAE3CD] rounded-full overflow-hidden shadow-[inset_2px_2px_4px_#c7c1ae,inset_-2px_-2px_4px_#ffffff]">
-                                    <div className="h-full bg-[#2A3D4C] transition-all duration-500" style={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }} />
+                            {/* Header Progress */}
+                            <div className="flex items-center justify-between mb-10">
+                                <span className="text-[11px] font-bold tracking-[0.15em] text-[#718096] uppercase">Step {currentQ + 1} / {QUESTIONS.length}</span>
+                                <div className="w-32 h-1.5 bg-[#e2e8f0] rounded-full overflow-hidden">
+                                    <motion.div 
+                                        className="h-full bg-[#4a637c]" 
+                                        initial={{ width: `${(currentQ / QUESTIONS.length) * 100}%` }}
+                                        animate={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }} 
+                                        transition={{ duration: 0.5, ease: "easeOut" }}
+                                    />
                                 </div>
                             </div>
 
-                            <h2 className="text-lg font-bold mb-8 text-[#2A3D4C] leading-relaxed">{QUESTIONS[currentQ].q}</h2>
+                            <h2 className="text-2xl font-elegant font-semibold mb-8 text-[#2d3748] leading-tight">{QUESTIONS[currentQ].q}</h2>
 
-                            <div className="space-y-4 mb-6">
+                            {/* Options */}
+                            <div className="space-y-3 mb-8">
                                 {QUESTIONS[currentQ].options.map((opt, idx) => {
                                     const isSelected = selectedOpt === idx;
                                     return (
-                                        <button key={idx} onClick={() => handleOptionSelect(idx)}
-                                            className={`w-full p-4 text-left font-bold ${isSelected ? puffyBtnSelected : puffyBtnDefault}`}>
+                                        <button 
+                                            key={idx} 
+                                            onClick={() => setSelectedOpt(idx)}
+                                            className={`w-full p-4 rounded-xl text-left font-medium text-[15px] transition-all flex justify-between items-center ${isSelected ? 'bg-[#4a637c] text-white shadow-md' : 'bg-white text-[#4a5568] border border-[#e2e8f0] hover:bg-[#f8fafc]'}`}
+                                        >
                                             {opt.text}
+                                            {isSelected && <Check size={18} className="text-white" />}
                                         </button>
                                     )
                                 })}
-                                <button onClick={() => setSelectedOpt("other")}
-                                    className={`w-full p-4 text-left font-bold ${selectedOpt === "other" ? puffyBtnSelected : puffyBtnDefault}`}>
+                                <button 
+                                    onClick={() => setSelectedOpt("other")}
+                                    className={`w-full p-4 rounded-xl text-left font-medium text-[15px] transition-all flex justify-between items-center ${selectedOpt === "other" ? 'bg-[#4a637c] text-white shadow-md' : 'bg-white text-[#4a5568] border border-[#e2e8f0] hover:bg-[#f8fafc]'}`}
+                                >
                                     Something else...
+                                    {selectedOpt === "other" && <Check size={18} className="text-white" />}
                                 </button>
                             </div>
 
-                            {selectedOpt === "other" && (
-                                <motion.input initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-                                    className={`w-full p-4 mb-4 outline-none text-sm font-bold ${puffyInput}`}
-                                    placeholder="Apna jawab likho yahan..." value={otherText} onChange={(e) => setOtherText(e.target.value)} />
-                            )}
+                            {/* Custom Input if 'Other' selected */}
+                            <AnimatePresence>
+                                {selectedOpt === "other" && (
+                                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                                        <input 
+                                            className="w-full p-4 mb-6 rounded-xl bg-white border border-[#e2e8f0] outline-none text-[#2d3748] placeholder-[#a0aec0] shadow-sm text-sm"
+                                            placeholder="Apna jawab yahan type karo..." 
+                                            value={otherText} 
+                                            onChange={(e) => setOtherText(e.target.value)} 
+                                        />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
-                            <div className="mt-8 pt-4">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-[#6B6254] mb-3 block">Tell me why? (Optional)</label>
-                                <textarea className={`w-full p-4 h-24 outline-none text-sm font-bold resize-none ${puffyInput}`}
-                                    placeholder="Iska koi khas reason?..." value={reasonText} onChange={(e) => setReasonText(e.target.value)} />
+                            {/* Optional Reason Box */}
+                            <div className="mb-8">
+                                <label className="text-[10px] font-bold tracking-[0.15em] text-[#718096] uppercase mb-2 block">Tell me why? (Optional)</label>
+                                <textarea 
+                                    className="w-full p-4 h-24 rounded-xl bg-white border border-[#e2e8f0] outline-none text-sm resize-none text-[#2d3748] placeholder-[#a0aec0] shadow-sm transition-all focus:border-[#4a637c]"
+                                    placeholder="Iska koi khas reason?..." 
+                                    value={reasonText} 
+                                    onChange={(e) => setReasonText(e.target.value)} 
+                                />
                             </div>
 
-                            <button disabled={selectedOpt === null} onClick={handleSubmit}
-                                className={`w-full py-4 mt-6 font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 
-                                ${selectedOpt !== null ? puffyBtnDefault : 'bg-[#EAE3CD] text-[#c7c1ae] rounded-[20px] cursor-not-allowed shadow-[inset_2px_2px_4px_#c7c1ae,inset_-2px_-2px_4px_#ffffff]'}`}>
-                                Send Response <Send className="w-4 h-4" />
+                            {/* Submit Button */}
+                            <button 
+                                disabled={selectedOpt === null} 
+                                onClick={handleSubmit}
+                                className={`w-full py-4 rounded-xl font-semibold tracking-wide transition-all flex justify-center items-center gap-2 
+                                ${selectedOpt !== null ? 'bg-[#4a637c] text-white shadow-md hover:shadow-lg active:scale-95' : 'bg-[#e2e8f0] text-[#a0aec0] cursor-not-allowed'}`}
+                            >
+                                SEND RESPONSE <Send size={16} />
                             </button>
                         </motion.div>
                     )}
 
-                    {/* MAYANK'S REPLY POPUP */}
+                    {/* POPUP / RESPONSE SENT SCREEN */}
                     {gameState === "popup" && (
-                        <motion.div key="popup" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-8 text-center ${puffyCard}`}>
-                            <div className="w-16 h-16 bg-[#EAE3CD] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[inset_4px_4px_8px_#c7c1ae,inset_-4px_-4px_8px_#ffffff]">
-                                <MessageCircle className="w-8 h-8 text-[#6B6254]" />
-                            </div>
-                            <h3 className="text-xs font-black uppercase text-[#6B6254] mb-4 tracking-widest">My Thought</h3>
-                            <p className="text-lg font-bold text-[#2A3D4C] italic mb-10 leading-relaxed">"{getMyThought()}"</p>
-                            <button onClick={nextQuestion} className={`w-full py-4 font-black uppercase tracking-widest ${puffyBtnDefault}`}>
-                                Next Question
+                        <motion.div key="popup" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="h-[80vh] flex flex-col items-center justify-center text-center px-6">
+                            
+                            <motion.div 
+                                initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+                                className="w-24 h-24 bg-[#4a637c] rounded-full flex items-center justify-center mb-8 shadow-xl"
+                            >
+                                <Check className="w-12 h-12 text-white" />
+                            </motion.div>
+                            
+                            <h2 className="text-2xl font-elegant font-semibold text-[#2d3748] mb-2">Response sent!</h2>
+                            <p className="text-[#718096] mb-8 text-sm">Thank you for being so honest.<br/> <Heart className="inline w-3 h-3 text-[#4a637c] fill-[#4a637c] mt-2" /></p>
+                            
+                            {/* Mayank's Thought Card */}
+                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="w-full bg-white p-6 rounded-2xl border border-[#e2e8f0] shadow-sm mb-10">
+                                <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#718096] mb-3">Mayank's Thought</h3>
+                                <p className="text-[15px] font-medium text-[#4a5568] italic">"{getMyThought()}"</p>
+                            </motion.div>
+
+                            <button onClick={nextQuestion} className="w-full sm:w-[80%] bg-[#4a637c] text-white py-4 rounded-xl flex justify-center items-center gap-2 font-semibold tracking-wide hover:bg-[#3b5064] shadow-md transition-all active:scale-95">
+                                NEXT <ArrowRight size={18} />
                             </button>
                         </motion.div>
                     )}
 
                     {/* FINISHED SCREEN */}
                     {gameState === "finished" && (
-                        <motion.div key="finished" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-8 text-center ${puffyCard}`}>
-                            <div className="w-20 h-20 bg-[#EAE3CD] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[inset_4px_4px_8px_#c7c1ae,inset_-4px_-4px_8px_#ffffff]">
-                                <Sparkles className="w-10 h-10 text-[#6B6254]" />
+                        <motion.div key="finished" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-[80vh] flex flex-col items-center justify-center text-center px-6">
+                            
+                            <div className="w-48 h-48 rounded-full border-[6px] border-[#4a637c]/20 flex items-center justify-center relative mb-8">
+                                <div className="absolute inset-0 rounded-full border-[6px] border-[#4a637c] border-t-transparent -rotate-45" />
+                                <div className="text-center">
+                                    <span className="text-4xl font-elegant font-semibold text-[#2d3748]">{QUESTIONS.length}</span>
+                                    <p className="text-[10px] font-bold tracking-[0.1em] text-[#718096] uppercase mt-1">Steps<br/>Completed</p>
+                                </div>
                             </div>
-                            <h2 className="text-2xl font-black mb-3 text-[#2A3D4C] tracking-tighter">Sab Mil Gaya! ✨</h2>
-                            <p className="text-[#6B6254] font-bold mb-10 text-sm leading-relaxed">Tumhare saare answers mere paas pahunch gaye hain. Acha laga ye jaan kar ki tum kya sochti ho.</p>
                             
-                            <button onClick={() => { localStorage.clear(); window.location.reload(); }} className="mb-6 text-[10px] font-black text-[#6B6254] hover:text-[#2A3D4C] uppercase tracking-widest flex items-center justify-center gap-2 mx-auto transition-colors">
-                                <RotateCcw size={14}/> Reset Everything
-                            </button>
+                            <h2 className="text-3xl font-elegant font-semibold text-[#2d3748] mb-2">You're amazing!</h2>
+                            <p className="text-[#718096] mb-12 text-sm tracking-wide">One step closer to<br/>understanding each other.</p>
                             
-                            <button onClick={() => onComplete(100)} className={`w-full py-4 font-black uppercase tracking-widest ${puffyBtnDefault}`}>
-                                Proceed to Surprise
+                            <button onClick={() => onComplete(100)} className="w-full sm:w-[80%] bg-[#4a637c] text-white py-4 rounded-xl flex items-center justify-center gap-3 font-semibold tracking-wide transition-all hover:bg-[#3b5064] shadow-md hover:shadow-lg active:scale-95">
+                                CONTINUE <ArrowRight size={18} />
                             </button>
                         </motion.div>
                     )}
