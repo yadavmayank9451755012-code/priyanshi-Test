@@ -87,7 +87,7 @@ export default function Loader({ onComplete }) {
             {/* 🌊 Curved Image Section (Adapted for Navy Theme) */}
             <div className="absolute inset-0 z-0">
                 <img
-                    src="/girl.jpg" 
+                    src="/images/1.jpg" 
                     alt="Background"
                     className="absolute bottom-0 right-0 h-[75%] object-cover opacity-60 mix-blend-luminosity"
                 />
