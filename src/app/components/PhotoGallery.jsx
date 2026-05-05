@@ -26,6 +26,7 @@ export default function PhotoGallery({ onNext }) {
         { id: 12, src: "/images/12.jpg" },
         { id: 13, src: "/images/13.jpg" },
         { id: 13, src: "/images/14.jpg"},
+        { id: 13, src: "/images/15.jpg"},
         { id: 12, src: "/images/3.jpg" },
     ]
 
