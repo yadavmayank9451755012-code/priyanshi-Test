@@ -26,7 +26,7 @@ export default function BirthdayApp() {
   // 1. Loader pe Continue click karne pe
   const handleLoaderComplete = () => {
     // Play song 1
-    const audio = new Audio("/image/IshqBulave.m4a")
+    const audio = new Audio("/images/AkhiyanGulab.mp3")
     audio.loop = true
     audio.play().catch(e => console.log("Audio play blocked", e))
     audioRef.current = audio
