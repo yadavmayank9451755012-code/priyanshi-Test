@@ -50,7 +50,7 @@ export default function MusicPlayer() {
 
       {/* 🎧 AUDIO */}
       <audio ref={audioRef} loop preload="auto">
-        <source src="/images/Song3.mp3" type="audio/mpeg" />
+        <source src="/images/IshqBulave.m4a" type="audio/mpeg" />
       </audio>
     </>
   )
