@@ -76,7 +76,7 @@ export default function BirthdayApp() {
       {/* Ye tag screen pe nahi dikhega, par gaana yahin se bajega */}
       <audio 
         ref={audioRef} 
-        src="/images/AkhiyanGulab.mp3" 
+        src="/images/Song2.mp3" 
         loop 
         preload="auto" 
         className="hidden" 
