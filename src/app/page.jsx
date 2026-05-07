@@ -1,8 +1,7 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { Music, Pause } from "lucide-react" // 🎵 Icons import kar liye
 
 // Import all components
 import Loader from "./components/Loader"
@@ -21,51 +20,21 @@ export default function BirthdayApp() {
   const [showFunGames, setShowFunGames] = useState(false)
   const [finalGameScore, setFinalGameScore] = useState(0)
   
-  // 🎵 Audio State
+  // 🎵 Audio Reference
   const audioRef = useRef(null)
-  const [isPlaying, setIsPlaying] = useState(false)
 
-  // ==========================================
-  // 🎵 MAGIC AUTOPLAY (Screen pe kahin bhi touch karte hi)
-  // ==========================================
-  useEffect(() => {
-    const playOnFirstInteraction = () => {
-      if (audioRef.current && audioRef.current.paused) {
-        audioRef.current.volume = 0.6; // Perfect background volume
-        audioRef.current.play()
-          .then(() => setIsPlaying(true))
-          .catch(err => console.log("Blocked by browser:", err))
-      }
-      // Ek baar chalne ke baad event listener hata do
-      document.removeEventListener('click', playOnFirstInteraction)
-      document.removeEventListener('touchstart', playOnFirstInteraction)
-    }
-
-    document.addEventListener('click', playOnFirstInteraction)
-    document.addEventListener('touchstart', playOnFirstInteraction)
-
-    return () => {
-      document.removeEventListener('click', playOnFirstInteraction)
-      document.removeEventListener('touchstart', playOnFirstInteraction)
-    }
-  }, [])
-
-  // 🎵 Manual Play/Pause Toggle
-  const toggleMusic = () => {
-    if (!audioRef.current) return
-    if (isPlaying) {
-      audioRef.current.pause()
-      setIsPlaying(false)
-    } else {
-      audioRef.current.play()
-      setIsPlaying(true)
-    }
-  }
-
-  // 1. Loader pe Continue click karne pe
+  // 1. Loader pe "Continue" click karne pe (Music Starts Here)
   const handleLoaderComplete = () => {
     setShowInitialLoader(false)
     setShowFunGames(true)
+
+    // 🎵 Continue button ke click par hi gaana chalu hoga
+    if (audioRef.current) {
+      audioRef.current.volume = 0.7; // Thodi decent volume
+      audioRef.current.play().catch(e => {
+        console.log("Audio play blocked or file missing:", e)
+      })
+    }
   }
 
   // 2. Games complete hone pe
@@ -78,11 +47,9 @@ export default function BirthdayApp() {
   const handleCountdownComplete = () => {
     if (audioRef.current) {
       audioRef.current.pause() 
-      audioRef.current.src = "/images/song2.mp3" // 👈 Dusra gaana
+      audioRef.current.src = "/images/song2.mp3" 
       audioRef.current.load() 
-      audioRef.current.play()
-        .then(() => setIsPlaying(true))
-        .catch(e => console.log("Audio play blocked", e)) 
+      audioRef.current.play().catch(e => console.log("Audio change error:", e)) 
     }
     setCurrentScreen(1) 
   }
@@ -102,7 +69,7 @@ export default function BirthdayApp() {
   return (
     <div className="min-h-screen bg-[#162433] overflow-hidden relative">
       
-      {/* 🎵 HIDDEN AUDIO PLAYER 🎵 */}
+      {/* 🎵 HIDDEN AUDIO PLAYER (No buttons on UI) 🎵 */}
       <audio 
         ref={audioRef} 
         src="/images/IshqBulave.mp3" 
@@ -110,25 +77,6 @@ export default function BirthdayApp() {
         preload="auto" 
         className="hidden" 
       />
-
-      {/* 🎵 TOP RIGHT FLOATING MUSIC BUTTON 🎵 */}
-      <div className="fixed top-4 right-4 z-[100]">
-        <button
-          onClick={toggleMusic}
-          className="flex items-center gap-2 px-4 py-2 rounded-full
-          bg-[#1B2A3A]/80 backdrop-blur-md
-          border border-white/10 text-white text-sm font-bold tracking-widest uppercase
-          shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f]
-          active:shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f]
-          transition-all duration-300"
-        >
-          {isPlaying ? (
-            <><Pause className="w-4 h-4 text-pink-400" /> Pause</>
-          ) : (
-            <><Music className="w-4 h-4 text-white" /> Play</>
-          )}
-        </button>
-      </div>
 
       {/* Background Accents */}
       <div className="fixed inset-0 z-0 pointer-events-none">
