@@ -100,7 +100,7 @@ export default function Countdown({ onNext, birthdayDate }) {
                         >
                             <div className={puffyImageCircle}>
                                 {/* 👇 Apna chidhane wala GIF yahan daalna */}
-                                <img src="/images/tease.gif" alt="Teasing" className="w-full h-full object-contain p-2 mix-blend-multiply" />
+                                <img src="/images/peach-and-goma-peach-loves-goma.gif" alt="Teasing" className="w-full h-full object-contain p-2 mix-blend-multiply" />
                             </div>
 
                             <h2 className="text-[16px] font-black text-pink-400 mb-1 uppercase tracking-widest mt-4">
