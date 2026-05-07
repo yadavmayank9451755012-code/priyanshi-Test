@@ -38,6 +38,7 @@ export default function Countdown({ onNext, birthdayDate }) {
     const puffyBox = `${cardBg} rounded-[20px] shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] border border-white/5 flex flex-col items-center justify-center py-4`
     const puffyBtnPrimary = `bg-white text-[#162433] transition-all duration-300 rounded-[20px] shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f] active:shadow-[inset_4px_4px_8px_#cbd5e1,inset_-4px_-4px_8px_#ffffff] font-extrabold flex items-center justify-center gap-2 px-6 py-4 w-full uppercase tracking-[0.15em] text-[13px]`
 
+    // 👇 FIXED: Added bg-white so the square white GIF blends perfectly
     const puffyImageCircle = `w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-2 shadow-[8px_8px_16px_#111b25,-8px_-8px_16px_#25394f] border-[4px] border-[#1B2A3A] overflow-hidden bg-white`
 
     return (
@@ -48,7 +49,6 @@ export default function Countdown({ onNext, birthdayDate }) {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.8 }}
         >
-            {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <div className="absolute top-[10%] left-[10%] w-[40%] h-[40%] bg-pink-500/5 blur-[100px] rounded-full" />
                 <div className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-indigo-500/5 blur-[100px] rounded-full" />
@@ -61,10 +61,10 @@ export default function Countdown({ onNext, birthdayDate }) {
                     transition={{ delay: 0.2 }}
                     className={`p-6 text-center ${puffyCard}`}
                 >
-                    {/* 👈 CUTE BORED PEACH GIF */}
+                    {/* 👈 FIXED GIF CONTAINER */}
                     <div className={puffyImageCircle}>
-                        {/* Tumhara 3rd wala GIF jisme billi leti hui hai */}
-                        <img src="/images/bored.gif" alt="Waiting..." className="w-full h-full object-cover scale-[1.2]" />
+                        {/* object-contain aur p-2 lagaya hai taaki GIF border ke bahar na nikle aur white bg me mix ho jaye */}
+                        <img src="/images/peach-and-goma-peach-loves-goma.gif" alt="Waiting..." className="w-full h-full object-contain p-2 mix-blend-multiply" />
                     </div>
 
                     <h2 className="text-[14px] font-black text-white mb-1 uppercase tracking-widest mt-4">Priyanshi waiting...</h2>
