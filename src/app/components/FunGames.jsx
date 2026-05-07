@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti" 
-import { ArrowRight, Send, Check, Heart, Sparkles, RotateCcw, ArrowLeft, Lock } from "lucide-react"
+import { ArrowRight, Send, Check, Lock, Sparkles, RotateCcw, ArrowLeft } from "lucide-react"
 
 // 🚨 QUESTIONS IMPORT 🚨
 import { QUESTIONS } from "@/app/data/questions" 
@@ -101,30 +101,24 @@ export default function FunGames({ onComplete }) {
     const puffyImageCircle = `w-28 h-28 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f] border-[4px] border-[#1B2A3A] overflow-hidden bg-white`
 
     // Answer wala dynamic GIF fetch karega (Default wala backup ke liye)
-    const currentGif = QUESTIONS[currentQ]?.gif || "/images/peach-and-goma-peach-loves-goma.gif"
+    const currentGif = QUESTIONS[currentQ]?.gif || "https://media.tenor.com/PZtT43_FzX0AAAAi/peach-goma-tease.gif"
 
     return (
-        <div className={`min-h-screen flex flex-col items-center justify-center p-4 ${bgBase} text-white font-sans relative overflow-x-hidden`}>
+        <div className={`min-h-screen flex flex-col items-center justify-center p-4 ${bgBase} text-white font-sans relative overflow-hidden`}>
             
             {/* 🐱 PERMANENT BUBU-DUDU STAMP (Bada aur tilted) */}
-            {gameState !== "start" && gameState !== "finished" && (
-                <motion.div 
-                    initial={{ y: -50, opacity: 0 }} 
-                    animate={{ y: 0, opacity: 1 }} 
-                    className="w-full max-w-[380px] flex justify-center mb-6 z-20 relative"
-                >
-                    <div className="w-24 h-24 bg-white rounded-3xl -rotate-6 p-2 shadow-[8px_8px_16px_#111b25] border-4 border-[#1B2A3A]">
-                        <img src="/images/bubu-dudu-bubu.gif" alt="Bubu" className="w-full h-full object-contain mix-blend-multiply" />
-                    </div>
-                </motion.div>
-            )}
+            <div className="absolute top-10 left-1/2 -translate-x-1/2 w-24 h-24 bg-white rounded-3xl -rotate-6 p-2 shadow-[8px_8px_16px_#111b25] border-4 border-[#1B2A3A] z-50">
+                {/* Ensure ki bubu-dudu-bubu.gif public/images/ me ho */}
+                <img src="/images/bubu-dudu-bubu.gif" alt="Bubu" className="w-full h-full object-contain mix-blend-multiply" />
+            </div>
 
-            <div className="w-full max-w-[380px] z-10">
+            {/* Main Card Container (Added margin-top taaki stamp overlap kare mast se) */}
+            <div className="w-full max-w-[380px] z-10 mt-20">
                 <AnimatePresence mode="wait">
                     
-                    {/* 1. PLAYING SCREEN (Options & Something Else Restored) */}
+                    {/* 1. PLAYING SCREEN (Options & Something Else) */}
                     {gameState === "playing" && (
-                        <motion.div key="playing" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 ${puffyCard}`}>
+                        <motion.div key="playing" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 pt-10 ${puffyCard}`}>
                             
                             <div className="flex justify-between items-center mb-6 px-1">
                                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#94a3b8]">Step {currentQ + 1} / {QUESTIONS.length}</span>
@@ -136,7 +130,6 @@ export default function FunGames({ onComplete }) {
                             <h2 className="text-[17px] font-black mb-6 text-white leading-snug tracking-wide">{QUESTIONS[currentQ].q}</h2>
 
                             <div className="space-y-4 mb-6">
-                                {/* Tumhare 4 Options aayenge yahan se */}
                                 {QUESTIONS[currentQ].options.map((opt, idx) => {
                                     const isSelected = selectedOpt === idx;
                                     return (
@@ -147,7 +140,6 @@ export default function FunGames({ onComplete }) {
                                     )
                                 })}
                                 
-                                {/* 👈 Something else wala option wapas aa gaya */}
                                 <button onClick={() => setSelectedOpt("other")} className={`w-full p-4 text-[14px] text-left flex justify-between items-center ${selectedOpt === "other" ? puffyBtnSelected : puffyBtnDefault}`}>
                                     Something else...
                                     {selectedOpt === "other" && <Check size={18} className="text-[#162433]" strokeWidth={3} />}
@@ -175,7 +167,7 @@ export default function FunGames({ onComplete }) {
 
                     {/* 2. CONFIRMATION SCREEN */}
                     {gameState === "confirm" && (
-                        <motion.div key="confirm" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className={`p-8 text-center ${puffyCard}`}>
+                        <motion.div key="confirm" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className={`p-8 pt-12 text-center ${puffyCard}`}>
                             <div className="w-16 h-16 bg-[#1B2A3A] rounded-full flex items-center justify-center mx-auto mb-4 shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f]">
                                 <Lock className="w-8 h-8 text-white" />
                             </div>
@@ -197,7 +189,7 @@ export default function FunGames({ onComplete }) {
 
                     {/* 3. MAYANK'S REPLY + TEXTBOX SCREEN (WITH SPECIFIC GIF & CONFETTI) */}
                     {gameState === "reply" && (
-                        <motion.div key="reply" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 text-center ${puffyCard}`}>
+                        <motion.div key="reply" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 pt-12 text-center ${puffyCard}`}>
                             
                             {/* 👈 Dynamic Reaction GIF from questions.js */}
                             <div className={puffyImageCircle}>
@@ -227,7 +219,7 @@ export default function FunGames({ onComplete }) {
 
                     {/* START SCREEN */}
                     {gameState === "start" && (
-                        <motion.div key="start" className={`p-8 text-center ${puffyCard}`} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}>
+                        <motion.div key="start" className={`p-8 pt-12 text-center ${puffyCard}`} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}>
                             <h1 className="text-2xl font-black mb-2 text-white">Welcome back</h1>
                             <p className="text-[#94a3b8] mb-8 text-[13px] font-bold">Your thoughts matter. Let's understand them better. ✨</p>
                             <button onClick={() => setGameState("playing")} className={`w-full py-4 text-[13px] uppercase tracking-[0.15em] ${puffyBtnDefault}`}>
@@ -238,7 +230,7 @@ export default function FunGames({ onComplete }) {
 
                     {/* FINISHED SCREEN */}
                     {gameState === "finished" && (
-                        <motion.div key="finished" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-8 text-center ${puffyCard}`}>
+                        <motion.div key="finished" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-8 pt-12 text-center ${puffyCard}`}>
                             <div className="w-16 h-16 bg-[#1B2A3A] rounded-full flex items-center justify-center mx-auto mb-4 shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f]">
                                 <Sparkles className="w-8 h-8 text-white" />
                             </div>
