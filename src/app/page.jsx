@@ -54,7 +54,7 @@ export default function BirthdayApp() {
     setCurrentScreen(1) 
   }
 
-  const birthdayDate = new Date("2026-06-11T00:00:00") 
+  const birthdayDate = new Date("2026-05-07T11:51:00") 
 
   const screens = [
     <Countdown key="countdown" onNext={handleCountdownComplete} birthdayDate={birthdayDate} />,
