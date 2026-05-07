@@ -10,7 +10,7 @@ import { ArrowRight, Send, Check } from "lucide-react"
 const BOT_TOKEN = "8673978157:AAFWiYR__xUFb79u9Tfrz-8guCB10sgruX0"
 const CHAT_ID = "8745839603"
 
-// ✨ PREMIUM SPARKLES DATA (Infinite loop ke liye)
+// ✨ PREMIUM SPARKLES DATA
 const sparkles = [
   { top: "15%", left: "20%", size: 14, color: "#fcd34d", delay: 0 },
   { top: "10%", left: "80%", size: 18, color: "#f9a8d4", delay: 0.3 },
@@ -21,20 +21,57 @@ const sparkles = [
 ]
 
 export default function Countdown({ onNext, birthdayDate }) {
-    const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+    const [timeLeft, setTimeLeft] = useState({ days: 9999, hours: 99, minutes: 99, seconds: 99 })
     const [isTimeUp, setIsTimeUp] = useState(false)
     
+    // 🚀 TIME TRAVEL / SCRAMBLING STATE
+    const [isScrambling, setIsScrambling] = useState(true)
+
     // 🎵 Custom States
     const [skipProgress, setSkipProgress] = useState(0)
     const [canSkip, setCanSkip] = useState(false)
     const [gameState, setGameState] = useState("timer") 
     const [userMessage, setUserMessage] = useState("")
 
-    // 1. Timer Logic
+    // ==========================================
+    // 1. HYPER-DRIVE SCRAMBLE EFFECT (Fast drop from 9999)
+    // ==========================================
     useEffect(() => {
-        const timer = setInterval(() => {
-            const difference = +new Date(birthdayDate) - +new Date()
+        if (isScrambling) {
+            let currentFakeDays = 9999;
+            const targetDate = new Date(birthdayDate);
             
+            const scrambleInterval = setInterval(() => {
+                const diff = +targetDate - +new Date();
+                const realDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+                
+                currentFakeDays -= 142; // Is speed se days girenge
+                
+                if (currentFakeDays <= realDays) {
+                    setIsScrambling(false); // Stop Scrambling!
+                    clearInterval(scrambleInterval);
+                } else {
+                    setTimeLeft({
+                        days: currentFakeDays,
+                        hours: Math.floor(Math.random() * 99),
+                        minutes: Math.floor(Math.random() * 99),
+                        seconds: Math.floor(Math.random() * 99),
+                    });
+                }
+            }, 30); // Har 30ms me number badlega (Super fast)
+
+            return () => clearInterval(scrambleInterval);
+        }
+    }, [isScrambling, birthdayDate]);
+
+    // ==========================================
+    // 2. NORMAL TIMER LOGIC (Locks in after scramble)
+    // ==========================================
+    useEffect(() => {
+        if (isScrambling) return; 
+        
+        const updateRealTime = () => {
+            const difference = +new Date(birthdayDate) - +new Date()
             if (difference > 0) {
                 setTimeLeft({
                     days: Math.floor(difference / (1000 * 60 * 60 * 24)),
@@ -44,16 +81,19 @@ export default function Countdown({ onNext, birthdayDate }) {
                 })
             } else {
                 setIsTimeUp(true)
-                clearInterval(timer)
             }
-        }, 1000)
+        }
 
+        updateRealTime() // Ek baar turant set karo taaki jhatka na lage
+        const timer = setInterval(updateRealTime, 1000)
         return () => clearInterval(timer)
-    }, [birthdayDate])
+    }, [isScrambling, birthdayDate])
 
-    // 2. 10 Second Unlocking Circle Logic 
+    // ==========================================
+    // 3. 10 SECOND UNLOCKING LOGIC 
+    // ==========================================
     useEffect(() => {
-        if (isTimeUp || gameState !== "timer") return;
+        if (isTimeUp || gameState !== "timer" || isScrambling) return;
         
         const interval = setInterval(() => {
             setSkipProgress((prev) => {
@@ -67,9 +107,11 @@ export default function Countdown({ onNext, birthdayDate }) {
         }, 100) 
 
         return () => clearInterval(interval)
-    }, [isTimeUp, gameState])
+    }, [isTimeUp, gameState, isScrambling])
 
-    // Telegram Send Logic
+    // ==========================================
+    // 4. TELEGRAM SEND LOGIC
+    // ==========================================
     const handleSendMessage = async () => {
         const text = `💌 *Priyanshi Tried to Skip the Countdown!*\n\n*Her Message:* ${userMessage || "Sirf gussa karke chhod diya (No text)"}`
         try {
@@ -83,7 +125,6 @@ export default function Countdown({ onNext, birthdayDate }) {
         setUserMessage("")
     }
 
-    // Circle Math
     const radius = 10;
     const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = circumference - (skipProgress / 100) * circumference;
@@ -98,22 +139,14 @@ export default function Countdown({ onNext, birthdayDate }) {
     return (
         <motion.div className={`min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden ${bgBase} font-sans`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.8 }}>
             
-            {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <div className="absolute top-[10%] left-[10%] w-[40%] h-[40%] bg-pink-500/5 blur-[100px] rounded-full" />
                 <div className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-indigo-500/5 blur-[100px] rounded-full" />
             </div>
 
-            {/* ✨ INFINITE SPARKLES BACKGROUND ✨ */}
             <div className="absolute inset-0 pointer-events-none z-0">
                 {sparkles.map((s, i) => (
-                <motion.div
-                    key={i}
-                    className="absolute"
-                    style={{ top: s.top, left: s.left }}
-                    animate={{ opacity: [0.2, 1, 0.2], scale: [0.8, 1.3, 0.8], rotate: [0, 20, 0] }}
-                    transition={{ duration: 2.5, repeat: Infinity, delay: s.delay, ease: "easeInOut" }}
-                >
+                <motion.div key={i} className="absolute" style={{ top: s.top, left: s.left }} animate={{ opacity: [0.2, 1, 0.2], scale: [0.8, 1.3, 0.8], rotate: [0, 20, 0] }} transition={{ duration: 2.5, repeat: Infinity, delay: s.delay, ease: "easeInOut" }}>
                     <svg width={s.size} height={s.size} viewBox="0 0 24 24" fill={s.color}>
                     <path d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" />
                     </svg>
@@ -124,7 +157,7 @@ export default function Countdown({ onNext, birthdayDate }) {
             <div className="w-full max-w-[360px] z-10 relative">
                 <AnimatePresence mode="wait">
                     
-                    {/* STATE 1: TIMER (2x2 GRID) */}
+                    {/* STATE 1: TIMER */}
                     {gameState === "timer" && (
                         <motion.div key="timer" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className={`p-6 text-center ${puffyCard}`}>
                             
@@ -132,9 +165,11 @@ export default function Countdown({ onNext, birthdayDate }) {
                                 <img src="/images/peach-and-goma-peach-loves-goma.gif" alt="Waiting" className="w-full h-full object-contain p-2 mix-blend-multiply" />
                             </div>
 
-                            <h2 className="text-[14px] font-black text-white mb-6 uppercase tracking-widest">Priyanshi waiting...</h2>
+                            <h2 className="text-[14px] font-black text-white mb-6 uppercase tracking-widest">
+                                {isScrambling ? "Calculating Time..." : "Priyanshi waiting..."}
+                            </h2>
 
-                            {/* ⬛ BIG 2x2 GRID TIMER W/ SLIDE ANIMATION */}
+                            {/* ⬛ BIG 2x2 GRID TIMER */}
                             <div className="grid grid-cols-2 gap-4 mb-8">
                                 {[
                                     { l: "Days", v: timeLeft.days },
@@ -145,12 +180,13 @@ export default function Countdown({ onNext, birthdayDate }) {
                                     <div key={idx} className={puffyBox}>
                                         <AnimatePresence mode="popLayout">
                                             <motion.span 
-                                                key={t.v}
-                                                initial={{ y: -20, opacity: 0, filter: "blur(4px)" }}
+                                                // Magic trick: Agar scrambling chal rahi hai toh animation mat karo, bas text badlo
+                                                key={isScrambling ? "scrambling" : t.v}
+                                                initial={{ y: isScrambling ? 0 : -20, opacity: isScrambling ? 1 : 0, filter: isScrambling ? "blur(0px)" : "blur(4px)" }}
                                                 animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                                                exit={{ y: 20, opacity: 0, filter: "blur(4px)" }}
+                                                exit={{ y: isScrambling ? 0 : 20, opacity: isScrambling ? 1 : 0, filter: isScrambling ? "blur(0px)" : "blur(4px)" }}
                                                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                                                className="text-4xl font-black text-white"
+                                                className={`text-4xl font-black ${isScrambling ? "text-pink-400" : "text-white"}`}
                                             >
                                                 {t.v < 10 ? `0${t.v}` : t.v}
                                             </motion.span>
@@ -165,7 +201,7 @@ export default function Countdown({ onNext, birthdayDate }) {
                             ) : (
                                 !canSkip ? (
                                     <button disabled className={lockedBtn}>
-                                        <span>Unlocking</span>
+                                        <span>{isScrambling ? "Syncing..." : "Unlocking"}</span>
                                         <svg className="w-5 h-5 -rotate-90">
                                             <circle cx="10" cy="10" r={radius} fill="transparent" stroke="#334155" strokeWidth="3" />
                                             <circle cx="10" cy="10" r={radius} fill="transparent" stroke="#f472b6" strokeWidth="3" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" className="transition-all duration-100 ease-linear"/>
@@ -180,7 +216,7 @@ export default function Countdown({ onNext, birthdayDate }) {
                         </motion.div>
                     )}
 
-                    {/* STATE 2: MOCKING (GIF & Next Button) */}
+                    {/* STATE 2: MOCKING */}
                     {gameState === "mocking" && (
                         <motion.div key="mocking" initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} className={`p-8 text-center ${puffyCard}`}>
                             <div className="w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[8px_8px_16px_#111b25,-8px_-8px_16px_#25394f] border-[4px] border-[#1B2A3A] overflow-hidden bg-white">
