@@ -1,164 +1,82 @@
-// src/app/data/questions.js
-
 export const QUESTIONS = [
     {
-        q: "Jab baat cut karni ho, toh aaj kal aapka fav excuse kya hota hai?",
+        q: "Jab baat karte karte aapko suddenly mann kare call cut karne ka, toh aap bolti ho?",
         options: [
-            { text: "Neend aa rahi hai 😴", reply: "Sote raho bas duniya bhar ka! 😂" },
-            { text: "Shanti se padhai karni hai bas!", reply: "Mujhe pata tha! Ye 'shanti' wali padhai kabhi khatam nahi hoti 😂" },
-            { text: "Baad mein baat karti hu", reply: "Wo 'baad mein' hamesha agle din aata hai, mujhe pata hai." }
+            { text: "Neend aa rhi hai 😴", reply: "Jhooth mat bolo! Tum toh 2 min mein insta scroll karne lagti ho" },
+            { text: "Padhai karni hai", reply: "Wo padhai ka drama hai... hum dono ko pata hai 😂" },
+            { text: "Baad mein baat karna ⏰", reply: "Baad mtlb agle janam? 😭" }
         ]
     },
     {
-        q: "Mere number ke last 4 digits (1108) ka asli raaz kya hai?",
+        q: "Maine jo number liya hai 1108, tumhe pata hai iska matlab?",
         options: [
-            { text: "Mera lucky number", reply: "Nahi baba, kuch aur reason tha iske piche." },
-            { text: "Random digits hain", reply: "Itna random bhi nahi hai, soch ke liya tha." },
-            { text: "11 June aur 2008 ❤️", reply: "Acha laga dekh kar ki aapko yaad hai. 1108 is special. ✨" }
+            { text: "Kuch random number hai", reply: "Random? Mai itna soch ke laaya hu 😭" },
+            { text: "Tumhara lucky number hai", reply: "Ha bhi aur nahi bhi... par special hai" },
+            { text: "11 June ❤️ + 2008", reply: "Acha laga ki tumhe yaad hai. 1108 forever ✨" }
         ]
     },
     {
-        q: "Hum dono mein sabse bada 'Overthinker' kaun hai?",
+        q: "Jab tumhe gussa aata hai, toh mai kya karu ki tum maan jao?",
         options: [
-            { text: "Sirf Mayank", reply: "Acha ji? Saara blame mere upar? 😂" },
-            { text: "Sirf Priyanshi", reply: "Sahi pakda! Dimaag mein 24/7 ek movie chalti rehti hai na." },
-            { text: "Dono barabar hain", reply: "Dono hi PhD level overthinkers hain, isliye toh vibe match hoti hai 😅" }
+            { text: "Sorry bolu", reply: "Sirf sorry se kaam nahi chalta aaj kal 😂" },
+            { text: "Khana khila du 🍕", reply: "Food tumhara weakness hai maan gaya" },
+            { text: "Tareef ki baarish kar du", reply: "Tareef sunte hi tumhara gussa pighalna... ye mera secret weapon hai 🪄" }
         ]
     },
     {
-        q: "Gussa aane pe Priyanshi ko shant karne ka best tareeka kya hai?",
+        q: "Message karne ke baad 'seen' karke gayab ho jana... ye aapki kis category mein aata hai?",
         options: [
-            { text: "Sorry bol dena", reply: "Aaj kal sirf 'sorry' se kahan maanti ho." },
-            { text: "Khana khila dena 🍕", reply: "Food is the ultimate cheat code for you!" },
-            { text: "Dher saari tareef karna", reply: "Tareef sunte hi pighal jana... ye mera sabse bada secret astra hai 🪄" }
+            { text: "Main busy tha 🥺", reply: "Instagram story dekh rahe the hmm?" },
+            { text: "Bas mood nahi tha", reply: "Ye real wala answer hai 😂" },
+            { text: "Galati se ho jata hai", reply: "Galati se? Roz roz? 😭" }
         ]
     },
     {
-        q: "Duniya mein sabse zyada 'Nakhre' kiske hain?",
+        q: "Meri kya aadat tumhe sabse zyada irritate karti hai?",
         options: [
-            { text: "Mayank ke", reply: "Main toh kitna seedha hu yaar 😇" },
-            { text: "Aapki best friend ke", reply: "Uski best friend ke nakhre aapse toh kam hi hain." },
-            { text: "Maharani Priyanshi khud 👑", reply: "Maharani ji, aapke nakhre toh world famous hain! Aur cute bhi." }
+            { text: "Baar baar msg karna", reply: "Mujhe pata hai... par tumhe bhi toh accha lagta hai 🤭" },
+            { text: "Jokes maarna", reply: "Andar se hasi aati hai par dikhati nahi ho" },
+            { text: "Touchy-feely hona", reply: "Ye secretly tumhe pasand hai maan jao" }
         ]
     },
     {
-        q: "Humari sabse pehli baat kis topic pe hui thi?",
+        q: "Jab mai kisi aur ladki ki baat karta hu, toh tumhe kaise lagta hai?",
         options: [
-            { text: "Teachers Day Dance 💃", reply: "Wo Teachers Day wala dance... wahi se toh sab shuru hua tha! ✨" },
-            { text: "Insta story reply pe", reply: "Nahi, dhyan se yaad karo. Usse pehle baat hui thi." },
-            { text: "Notes maangne par", reply: "Padhakku lagti ho par notes wali baat nahi thi." }
+            { text: "Farak nahi padta 🙂", reply: "Jhooth! Tumhara reaction sab kuch bol deta hai" },
+            { text: "Thoda sa bura lagta hai", reply: "Hmm... ye sach hai" },
+            { text: "Mera dost sirf mera 😤", reply: "Ye wali line meri favourite hai... mera dost sirf mera 💙" }
         ]
     },
     {
-        q: "Mera sabse favorite kaam kya hai?",
+        q: "Instagram story dekhne ke baad reply na karna... iska kya matlab hai?",
         options: [
-            { text: "Padhai karna", reply: "Padhta hu, par sabse favorite nahi hai." },
-            { text: "Doston ke sath ghoomna", reply: "Doston ke sath maza aata hai, but there is something better." },
-            { text: "Priyanshi ko tease karna 👻", reply: "Aapko pareshan karne mein jo sukoon hai, wo aur kahin nahi!" }
+            { text: "Dhyaan nahi gaya", reply: "Story dekh ke fire emoji tak de diya... par reply nahi? 🧐" },
+            { text: "Baad mein karungi", reply: "Wo baad kab aata hai?" },
+            { text: "Bus aise hi", reply: "Ye sabse dangerous answer hai 😂" }
         ]
     },
     {
-        q: "Aapki kaunsi aadat mujhe sabse cute lagti hai?",
+        q: "Tumhare '5 minute' ka matlab vastav mein kitna hota hai?",
         options: [
-            { text: "Aapka gussa", reply: "Gusse mein laal tamatar toh lagti ho, but it's not the cutest." },
-            { text: "Aapki smile", reply: "Smile toh achi hai hi, par ek aur cheez bohot pyari hai." },
-            { text: "Galti karke cute sa muh banana ❤️", reply: "Jab aap galti karke cute sa face banati ho, wahi mera favorite moment hai!" }
+            { text: "Exactly 5 minute", reply: "Ye toh tumne aaj tak nahi kiya 😂" },
+            { text: "30-40 minute", reply: "Thoda sa accurate ho rahe ho" },
+            { text: "1 ghanta plus 🕐", reply: "5 minute = agla janam. Ye formula permanent hai" }
         ]
     },
     {
-        q: "'Late Reply' karne ka award kisko milna chahiye?",
+        q: "Priyanshi ko 'boring' feel ho raha ho, toh kya karna chahiye?",
         options: [
-            { text: "Mayank ko", reply: "Arey main toh bohot fast reply karta hu!" },
-            { text: "Madam Jii ko 🏆", reply: "Aapko award dene ke liye toh stage bhi taiyaar hai!" },
-            { text: "Kharab internet ko", reply: "Jio ko blame mat karo, sachai hum dono jante hain 😂" }
+            { text: "Kuch interesting baat karna", reply: "Interesting ka sense do 😂" },
+            { text: "Reel bhejna", reply: "Reel dekhoge, uspe react karogi... reply nahi" },
+            { text: "Call karna", reply: "Pata hai call pick nahi karogi par try karta hu tab bhi 😭" }
         ]
     },
     {
-        q: "Log Priyanshi se sabse zyada kyun jalte hain?",
+        q: "'Mujhe kya' bolne ke baad asli feeling kya hoti hai?",
         options: [
-            { text: "Aesthetic vibes dekh kar ✨", reply: "Main khud fan hu aapki aesthetic sense ka, log kyun na jaley?" },
-            { text: "Achhe marks dekh kar", reply: "Marks toh ache aate hi hain, par vibe ka jalwa alag hai." },
-            { text: "Attitude dekh kar", reply: "Attitude nahi hai, wo bas aapka style hai." }
-        ]
-    },
-    {
-        q: "Agar aap superhero hoti, toh aapki power kya hoti?",
-        options: [
-            { text: "Mind-reading", reply: "Dusro ka dimaag padhogi toh aur overthink karogi aap!" },
-            { text: "24 ghante so paane ki taqat 😴", reply: "Sote-sote duniya bachaogi aap, super-sleeper!" },
-            { text: "Ignore karne ki ninja technique", reply: "Ye technique toh already hai aapke paas ninja ji." }
-        ]
-    },
-    {
-        q: "Aapke phone mein sabse zyada storage kisne gheri hai?",
-        options: [
-            { text: "Padhai ke PDFs", reply: "Aap aur PDFs ki storage? Safed jhooth! 😂" },
-            { text: "Memes", reply: "Memes hain, but sabse zyada nahi." },
-            { text: "Same pose wali 1000 selfies 📸", reply: "Selfies delete mat karna, wo mere liye memories hain storage nahi." }
-        ]
-    },
-    {
-        q: "Mujhe aapki photos mein sabse best kya lagta hai?",
-        options: [
-            { text: "Background", reply: "Aapko dekhu ya background ko?" },
-            { text: "Outfit", reply: "Kapde ache hote hain, par usse bhi acha kuch hai." },
-            { text: "Aapki natural vibe 🌸", reply: "Camera aapki natural vibe ko kabhi poori tarah capture nahi kar pata." }
-        ]
-    },
-    {
-        q: "Agar mood kharab ho, toh usko theek karne ka ultimate fix?",
-        options: [
-            { text: "Chai / Coffee", reply: "Beverages se mood bas thoda sa theek hota hai." },
-            { text: "Momos / Pizza 🍕", reply: "Acha khana aur aapka mood, dono ka gehra connection hai!" },
-            { text: "Shopping", reply: "Shopping theek hai, par food is supreme for you." }
-        ]
-    },
-    {
-        q: "Jab aap kehti ho '5 min mein aayi', toh actual time kya hota hai?",
-        options: [
-            { text: "Exactly 5 minute", reply: "Ye toh aapne zindagi ka sabse bada jhooth bola hai 😂" },
-            { text: "30 minute", reply: "Thoda aur zyada time lagta hai shayad." },
-            { text: "Minimum 1 ghanta 🕰️", reply: "5 minute matlab hamesha 'Agla janam' hota hai aapke liye!" }
-        ]
-    },
-    {
-        q: "Priyanshi ki vibe kisse sabse zyada match karti hai?",
-        options: [
-            { text: "Golden hour sunlight 🌇", reply: "Golden hour ki tarah aap bhi thodi shant aur bohot glowing ho." },
-            { text: "Raat ki shanti", reply: "Raat ki shanti nahi, thodi sunshine jaisi ho aap." },
-            { text: "Subah ki thandi hawa", reply: "Subah jaldi uth ke thandi hawa khaane walo mein se toh aap nahi ho 😂" }
-        ]
-    },
-    {
-        q: "Mere bekar jokes par aapka kya reaction hota hai?",
-        options: [
-            { text: "Zor se hasna", reply: "Andar se hasi aati hai par dikhati nahi ho." },
-            { text: "'Kaisi baatein karte ho' 🙄", reply: "Ye 'Kaisi baatein karte ho' sunne ke liye hi toh main jokes maarta hu 😂" },
-            { text: "Seen pe chhod dena", reply: "Seen pe chhodna toh aadat si ban gayi hai na?" }
-        ]
-    },
-    {
-        q: "Agar humari movie banti, toh title kya hota?",
-        options: [
-            { text: "Tom and Jerry 🐱🐭", reply: "Perfect! Ladna-jhagadna aur phir sath rehna." },
-            { text: "The Overthinkers", reply: "Overthinkers toh hain, par title boring ho jata." },
-            { text: "Silent Treatment", reply: "Kabhi kabhi silent treatment chalta hai, par poori movie nahi." }
-        ]
-    },
-    {
-        q: "Mayank ki life mein Priyanshi ki kya importance hai?",
-        options: [
-            { text: "Ek dost", reply: "Dost se bhi kahin badhkar ho." },
-            { text: "Ek aadat", reply: "Aadat toh ho gayi hai aapki, that's true." },
-            { text: "Jo har din behtar bana de ❤️", reply: "Ye sach hai. Aap hamesha mere din ko thoda behtar bana deti ho. ✨" }
-        ]
-    },
-    {
-        q: "Ye game khelne ke baad aapka reaction kya hai?",
-        options: [
-            { text: "'Aree yrrr ab bohot ho gya 😭'", reply: "Abhi nahi hua hai bohot! Thoda sa aur baaki hai." },
-            { text: "Hmm...", reply: "Sirf 'Hmm'? Itna dry reply mat do yaar." },
-            { text: "Smile karke sochna 'Pagal hai ye' 🤭", reply: "Main janta hu aap abhi smile kar rahi ho... mission successful! 💙" }
+            { text: "Sach mein farak nahi padta", reply: "Jhooth. Farak padta hai warna baat hi nahi karti" },
+            { text: "Dhyaan mat dilao", reply: "Ye thoda real hai" },
+            { text: "Mai hurt hoon 🥺", reply: "Ye sabse accurate answer hai, maan jaao" }
         ]
     }
 ];
