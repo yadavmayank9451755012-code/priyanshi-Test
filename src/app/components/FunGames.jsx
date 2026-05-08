@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti" 
-import { ArrowRight, Send, Check, Lock, Sparkles, RotateCcw, ArrowLeft } from "lucide-react"
+import { ArrowRight, Send, Check, RotateCcw, ArrowLeft } from "lucide-react"
 
 // 🚨 QUESTIONS IMPORT 🚨
 import { QUESTIONS } from "@/app/data/questions" 
@@ -49,7 +49,7 @@ export default function FunGames({ onComplete }) {
     const handleProceedToConfirm = () => setGameState("confirm")
 
     const handleLockAnswer = () => {
-        // 🎉 CONFETTI BLAST FUNCTION (Half screen se udega)
+        // 🎉 CONFETTI BLAST
         confetti({
             particleCount: 150,
             spread: 80,
@@ -88,38 +88,35 @@ export default function FunGames({ onComplete }) {
     }
 
     // ==========================================
-    // 🌟 PREMIUM NAVY BLUE 3D NEUMORPHISM 🌟
+    // 🌟 PREMIUM NAVY BLUE 3D NEUMORPHISM
     // ==========================================
     const bgBase = "bg-[#162433]"
     const cardBg = "bg-[#1B2A3A]"
-    const puffyCard = `${cardBg} rounded-[28px] shadow-[10px_10px_20px_#111b25,-10px_-10px_20px_#213345] border border-white/5`
+    const puffyCard = `${cardBg} rounded-[32px] shadow-[10px_10px_20px_#111b25,-10px_-10px_20px_#213345] border border-white/5 relative mt-16`
     const puffyBtnDefault = `${cardBg} text-[#e2e8f0] transition-all duration-300 rounded-[20px] shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f] active:shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] font-bold border border-white/5`
     const puffyBtnSelected = `bg-white text-[#162433] transition-all duration-300 rounded-[20px] shadow-[inset_4px_4px_8px_#cbd5e1,inset_-4px_-4px_8px_#ffffff] font-extrabold`
     const puffyInput = `${cardBg} rounded-[16px] shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] border-none text-white placeholder-[#64748b] focus:outline-none p-4 font-medium text-sm`
     
-    // Naya 3D Image Circle class for dynamic question GIFs
-    const puffyImageCircle = `w-28 h-28 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f] border-[4px] border-[#1B2A3A] overflow-hidden bg-white`
+    // 🔥 NEW MASSIVE 3D POP-OUT GIF BOX
+    const massiveGifBox = "w-40 h-40 mx-auto -mt-20 mb-6 bg-white rounded-[32px] shadow-[10px_10px_20px_#111b25] border-[6px] border-[#1B2A3A] p-2 flex items-center justify-center relative z-20 overflow-hidden"
 
-    // Answer wala dynamic GIF fetch karega (Default wala backup ke liye)
-    const currentGif = QUESTIONS[currentQ]?.gif || "https://media.tenor.com/PZtT43_FzX0AAAAi/peach-goma-tease.gif"
+    const currentGif = QUESTIONS[currentQ]?.gif || "/images/bubu-dudu-bubu.gif"
 
     return (
         <div className={`min-h-screen flex flex-col items-center justify-center p-4 ${bgBase} text-white font-sans relative overflow-hidden`}>
             
-            {/* 🐱 PERMANENT BUBU-DUDU STAMP (Bada aur tilted) */}
-            <div className="absolute top-10 left-1/2 -translate-x-1/2 w-24 h-24 bg-white rounded-3xl -rotate-6 p-2 shadow-[8px_8px_16px_#111b25] border-4 border-[#1B2A3A] z-50">
-                {/* Ensure ki bubu-dudu-bubu.gif public/images/ me ho */}
-                <img src="/images/bubu-dudu-bubu.gif" alt="Bubu" className="w-full h-full object-contain mix-blend-multiply" />
-            </div>
-
-            {/* Main Card Container (Added margin-top taaki stamp overlap kare mast se) */}
-            <div className="w-full max-w-[380px] z-10 mt-20">
+            <div className="w-full max-w-[380px] z-10">
                 <AnimatePresence mode="wait">
                     
-                    {/* 1. PLAYING SCREEN (Options & Something Else) */}
+                    {/* 1. PLAYING SCREEN (Dancing GIF) */}
                     {gameState === "playing" && (
-                        <motion.div key="playing" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 pt-10 ${puffyCard}`}>
+                        <motion.div key="playing" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 ${puffyCard}`}>
                             
+                            {/* 👈 BADA DANCING GIF */}
+                            <div className={massiveGifBox}>
+                                <img src="/images/bubu-dudu-bubu.gif" alt="Dancing" className="w-full h-full object-contain mix-blend-multiply" />
+                            </div>
+
                             <div className="flex justify-between items-center mb-6 px-1">
                                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#94a3b8]">Step {currentQ + 1} / {QUESTIONS.length}</span>
                                 <div className={`w-20 h-1.5 ${cardBg} rounded-full overflow-hidden shadow-[inset_2px_2px_4px_#111b25,inset_-2px_-2px_4px_#25394f]`}>
@@ -127,7 +124,7 @@ export default function FunGames({ onComplete }) {
                                 </div>
                             </div>
 
-                            <h2 className="text-[17px] font-black mb-6 text-white leading-snug tracking-wide">{QUESTIONS[currentQ].q}</h2>
+                            <h2 className="text-[17px] font-black mb-6 text-white leading-snug tracking-wide text-center">{QUESTIONS[currentQ].q}</h2>
 
                             <div className="space-y-4 mb-6">
                                 {QUESTIONS[currentQ].options.map((opt, idx) => {
@@ -165,17 +162,22 @@ export default function FunGames({ onComplete }) {
                         </motion.div>
                     )}
 
-                    {/* 2. CONFIRMATION SCREEN */}
+                    {/* 2. CONFIRMATION SCREEN (8.gif - Thinking) */}
                     {gameState === "confirm" && (
-                        <motion.div key="confirm" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className={`p-8 pt-12 text-center ${puffyCard}`}>
-                            <div className="w-16 h-16 bg-[#1B2A3A] rounded-full flex items-center justify-center mx-auto mb-4 shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f]">
-                                <Lock className="w-8 h-8 text-white" />
+                        <motion.div key="confirm" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className={`p-8 text-center ${puffyCard}`}>
+                            
+                            {/* 👈 BADA THINKING GIF (8.gif) */}
+                            <div className={massiveGifBox}>
+                                <img src="/images/8.gif" alt="Thinking" className="w-full h-full object-contain mix-blend-multiply" />
                             </div>
-                            <h2 className="text-xl font-black text-white mb-2">Are you sure?</h2>
+
+                            <h2 className="text-xl font-black text-white mb-2 mt-2">Are you sure?</h2>
                             <p className="text-[#94a3b8] mb-6 text-[12px] font-bold">You selected:</p>
+                            
                             <div className={`p-4 mb-8 text-white text-[15px] font-bold ${cardBg} rounded-[16px] shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f]`}>
                                 "{getSelectedText()}"
                             </div>
+
                             <div className="flex flex-col gap-4">
                                 <button onClick={handleLockAnswer} className={`w-full py-4 text-[13px] uppercase tracking-[0.15em] flex items-center justify-center gap-2 ${puffyBtnSelected}`}>
                                     Yes, Lock It! <Check size={16} strokeWidth={3} />
@@ -187,16 +189,16 @@ export default function FunGames({ onComplete }) {
                         </motion.div>
                     )}
 
-                    {/* 3. MAYANK'S REPLY + TEXTBOX SCREEN (WITH SPECIFIC GIF & CONFETTI) */}
+                    {/* 3. MAYANK'S REPLY + TEXTBOX SCREEN (Specific Reaction GIF) */}
                     {gameState === "reply" && (
-                        <motion.div key="reply" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 pt-12 text-center ${puffyCard}`}>
+                        <motion.div key="reply" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 text-center ${puffyCard}`}>
                             
-                            {/* 👈 Dynamic Reaction GIF from questions.js */}
-                            <div className={puffyImageCircle}>
-                                <img src={currentGif} alt="Reaction" className="w-full h-full object-contain p-2 mix-blend-multiply" />
+                            {/* 👈 BADA SPECIFIC REACTION GIF (from questions.js) */}
+                            <div className={massiveGifBox}>
+                                <img src={currentGif} alt="Reaction" className="w-full h-full object-contain mix-blend-multiply" />
                             </div>
                             
-                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className={`w-full p-5 rounded-2xl shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] mb-6 bg-[#1A2A3C]`}>
+                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className={`w-full p-5 mt-2 rounded-2xl shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] mb-6 bg-[#1A2A3C]`}>
                                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#94a3b8] mb-3">Mayank's Reaction</h3>
                                 <p className="text-[15px] font-bold text-white italic">"{getMyThought()}"</p>
                             </motion.div>
@@ -219,8 +221,11 @@ export default function FunGames({ onComplete }) {
 
                     {/* START SCREEN */}
                     {gameState === "start" && (
-                        <motion.div key="start" className={`p-8 pt-12 text-center ${puffyCard}`} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}>
-                            <h1 className="text-2xl font-black mb-2 text-white">Welcome back</h1>
+                        <motion.div key="start" className={`p-8 text-center ${puffyCard}`} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}>
+                            <div className={massiveGifBox}>
+                                <img src="/images/bubu-dudu-bubu.gif" alt="Start" className="w-full h-full object-contain mix-blend-multiply" />
+                            </div>
+                            <h1 className="text-2xl font-black mb-2 text-white mt-4">Welcome back</h1>
                             <p className="text-[#94a3b8] mb-8 text-[13px] font-bold">Your thoughts matter. Let's understand them better. ✨</p>
                             <button onClick={() => setGameState("playing")} className={`w-full py-4 text-[13px] uppercase tracking-[0.15em] ${puffyBtnDefault}`}>
                                 Let's Begin
@@ -230,11 +235,11 @@ export default function FunGames({ onComplete }) {
 
                     {/* FINISHED SCREEN */}
                     {gameState === "finished" && (
-                        <motion.div key="finished" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-8 pt-12 text-center ${puffyCard}`}>
-                            <div className="w-16 h-16 bg-[#1B2A3A] rounded-full flex items-center justify-center mx-auto mb-4 shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f]">
-                                <Sparkles className="w-8 h-8 text-white" />
+                        <motion.div key="finished" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-8 text-center ${puffyCard}`}>
+                            <div className={massiveGifBox}>
+                                <img src="/images/10.gif" alt="Finished" className="w-full h-full object-contain mix-blend-multiply" />
                             </div>
-                            <h2 className="text-2xl font-black text-white mb-3">You're amazing!</h2>
+                            <h2 className="text-2xl font-black text-white mb-3 mt-4">You're amazing!</h2>
                             <p className="text-[#94a3b8] mb-10 text-[13px] font-bold tracking-wide leading-relaxed">
                                 One step closer to understanding each other.
                             </p>
