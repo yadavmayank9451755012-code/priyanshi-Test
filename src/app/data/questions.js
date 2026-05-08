@@ -63,20 +63,21 @@ export const QUESTIONS = [
       { text: "Door bhag jaoo mughseyyy", reply: "Ye bolti toh ho par asli matlab kuch aur hota hai. " }
     ],
     // 6.gif -> Manane wala / Massage karne wala GIF
-    gif: "/images/6.gif" 
-  },
-  {
-    q: "Agar main mota ho gaya future me, toh kya karogi?",
-    options: [
-      { text: "Zabardasti Gym bhejungi", reply: "Diet pe mat rakhna bas, thoda khane dena please! 🏋️‍♂️😂" },
-      { text: "Gol-matol zyada cute lagoge", reply: "Teddy bear bana ke rakhogi kya apne dost ko? 🧸" },
-      { text: "Pyaar toh utna hi karungi", reply: "Aww! You are the best dost ever! ❤️" },
-      { text: "Sath me dono mote honge", reply: "Plan toh yehi sabse badiya hai! Khate peete rahenge dono besties. 🍔" }
-    ],
-    // 7.gif -> Mota pet dabaane wala / Khane wala GIF
     gif: "/images/7.gif" 
   },
   {
+      {
+    q: "Agar maine kabhi gusse mein aake tumhe sach me block kar diya, toh tumhara reaction kya hoga?",
+    options: [
+      { text: "Fark nahi padta, ghoom phir ke aana toh waapas yahin hai", reply: "Itna overconfidence? Sahi khel gayi! Par dukh ki baat ye hai ki ye sach hai... 😂" },
+      { text: "Wait karungi ki kab khud shant hoke unblock karoge", reply: "Matlab thodi si bhi mehnat nahi karni manane ke liye? Waah re dost! 😒" },
+      { text: "Kisi aur number/id se message karke daant lagaungi", reply: "Aaha! Chalo iska matlab thoda bohot toh farq padta hai mere hone se! ✨" },
+      { text: "Main bhi block mar dungi, kissa khatam!", reply: "Ego clash pro max! Ye dosti hai ya World War 3? 🥊😂" }
+    ],
+    // 7.gif -> Attitude dikhane wala / Ignore karne wala / Ego clash GIF
+    gif: "/images/6.gif" 
+  },
+
     q: "Jab hum phli baar mile the / baat ki thi, toh kya socha tha?",
     options: [
       { text: "Ye kitna ajeeb hai", reply: "Ajeeb hu, par jaisa bhi hu tumhara hi dost hu! 😎" },
