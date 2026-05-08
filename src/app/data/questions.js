@@ -76,7 +76,7 @@ export const QUESTIONS = [
     // 7.gif -> Attitude dikhane wala / Ignore karne wala / Ego clash GIF
     gif: "/images/6.gif" 
   },
-
+  { // 👈 YAHAN BRACKET MISSING THA! Maine laga diya hai.
     q: "Jab hum phli baar mile the / baat ki thi, toh kya socha tha?",
     options: [
       { text: "Ye kitna ajeeb hai", reply: "Ajeeb hu, par jaisa bhi hu tumhara hi dost hu! 😎" },
@@ -109,4 +109,4 @@ export const QUESTIONS = [
     // 10.gif -> Happy/Dancing/Celebration wala GIF
     gif: "/images/10.gif" 
   }
-]
+];
