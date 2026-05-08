@@ -66,7 +66,6 @@ export const QUESTIONS = [
     gif: "/images/7.gif" 
   },
   {
-      {
     q: "Agar maine kabhi gusse mein aake tumhe sach me block kar diya, toh tumhara reaction kya hoga?",
     options: [
       { text: "Fark nahi padta, ghoom phir ke aana toh waapas yahin hai", reply: "Itna overconfidence? Sahi khel gayi! Par dukh ki baat ye hai ki ye sach hai... 😂" },
