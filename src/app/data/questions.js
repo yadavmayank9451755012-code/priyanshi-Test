@@ -7,8 +7,8 @@ export const QUESTIONS = [
       { text: "block wgehra karne ka man karta hh", reply: "Are meri maa, block mat kiya karo, ek hi toh achha dost hai tumhara! 😂" },
       { text: "Sad wali shakal bana lena", reply: "Aww ale le le... main apne dost ko kabhi sad nahi hone dunga. 💕" }
     ],
-    // Gusse me phone dekhne/peetne wala GIF
-    gif: "https://media.tenor.com/b9L_5tY37oUAAAAi/peach-cat-angry.gif" 
+    // 1.gif -> Gusse wala / Phone peetne wala GIF
+    gif: "/images/1.gif" 
   },
   {
     q: "Hum dono me se sabse bada dramebaaz kaun hai?",
@@ -18,8 +18,8 @@ export const QUESTIONS = [
       { text: "Dono barabar ke hain", reply: "Yeh baat ekdum sahi boli. We are a deadly dramatic duo! 🎭" },
       { text: "Pata nahi", reply: "Pata kaise nahi? Tum hi ho sabse badi nautanki! ❤️" }
     ],
-    // Jeebh dikha ke chidhane wala GIF
-    gif: "https://media.tenor.com/PZtT43_FzX0AAAAi/peach-goma-tease.gif" 
+    // 2.gif -> Jeebh dikha ke chidhane wala GIF
+    gif: "/images/2.gif" 
   },
   {
     q: "Tumhara sabse favourite tareeka mujhe pareshan karne ka?",
@@ -29,8 +29,8 @@ export const QUESTIONS = [
       { text: "Bina baat ke nakhre dikhana", reply: "Aur mera kaam hai tumhare nakhre jhelna... aakhir dost jo thehra! ✨" },
       { text: "Jaan bujh kar gussa hona, nautanki karna", reply: "Uske baad mujhe hi manana padta hai tumhe 😈" }
     ],
-    // Kaatne (Biting) wala GIF
-    gif: "https://media.tenor.com/GzB36zY0Q1EAAAAi/bite-peach-goma.gif" 
+    // 3.gif -> Kaatne (Biting) / Maar peet wala GIF
+    gif: "/images/3.gif" 
   },
   {
     q: "Agar main kabhi kisi aur ladki se zyada baat kar lu toh?",
@@ -40,8 +40,8 @@ export const QUESTIONS = [
       { text: "Tumhari jaan le lungi", reply: "Baap re! Meri bestie serial killer mode me! 😂🗡️" },
       { text: "Gussa karke baith jaungi", reply: "Aur phir mujhe ice-cream khila ke apna dost manana padega! 🍦" }
     ],
-    // Talwar/Chaku ghusane wala GIF
-    gif: "https://media.tenor.com/mOqZ1JgQW6QAAAAi/peach-goma.gif" 
+    // 4.gif -> Talwar/Chaku ghusane wala GIF
+    gif: "/images/4.gif" 
   },
   {
     q: "Jab main achanak se tumhari tareef karu toh kaisa lagta hai?",
@@ -51,8 +51,8 @@ export const QUESTIONS = [
       { text: "Butter fly uddne lagti hain", reply: "Kya baat kar rahi ho! Aaj kal kuch zyada hi hawa me ud rahi ho. 😂🦋" },
       { text: "Aadat ho gayi hai ab", reply: "Acha ji? Toh ab se apne bestie ki tareef karna band! (Just kidding) 😂" }
     ],
-    // Sharmane (Blushing) wala GIF
-    gif: "https://media.tenor.com/JbW6H2Y3Oa8AAAAi/peach-cat.gif" 
+    // 5.gif -> Sharmane (Blushing) wala GIF
+    gif: "/images/5.gif" 
   },
   {
     q: "Tumhara mood theek karne ka ultimate tareeka kya hai?",
@@ -62,8 +62,8 @@ export const QUESTIONS = [
       { text: "Pyaar se manana ", reply: "Ye mere budget me hai aur sabse best dosti wali vibe bhi! 🤗" },
       { text: "Door bhag jaoo mughseyyy", reply: "Ye bolti toh ho par asli matlab kuch aur hota hai. " }
     ],
-    // Pyaar se massage/manane wala GIF
-    gif: "https://media.tenor.com/K_c305a417wAAAAi/peach-goma.gif" 
+    // 6.gif -> Manane wala / Massage karne wala GIF
+    gif: "/images/6.gif" 
   },
   {
     q: "Agar main mota ho gaya future me, toh kya karogi?",
@@ -73,19 +73,19 @@ export const QUESTIONS = [
       { text: "Pyaar toh utna hi karungi", reply: "Aww! You are the best dost ever! ❤️" },
       { text: "Sath me dono mote honge", reply: "Plan toh yehi sabse badiya hai! Khate peete rahenge dono besties. 🍔" }
     ],
-    // Mota pet dabaane wala GIF
-    gif: "https://media.tenor.com/rLz8uD2bSj0AAAAi/peach-and-goma-peach-goma.gif" 
+    // 7.gif -> Mota pet dabaane wala / Khane wala GIF
+    gif: "/images/7.gif" 
   },
   {
     q: "Jab hum phli baar mile the / baat ki thi, toh kya socha tha?",
     options: [
       { text: "Ye kitna ajeeb hai", reply: "Ajeeb hu, par jaisa bhi hu tumhara hi dost hu! 😎" },
-      { text: "Cute laga tha", reply: "Pata tha mujhe! Bachpan se hi smart hu. ✨" },
+      { text: "Cute laga tha", reply: "Pata tha mujhe!. ✨" },
       { text: "Attitude bohot hai isme", reply: "Attitude nahi, thoda shy tha main starting mein. 🥺" },
       { text: "Dost banne layak hai", reply: "Aur dekho dosti kahan tak aa gayi! 💫" }
     ],
-    // Sochne (Thinking) wala GIF
-    gif: "https://media.tenor.com/bH_0_H9564kAAAAi/peach-goma.gif" 
+    // 8.gif -> Sochne (Thinking) wala GIF
+    gif: "/images/8.gif" 
   },
   {
     q: "Raat ko sone se pehle sabse aakhiri khayal kiska aata hai?",
@@ -95,8 +95,8 @@ export const QUESTIONS = [
       { text: "Subah uthne ka tension", reply: "Alarm se pehle main utha diya karunga, Agar kaho toh! ⏰" },
       { text: "Khane ka", reply: "Sach-sach batao, bhukkad ho na tum? 🍜😂" }
     ],
-    // Sone / Cuddling wala GIF
-    gif: "https://media.tenor.com/w1-1bUvQOwwAAAAi/peach-and-goma-sleep.gif" 
+    // 9.gif -> Sone (Sleeping) / Yawning wala GIF
+    gif: "/images/9.gif" 
   },
   {
     q: "How are youuu?",
@@ -106,7 +106,7 @@ export const QUESTIONS = [
       { text: "Pata nahi, bas jinda huu", reply: "Arre aise devdas ki tarah mat bolo, main hu na entertainment ke liye! 😂" },
       { text: "sad🥺 ", reply: "Sad kyun? Abhi aa ke tumhara mood theek karta hu! 🥺🌻" }
     ],
-    // Happy/Dancing/Celebration GIF
-    gif: "https://media.tenor.com/9v87zGf0LxcAAAAi/peach-and-goma-peach-goma.gif" 
+    // 10.gif -> Happy/Dancing/Celebration wala GIF
+    gif: "/images/10.gif" 
   }
 ]
