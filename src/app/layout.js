@@ -1,24 +1,28 @@
+import { Comfortaa, Shantell_Sans } from "next/font/google";
 import "./globals.css";
-import FloatingHearts from "./components/FloatingHearts"; // 👈 Import karo
+
+const comfortaa = Comfortaa({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const shantell = Shantell_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
 
 export const metadata = {
-  title: "Happy Birthday Madam Jii!",
-  description: "A special surprise...",
+  title: "Happy Birthday!",
+  description: "Celebrate your day with joy and happiness!",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      {/* Background ko black hi rakhna taaki neon chamke */}
-      <body className="antialiased bg-black relative">
-        
-        {/* 🌟 Floating Hearts Background Component 🌟 */}
-        <FloatingHearts />
-        
-        {/* Baaki saare pages content (Children) */}
-        <div className="relative z-10">
-            {children}
-        </div>
+    <html lang="en">
+      <body
+        className={`${shantell.className} antialiased bg-background select-none min-h-screen`}
+      >
+        {children}
       </body>
     </html>
   );

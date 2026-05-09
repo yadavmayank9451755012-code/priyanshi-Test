@@ -20,7 +20,7 @@ export default function BirthdayApp() {
   const [showFunGames, setShowFunGames] = useState(false)
   const [finalGameScore, setFinalGameScore] = useState(0)
   
-  // 🎵 Audio Reference
+  // Audio Reference
   const audioRef = useRef(null)
 
   // 1. Loader pe "Continue" click karne pe (Music Starts Here)
@@ -28,9 +28,9 @@ export default function BirthdayApp() {
     setShowInitialLoader(false)
     setShowFunGames(true)
 
-    // 🎵 Continue button ke click par hi gaana chalu hoga
+    // Continue button ke click par hi gaana chalu hoga
     if (audioRef.current) {
-      audioRef.current.volume = 0.7; // Thodi decent volume
+      audioRef.current.volume = 0.7;
       audioRef.current.play().catch(e => {
         console.log("Audio play blocked or file missing:", e)
       })
@@ -67,9 +67,9 @@ export default function BirthdayApp() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#162433] overflow-hidden relative">
+    <div className="min-h-screen bg-[#fdf7ff] overflow-hidden relative bg-polka-dots">
       
-      {/* 🎵 HIDDEN AUDIO PLAYER (No buttons on UI) 🎵 */}
+      {/* HIDDEN AUDIO PLAYER */}
       <audio 
         ref={audioRef} 
         src="/images/IshqBulave.mp3" 
@@ -78,10 +78,11 @@ export default function BirthdayApp() {
         className="hidden" 
       />
 
-      {/* Background Accents */}
+      {/* Background Accents - Pink/Purple soft glows */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-white/5 blur-[120px] rounded-full" />
-        <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-blue-400/5 blur-[120px] rounded-full" />
+        <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-pink-300/20 blur-[120px] rounded-full" />
+        <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-purple-300/20 blur-[120px] rounded-full" />
+        <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
       </div>
 
       <div className="relative z-10 h-full">
@@ -99,9 +100,9 @@ export default function BirthdayApp() {
         initial={{ x: 100, opacity: 0 }} 
         animate={{ x: 0, opacity: 1 }} 
         transition={{ duration: 1, delay: 1 }} 
-        className="fixed bottom-4 right-4 text-[11px] text-[#94a3b8] tracking-[0.2em] pointer-events-none z-50 font-bold uppercase"
+        className="fixed bottom-4 right-4 text-sm text-[#77537e]/40 pointer-events-none z-50 font-light"
       >
-        @rao.mayankkk
+        Rao.mayankkk
       </motion.div>
     </div>
   )

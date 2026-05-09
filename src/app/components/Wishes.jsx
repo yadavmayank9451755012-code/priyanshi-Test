@@ -35,11 +35,11 @@ const wishes = [
 export default function Wishes({ onNext, onBack }) {
     const [current, setCurrent] = useState(0)
     const [direction, setDirection] = useState(1)
-    const [isFlipped, setIsFlipped] = useState(false) // 👈 Flip state added
+    const [isFlipped, setIsFlipped] = useState(false)
 
     const goNext = () => {
         if (current < wishes.length - 1) {
-            setIsFlipped(false) // Naye card pe jate hi wapas hidden ho jaye
+            setIsFlipped(false)
             setDirection(1)
             setCurrent(c => c + 1)
         }
@@ -47,7 +47,7 @@ export default function Wishes({ onNext, onBack }) {
 
     const goPrev = () => {
         if (current > 0) {
-            setIsFlipped(false) // Wapas jate hi hide ho jaye
+            setIsFlipped(false)
             setDirection(-1)
             setCurrent(c => c - 1)
         }
@@ -55,16 +55,13 @@ export default function Wishes({ onNext, onBack }) {
 
     const w = wishes[current]
 
-    // ==========================================
-    // 🌟 PREMIUM NAVY BLUE THEME 🌟
-    // ==========================================
-    const bgBase = "bg-[#162433]"
-    const cardBg = "bg-[#1B2A3A]"
-    const puffyBtnPrimary = `bg-white text-[#162433] transition-all duration-300 rounded-[20px] shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f] active:shadow-[inset_4px_4px_8px_#cbd5e1,inset_-4px_-4px_8px_#ffffff] font-extrabold flex items-center justify-center gap-2 px-6 py-3`
+    // Premium styles
+    const cardBg = "bg-[#fff8fc]"
+    const btnPrimary = "bg-[#f1caeb] text-[#973b88] transition-all duration-300 rounded-[20px] shadow-lg hover:shadow-xl hover:bg-[#f5d4f0] active:scale-95 font-bold flex items-center justify-center gap-2 px-6 py-3"
 
     return (
         <motion.div
-            className={`min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden ${bgBase}`}
+            className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-[#fdf7ff] bg-polka-dots"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -72,16 +69,18 @@ export default function Wishes({ onNext, onBack }) {
         >
             {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-white/5 blur-[120px] rounded-full" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-blue-400/5 blur-[120px] rounded-full" />
+                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-pink-300/20 blur-[120px] rounded-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-purple-300/20 blur-[120px] rounded-full" />
+                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
             </div>
 
             {/* Header */}
             <motion.div className="text-center mb-8 relative z-10" initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-                <h1 className="text-3xl md:text-5xl font-elegant font-black text-white mb-2 tracking-wide">
+                <h1 className="text-3xl md:text-5xl font-bold text-[#973b88] mb-2 tracking-wide drop-shadow"
+                    style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
                     Secret Wishes
                 </h1>
-                <p className="text-[#94a3b8] text-[12px] font-bold tracking-[0.2em] uppercase">
+                <p className="text-[#77537e] text-[13px] font-medium tracking-[0.15em] uppercase">
                     Tap the card to reveal 💌
                 </p>
             </motion.div>
@@ -97,7 +96,7 @@ export default function Wishes({ onNext, onBack }) {
                         exit={{ x: direction * -100, opacity: 0 }}
                         transition={{ type: "spring", stiffness: 200, damping: 20 }}
                         className="w-full h-[380px] cursor-pointer"
-                        onClick={() => setIsFlipped(!isFlipped)} // 👈 Click to flip
+                        onClick={() => setIsFlipped(!isFlipped)}
                     >
                         <motion.div
                             className="w-full h-full relative [transform-style:preserve-3d]"
@@ -105,25 +104,25 @@ export default function Wishes({ onNext, onBack }) {
                             transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
                         >
                             {/* FRONT OF CARD (Hidden State) */}
-                            <div className={`absolute w-full h-full rounded-3xl ${cardBg} shadow-[10px_10px_20px_#111b25,-10px_-10px_20px_#25394f] border border-white/10 p-8 flex flex-col items-center justify-center [backface-visibility:hidden]`}>
-                                <div className="w-20 h-20 bg-[#162433] rounded-full flex items-center justify-center mb-6 shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f]">
-                                    <Sparkles className="w-8 h-8 text-[#94a3b8]" />
+                            <div className={`absolute w-full h-full rounded-3xl ${cardBg} shadow-[0_25px_50px_-12px_rgba(151,59,136,0.25)] border border-white/50 p-8 flex flex-col items-center justify-center [backface-visibility:hidden]`}>
+                                <div className="w-20 h-20 bg-gradient-to-b from-white/80 to-pink-200 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                                    <Sparkles className="w-8 h-8 text-[#973b88]" />
                                 </div>
-                                <h3 className="text-xl font-black text-white uppercase tracking-widest mb-2">Wish {current + 1}</h3>
-                                <p className="text-[#64748b] text-[11px] font-bold flex items-center gap-2">
+                                <h3 className="text-xl font-bold text-[#973b88] uppercase tracking-widest mb-2">Wish {current + 1}</h3>
+                                <p className="text-[#77537e] text-[12px] font-medium flex items-center gap-2">
                                     <MousePointerClick size={14} /> Tap to open
                                 </p>
                             </div>
 
                             {/* BACK OF CARD (Revealed State) */}
-                            <div className={`absolute w-full h-full rounded-3xl bg-white shadow-[inset_4px_4px_8px_#cbd5e1,inset_-4px_-4px_8px_#ffffff] p-8 flex flex-col items-center text-center [backface-visibility:hidden]`} style={{ transform: 'rotateY(180deg)' }}>
+                            <div className={`absolute w-full h-full rounded-3xl bg-white shadow-inner p-8 flex flex-col items-center text-center [backface-visibility:hidden]`} style={{ transform: 'rotateY(180deg)' }}>
                                 <motion.div className="text-5xl mb-4" animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }}>
                                     {w.emoji}
                                 </motion.div>
-                                <h2 className="text-xl font-black text-[#162433] mb-4 uppercase tracking-widest">
+                                <h2 className="text-xl font-bold text-[#973b88] mb-4 uppercase tracking-widest">
                                     {w.title}
                                 </h2>
-                                <p className="text-[#475569] leading-relaxed text-sm font-semibold">
+                                <p className="text-[#77537e] leading-relaxed text-sm font-medium">
                                     {w.text}
                                 </p>
                             </div>
@@ -136,7 +135,7 @@ export default function Wishes({ onNext, onBack }) {
                     {wishes.map((_, i) => (
                         <div
                             key={i}
-                            className={`transition-all duration-300 rounded-full h-2 ${i === current ? 'w-6 bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'w-2 bg-[#475569]'}`}
+                            className={`transition-all duration-300 rounded-full h-2 ${i === current ? 'w-6 bg-[#973b88] shadow-[0_0_10px_rgba(151,59,136,0.5)]' : 'w-2 bg-[#eecfeb]'}`}
                         />
                     ))}
                 </div>
@@ -146,17 +145,17 @@ export default function Wishes({ onNext, onBack }) {
                     <button
                         onClick={goPrev}
                         disabled={current === 0}
-                        className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-white/10 text-white disabled:opacity-30 transition-all hover:bg-white/5 active:scale-95"
+                        className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-[#973b88]/20 text-[#973b88] disabled:opacity-30 transition-all hover:bg-[#973b88]/10 active:scale-95"
                     >
                         <ArrowLeft className="w-5 h-5" strokeWidth={3} />
                     </button>
 
                     {current < wishes.length - 1 ? (
-                        <button onClick={goNext} className={`flex-1 ${puffyBtnPrimary} text-[13px] uppercase tracking-[0.15em]`}>
+                        <button onClick={goNext} className={`flex-1 ${btnPrimary} text-[13px] uppercase tracking-[0.12em]`}>
                             Next Wish <ArrowRight size={16} strokeWidth={3} />
                         </button>
                     ) : (
-                        <button onClick={onNext} className={`flex-1 ${puffyBtnPrimary} text-[13px] uppercase tracking-[0.15em]`}>
+                        <button onClick={onNext} className={`flex-1 ${btnPrimary} text-[13px] uppercase tracking-[0.12em]`}>
                             Continue <ArrowRight size={16} strokeWidth={3} />
                         </button>
                     )}

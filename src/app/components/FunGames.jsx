@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti" 
 import { ArrowRight, Send, Check, RotateCcw, ArrowLeft } from "lucide-react"
 
-// 🚨 QUESTIONS IMPORT 🚨
 import { QUESTIONS } from "@/app/data/questions" 
 
 const BOT_TOKEN = "8673978157:AAFWiYR__xUFb79u9Tfrz-8guCB10sgruX0"
@@ -49,12 +48,11 @@ export default function FunGames({ onComplete }) {
     const handleProceedToConfirm = () => setGameState("confirm")
 
     const handleLockAnswer = () => {
-        // 🎉 CONFETTI BLAST
         confetti({
             particleCount: 150,
             spread: 80,
             origin: { y: 0.6 },
-            colors: ['#F472B6', '#6366F1', '#FFFFFF', '#38BDF8'],
+            colors: ['#F472B6', '#A855F7', '#FFFFFF', '#FFD700'],
             disableForReducedMotion: true
         });
         setGameState("reply")
@@ -87,59 +85,62 @@ export default function FunGames({ onComplete }) {
         return selectedOpt === "other" ? otherText || "Something else" : QUESTIONS[currentQ].options[selectedOpt]?.text
     }
 
-    // ==========================================
-    // 🌟 PREMIUM NAVY BLUE 3D NEUMORPHISM
-    // ==========================================
-    const bgBase = "bg-[#162433]"
-    const cardBg = "bg-[#1B2A3A]"
-    const puffyCard = `${cardBg} rounded-[32px] shadow-[10px_10px_20px_#111b25,-10px_-10px_20px_#213345] border border-white/5 relative mt-16`
-    const puffyBtnDefault = `${cardBg} text-[#e2e8f0] transition-all duration-300 rounded-[20px] shadow-[6px_6px_12px_#111b25,-6px_-6px_12px_#25394f] active:shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] font-bold border border-white/5`
-    const puffyBtnSelected = `bg-white text-[#162433] transition-all duration-300 rounded-[20px] shadow-[inset_4px_4px_8px_#cbd5e1,inset_-4px_-4px_8px_#ffffff] font-extrabold`
-    const puffyInput = `${cardBg} rounded-[16px] shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] border-none text-white placeholder-[#64748b] focus:outline-none p-4 font-medium text-sm`
+    // Premium Pink/Purple Theme
+    const bgBase = "bg-[#fdf7ff]"
+    const cardBg = "bg-[#fff8fc]"
+    const premiumCard = `${cardBg} rounded-[32px] shadow-[0_25px_50px_-12px_rgba(151,59,136,0.25)] border border-white/50 relative mt-16`
+    const btnDefault = `bg-white text-[#77537e] transition-all duration-300 rounded-[20px] shadow-lg hover:shadow-xl hover:bg-[#fff] active:scale-95 font-medium border border-pink-100`
+    const btnSelected = `bg-[#f1caeb] text-[#973b88] transition-all duration-300 rounded-[20px] shadow-inner font-bold`
+    const inputStyle = `bg-[#fff] rounded-[16px] shadow-inner border border-pink-100 text-[#77537e] placeholder-[#77537e]/50 focus:outline-none focus:ring-2 focus:ring-[#973b88]/30 p-4 font-medium text-sm`
     
-    // 🔥 NEW MASSIVE 3D POP-OUT GIF BOX
-    const massiveGifBox = "w-40 h-40 mx-auto -mt-20 mb-6 bg-white rounded-[32px] shadow-[10px_10px_20px_#111b25] border-[6px] border-[#1B2A3A] p-2 flex items-center justify-center relative z-20 overflow-hidden"
+    const gifBox = "w-36 h-36 md:w-40 md:h-40 mx-auto -mt-20 mb-6 bg-gradient-to-b from-white/80 to-pink-200 rounded-[32px] shadow-lg border-[4px] border-white p-2 flex items-center justify-center relative z-20 overflow-hidden"
 
     const currentGif = QUESTIONS[currentQ]?.gif || "/images/bubu-dudu-bubu.gif"
 
     return (
-        <div className={`min-h-screen flex flex-col items-center justify-center p-4 ${bgBase} text-white font-sans relative overflow-hidden`}>
+        <div className={`min-h-screen flex flex-col items-center justify-center p-4 ${bgBase} text-[#77537e] font-sans relative overflow-hidden bg-polka-dots`}>
             
+            {/* Elegant Background Accents */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-pink-300/20 blur-[120px] rounded-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-purple-300/20 blur-[120px] rounded-full" />
+                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
+            </div>
+
             <div className="w-full max-w-[380px] z-10">
                 <AnimatePresence mode="wait">
                     
                     {/* 1. PLAYING SCREEN (Dancing GIF) */}
                     {gameState === "playing" && (
-                        <motion.div key="playing" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 ${puffyCard}`}>
-                            
-                            {/* 👈 BADA DANCING GIF */}
-                            <div className={massiveGifBox}>
-                                <img src="/images/bubu-dudu-bubu.gif" alt="Dancing" className="w-full h-full object-contain mix-blend-multiply" />
+                        <motion.div key="playing" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 ${premiumCard}`}>
+                                
+                            <div className={gifBox}>
+                                <img src="/images/bubu-dudu-bubu.gif" alt="Dancing" className="w-full h-full object-contain" />
                             </div>
 
                             <div className="flex justify-between items-center mb-6 px-1">
-                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#94a3b8]">Step {currentQ + 1} / {QUESTIONS.length}</span>
-                                <div className={`w-20 h-1.5 ${cardBg} rounded-full overflow-hidden shadow-[inset_2px_2px_4px_#111b25,inset_-2px_-2px_4px_#25394f]`}>
-                                    <div className="h-full bg-white transition-all duration-500" style={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }} />
+                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#77537e]">Step {currentQ + 1} / {QUESTIONS.length}</span>
+                                <div className="w-20 h-1.5 bg-[#eecfeb] rounded-full overflow-hidden">
+                                    <div className="h-full bg-gradient-to-r from-pink-400 to-purple-400 transition-all duration-500" style={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }} />
                                 </div>
                             </div>
 
-                            <h2 className="text-[17px] font-black mb-6 text-white leading-snug tracking-wide text-center">{QUESTIONS[currentQ].q}</h2>
+                            <h2 className="text-[17px] font-bold mb-6 text-[#973b88] leading-snug tracking-wide text-center">{QUESTIONS[currentQ].q}</h2>
 
                             <div className="space-y-4 mb-6">
                                 {QUESTIONS[currentQ].options.map((opt, idx) => {
                                     const isSelected = selectedOpt === idx;
                                     return (
-                                        <button key={idx} onClick={() => setSelectedOpt(idx)} className={`w-full p-4 text-[14px] text-left flex justify-between items-center ${isSelected ? puffyBtnSelected : puffyBtnDefault}`}>
+                                        <button key={idx} onClick={() => setSelectedOpt(idx)} className={`w-full p-4 text-[14px] text-left flex justify-between items-center ${isSelected ? btnSelected : btnDefault}`}>
                                             {opt.text}
-                                            {isSelected && <Check size={18} className="text-[#162433]" strokeWidth={3} />}
+                                            {isSelected && <Check size={18} className="text-[#973b88]" strokeWidth={3} />}
                                         </button>
                                     )
                                 })}
                                 
-                                <button onClick={() => setSelectedOpt("other")} className={`w-full p-4 text-[14px] text-left flex justify-between items-center ${selectedOpt === "other" ? puffyBtnSelected : puffyBtnDefault}`}>
+                                <button onClick={() => setSelectedOpt("other")} className={`w-full p-4 text-[14px] text-left flex justify-between items-center ${selectedOpt === "other" ? btnSelected : btnDefault}`}>
                                     Something else...
-                                    {selectedOpt === "other" && <Check size={18} className="text-[#162433]" strokeWidth={3} />}
+                                    {selectedOpt === "other" && <Check size={18} className="text-[#973b88]" strokeWidth={3} />}
                                 </button>
                             </div>
 
@@ -147,7 +148,7 @@ export default function FunGames({ onComplete }) {
                                 {selectedOpt === "other" && (
                                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden mb-6">
                                         <input 
-                                            className={`w-full ${puffyInput}`}
+                                            className={`w-full ${inputStyle}`}
                                             placeholder="Type your answer here..." 
                                             value={otherText} 
                                             onChange={(e) => setOtherText(e.target.value)} 
@@ -156,64 +157,62 @@ export default function FunGames({ onComplete }) {
                                 )}
                             </AnimatePresence>
 
-                            <button disabled={selectedOpt === null} onClick={handleProceedToConfirm} className={`w-full py-4 text-[13px] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-3 ${selectedOpt !== null ? puffyBtnDefault : `${cardBg} text-[#475569] rounded-[20px] cursor-not-allowed shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] font-extrabold border border-transparent`}`}>
+                            <button disabled={selectedOpt === null} onClick={handleProceedToConfirm} className={`w-full py-4 text-[13px] uppercase tracking-[0.12em] transition-all flex items-center justify-center gap-3 ${selectedOpt !== null ? btnDefault : 'bg-[#eecfeb] text-[#77537e]/60 rounded-[20px] cursor-not-allowed font-bold'}`}>
                                 Next <ArrowRight size={16} strokeWidth={3} />
                             </button>
                         </motion.div>
                     )}
 
-                    {/* 2. CONFIRMATION SCREEN (8.gif - Thinking) */}
+                    {/* 2. CONFIRMATION SCREEN */}
                     {gameState === "confirm" && (
-                        <motion.div key="confirm" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className={`p-8 text-center ${puffyCard}`}>
-                            
-                            {/* 👈 BADA THINKING GIF (8.gif) */}
-                            <div className={massiveGifBox}>
-                                <img src="/images/8.gif" alt="Thinking" className="w-full h-full object-contain mix-blend-multiply" />
+                        <motion.div key="confirm" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className={`p-8 text-center ${premiumCard}`}>
+                                
+                            <div className={gifBox}>
+                                <img src="/images/8.gif" alt="Thinking" className="w-full h-full object-contain" />
                             </div>
 
-                            <h2 className="text-xl font-black text-white mb-2 mt-2">Are you sure?</h2>
-                            <p className="text-[#94a3b8] mb-6 text-[12px] font-bold">You selected:</p>
+                            <h2 className="text-xl font-bold text-[#973b88] mb-2 mt-2">Are you sure?</h2>
+                            <p className="text-[#77537e] mb-6 text-[12px] font-medium">You selected:</p>
                             
-                            <div className={`p-4 mb-8 text-white text-[15px] font-bold ${cardBg} rounded-[16px] shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f]`}>
-                                "{getSelectedText()}"
+                            <div className="p-4 mb-8 text-[#973b88] text-[15px] font-bold bg-white rounded-[16px] shadow-inner border border-pink-100">
+                                &quot;{getSelectedText()}&quot;
                             </div>
 
                             <div className="flex flex-col gap-4">
-                                <button onClick={handleLockAnswer} className={`w-full py-4 text-[13px] uppercase tracking-[0.15em] flex items-center justify-center gap-2 ${puffyBtnSelected}`}>
+                                <button onClick={handleLockAnswer} className={`w-full py-4 text-[13px] uppercase tracking-[0.12em] flex items-center justify-center gap-2 ${btnSelected}`}>
                                     Yes, Lock It! <Check size={16} strokeWidth={3} />
                                 </button>
-                                <button onClick={() => setGameState("playing")} className={`w-full py-3 text-[#94a3b8] hover:text-white uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-colors`}>
+                                <button onClick={() => setGameState("playing")} className="w-full py-3 text-[#77537e] hover:text-[#973b88] uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-colors">
                                     <ArrowLeft size={14} strokeWidth={2.5} /> Wait, change answer
                                 </button>
                             </div>
                         </motion.div>
                     )}
 
-                    {/* 3. MAYANK'S REPLY + TEXTBOX SCREEN (Specific Reaction GIF) */}
+                    {/* 3. REPLY + TEXTBOX SCREEN */}
                     {gameState === "reply" && (
-                        <motion.div key="reply" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 text-center ${puffyCard}`}>
-                            
-                            {/* 👈 BADA SPECIFIC REACTION GIF (from questions.js) */}
-                            <div className={massiveGifBox}>
-                                <img src={currentGif} alt="Reaction" className="w-full h-full object-contain mix-blend-multiply" />
+                        <motion.div key="reply" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className={`p-6 text-center ${premiumCard}`}>
+                                
+                            <div className={gifBox}>
+                                <img src={currentGif} alt="Reaction" className="w-full h-full object-contain" />
                             </div>
                             
-                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className={`w-full p-5 mt-2 rounded-2xl shadow-[inset_4px_4px_8px_#111b25,inset_-4px_-4px_8px_#25394f] mb-6 bg-[#1A2A3C]`}>
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#94a3b8] mb-3">Mayank's Reaction</h3>
-                                <p className="text-[15px] font-bold text-white italic">"{getMyThought()}"</p>
+                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="w-full p-5 mt-2 rounded-2xl shadow-inner mb-6 bg-white border border-pink-100">
+                                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#973b88] mb-3">Mayank&apos;s Reaction</h3>
+                                <p className="text-[15px] font-medium text-[#77537e] italic">&quot;{getMyThought()}&quot;</p>
                             </motion.div>
 
                             <div className="mb-6 text-left">
-                                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-[#94a3b8] mb-3 block">Your Reply / Thoughts (Optional)</label>
+                                <label className="text-[10px] font-medium uppercase tracking-[0.15em] text-[#77537e] mb-3 block">Your Reply / Thoughts (Optional)</label>
                                 <textarea 
-                                    className={`w-full h-24 resize-none ${puffyInput}`}
-                                    placeholder="Kuch kehna hai is baare mein? 👀" 
+                                    className={`w-full h-24 resize-none ${inputStyle}`}
+                                    placeholder="Kuch kehna hai is baare mein?" 
                                     value={reasonText} 
                                     onChange={(e) => setReasonText(e.target.value)} 
                                 />
                             </div>
 
-                            <button onClick={handleSubmitAndNext} className={`w-full py-4 text-[13px] uppercase tracking-widest flex items-center justify-center gap-2 ${puffyBtnSelected}`}>
+                            <button onClick={handleSubmitAndNext} className={`w-full py-4 text-[13px] uppercase tracking-widest flex items-center justify-center gap-2 ${btnSelected}`}>
                                 Send & Next <Send size={16} strokeWidth={2.5} />
                             </button>
                         </motion.div>
@@ -221,32 +220,32 @@ export default function FunGames({ onComplete }) {
 
                     {/* START SCREEN */}
                     {gameState === "start" && (
-                        <motion.div key="start" className={`p-8 text-center ${puffyCard}`} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}>
-                            <div className={massiveGifBox}>
-                                <img src="/images/bubu-dudu-bubu.gif" alt="Start" className="w-full h-full object-contain mix-blend-multiply" />
+                        <motion.div key="start" className={`p-8 text-center ${premiumCard}`} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}>
+                            <div className={gifBox}>
+                                <img src="/images/bubu-dudu-bubu.gif" alt="Start" className="w-full h-full object-contain" />
                             </div>
-                            <h1 className="text-2xl font-black mb-2 text-white mt-4">Welcome back</h1>
-                            <p className="text-[#94a3b8] mb-8 text-[13px] font-bold">Your thoughts matter. Let's understand them better. ✨</p>
-                            <button onClick={() => setGameState("playing")} className={`w-full py-4 text-[13px] uppercase tracking-[0.15em] ${puffyBtnDefault}`}>
-                                Let's Begin
+                            <h1 className="text-2xl font-bold mb-2 text-[#973b88] mt-4">Welcome back</h1>
+                            <p className="text-[#77537e] mb-8 text-[13px] font-medium">Your thoughts matter. Let&apos;s understand them better. ✨</p>
+                            <button onClick={() => setGameState("playing")} className={`w-full py-4 text-[13px] uppercase tracking-[0.12em] ${btnDefault}`}>
+                                Let&apos;s Begin
                             </button>
                         </motion.div>
                     )}
 
                     {/* FINISHED SCREEN */}
                     {gameState === "finished" && (
-                        <motion.div key="finished" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-8 text-center ${puffyCard}`}>
-                            <div className={massiveGifBox}>
-                                <img src="/images/10.gif" alt="Finished" className="w-full h-full object-contain mix-blend-multiply" />
+                        <motion.div key="finished" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={`p-8 text-center ${premiumCard}`}>
+                            <div className={gifBox}>
+                                <img src="/images/10.gif" alt="Finished" className="w-full h-full object-contain" />
                             </div>
-                            <h2 className="text-2xl font-black text-white mb-3 mt-4">You're amazing!</h2>
-                            <p className="text-[#94a3b8] mb-10 text-[13px] font-bold tracking-wide leading-relaxed">
+                            <h2 className="text-2xl font-bold text-[#973b88] mb-3 mt-4">You&apos;re amazing!</h2>
+                            <p className="text-[#77537e] mb-10 text-[13px] font-medium tracking-wide leading-relaxed">
                                 One step closer to understanding each other.
                             </p>
-                            <button onClick={() => { localStorage.clear(); window.location.reload(); }} className="mb-6 text-[10px] font-black text-[#64748b] hover:text-white uppercase tracking-widest flex items-center justify-center gap-2 mx-auto transition-colors">
+                            <button onClick={() => { localStorage.clear(); window.location.reload(); }} className="mb-6 text-[10px] font-bold text-[#77537e] hover:text-[#973b88] uppercase tracking-widest flex items-center justify-center gap-2 mx-auto transition-colors">
                                 <RotateCcw size={14} strokeWidth={3}/> Restart Journey
                             </button>
-                            <button onClick={() => onComplete(100)} className={`w-full py-4 text-[13px] uppercase tracking-[0.15em] flex items-center justify-center gap-2 ${puffyBtnSelected}`}>
+                            <button onClick={() => onComplete(100)} className={`w-full py-4 text-[13px] uppercase tracking-[0.12em] flex items-center justify-center gap-2 ${btnSelected}`}>
                                 Continue <ArrowRight size={16} strokeWidth={3} />
                             </button>
                         </motion.div>
