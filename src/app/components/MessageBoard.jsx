@@ -138,14 +138,14 @@ export default function MessageBoard() {
     const formatTime = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`
 
     // Premium styles
-    const cardBg = "bg-[#fff8fc]"
-    const inputBox = "bg-[#fff] rounded-[20px] shadow-inner border border-pink-100 p-4"
-    const btnDefault = "bg-[#fff8fc] text-[#77537e] transition-all duration-300 rounded-[20px] shadow-lg hover:shadow-xl hover:bg-[#fff] active:scale-95 font-bold"
-    const btnPrimary = "bg-[#f1caeb] text-[#973b88] transition-all duration-300 rounded-[20px] shadow-lg hover:shadow-xl hover:bg-[#f5d4f0] active:scale-95 font-bold"
-    const circleBtn = "w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg transition-all"
+    const cardBg = "neu-card"
+    const inputBox = "neu-card-pressed p-4"
+    const btnDefault = "neu-button text-[#77537e] font-bold"
+    const btnPrimary = "neu-button text-[#973b88] font-bold"
+    const circleBtn = "w-14 h-14 neu-image-frame flex items-center justify-center transition-all"
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#fdf7ff] text-[#77537e] font-sans relative overflow-hidden bg-polka-dots">
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-aesthetic text-[#77537e] font-sans relative overflow-hidden">
             
             {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -168,7 +168,7 @@ export default function MessageBoard() {
                 </motion.div>
 
                 {/* TEXT MESSAGE CARD */}
-                <motion.div className={`p-6 ${cardBg} rounded-[28px] shadow-[0_25px_50px_-12px_rgba(151,59,136,0.25)] border border-white/50`} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
+                <motion.div className={`p-6 ${cardBg}`} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
                     <div className="flex items-center gap-3 mb-5">
                         <MessageSquare className="w-5 h-5 text-[#973b88]" />
                         <h2 className="font-bold text-[#973b88] text-[15px] uppercase tracking-widest">
@@ -212,7 +212,7 @@ export default function MessageBoard() {
                 </motion.div>
 
                 {/* AUDIO NOTE CARD */}
-                <motion.div className={`p-6 ${cardBg} rounded-[28px] shadow-[0_25px_50px_-12px_rgba(151,59,136,0.25)] border border-white/50`} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
+                <motion.div className={`p-6 ${cardBg}`} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
                     <div className="flex items-center gap-3 mb-5">
                         <Mic className="w-5 h-5 text-[#973b88]" />
                         <h2 className="font-bold text-[#973b88] text-[15px] uppercase tracking-widest">

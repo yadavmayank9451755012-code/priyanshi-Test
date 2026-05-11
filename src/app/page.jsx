@@ -67,7 +67,7 @@ export default function BirthdayApp() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#fdf7ff] overflow-hidden relative bg-polka-dots">
+    <div className="min-h-screen bg-aesthetic overflow-hidden relative">
       
       {/* HIDDEN AUDIO PLAYER */}
       <audio 

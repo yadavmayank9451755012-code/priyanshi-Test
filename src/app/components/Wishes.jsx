@@ -56,12 +56,12 @@ export default function Wishes({ onNext, onBack }) {
     const w = wishes[current]
 
     // Premium styles
-    const cardBg = "bg-[#fff8fc]"
-    const btnPrimary = "bg-[#f1caeb] text-[#973b88] transition-all duration-300 rounded-[20px] shadow-lg hover:shadow-xl hover:bg-[#f5d4f0] active:scale-95 font-bold flex items-center justify-center gap-2 px-6 py-3"
+    const cardBg = "neu-card"
+    const btnPrimary = "neu-button text-[#973b88] font-bold flex items-center justify-center gap-2 px-6 py-3"
 
     return (
         <motion.div
-            className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-[#fdf7ff] bg-polka-dots"
+            className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-aesthetic"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -104,8 +104,8 @@ export default function Wishes({ onNext, onBack }) {
                             transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
                         >
                             {/* FRONT OF CARD (Hidden State) */}
-                            <div className={`absolute w-full h-full rounded-3xl ${cardBg} shadow-[0_25px_50px_-12px_rgba(151,59,136,0.25)] border border-white/50 p-8 flex flex-col items-center justify-center [backface-visibility:hidden]`}>
-                                <div className="w-20 h-20 bg-gradient-to-b from-white/80 to-pink-200 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                            <div className={`absolute w-full h-full rounded-3xl ${cardBg} p-8 flex flex-col items-center justify-center [backface-visibility:hidden]`}>
+                                <div className="neu-image-frame w-20 h-20 flex items-center justify-center mb-6">
                                     <Sparkles className="w-8 h-8 text-[#973b88]" />
                                 </div>
                                 <h3 className="text-xl font-bold text-[#973b88] uppercase tracking-widest mb-2">Wish {current + 1}</h3>

@@ -37,7 +37,7 @@ export default function PhotoGallery({ onNext }) {
 
     return (
         <motion.div
-            className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-[#fdf7ff] bg-polka-dots"
+            className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-aesthetic"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
@@ -50,55 +50,57 @@ export default function PhotoGallery({ onNext }) {
                 <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
             </div>
 
-            <motion.div className="text-center mb-8 z-10" initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-                <div className="w-16 h-16 bg-gradient-to-b from-white/80 to-pink-200 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
-                    <Camera className="w-8 h-8 text-[#973b88]" />
+            <motion.div className="text-center mb-10 z-10" initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+                <div className="neu-card w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                    <Camera className="w-10 h-10 text-[#973b88]" />
                 </div>
-                <h1 className="text-4xl md:text-5xl font-bold text-[#973b88] mb-2 tracking-wide drop-shadow"
+                <h1 className="text-5xl md:text-6xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow"
                     style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
                     Purely Her
                 </h1>
-                <p className="text-[#77537e] text-[13px] font-medium tracking-[0.15em] uppercase flex items-center justify-center gap-2">
-                    <Sparkles className="w-3 h-3 text-[#973b88]" /> Tap any photo to view
+                <p className="text-[#77537e] text-[14px] font-medium tracking-[0.15em] uppercase flex items-center justify-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#973b88]" /> Tap any photo to view
                 </p>
             </motion.div>
 
-            {/* INFINITE RANDOM SLIDER */}
-            <div className="w-full max-w-[300px] md:max-w-[380px] mx-auto z-10">
+            {/* INFINITE RANDOM SLIDER - Enlarged & Neumorphism */}
+            <div className="w-full max-w-[340px] md:max-w-[460px] mx-auto z-10">
                 {randomPhotos.length > 0 && (
-                    <Swiper
-                        grabCursor={true}
-                        loop={true}
-                        spaceBetween={20}
-                        speed={800}
-                        autoplay={{ delay: 2500, disableOnInteraction: false }}
-                        modules={[Autoplay]}
-                        className="w-full h-[400px] md:h-[480px] rounded-[2rem] shadow-[0_25px_50px_-12px_rgba(151,59,136,0.25)] bg-[#fff8fc] border border-white/50 p-2"
-                    >
-                        {randomPhotos.map((photo, index) => (
-                            <SwiperSlide key={photo.id} className="w-full h-full">
-                                <motion.div 
-                                    className="w-full h-full rounded-[1.5rem] overflow-hidden cursor-pointer"
-                                    whileHover={{ scale: 0.98 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={() => setSelectedImg(photo.src)}
-                                >
-                                    <img
-                                        src={photo.src}
-                                        alt="Memory"
-                                        className="w-full h-full object-cover hover:grayscale-0 transition-all duration-500"
-                                    />
-                                </motion.div>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
+                    <div className="neu-image-frame">
+                        <Swiper
+                            grabCursor={true}
+                            loop={true}
+                            spaceBetween={16}
+                            speed={800}
+                            autoplay={{ delay: 2500, disableOnInteraction: false }}
+                            modules={[Autoplay]}
+                            className="w-full h-[480px] md:h-[580px] rounded-[1.5rem] bg-gradient-to-b from-white/60 to-pink-100/40"
+                        >
+                            {randomPhotos.map((photo, index) => (
+                                <SwiperSlide key={photo.id} className="w-full h-full p-2">
+                                    <motion.div 
+                                        className="w-full h-full rounded-[1.25rem] overflow-hidden cursor-pointer neu-card-pressed"
+                                        whileHover={{ scale: 0.98 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => setSelectedImg(photo.src)}
+                                    >
+                                        <img
+                                            src={photo.src}
+                                            alt="Memory"
+                                            className="w-full h-full object-cover hover:grayscale-0 transition-all duration-500"
+                                        />
+                                    </motion.div>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </div>
                 )}
             </div>
 
             {/* Bottom Section */}
-            <motion.div className="mt-12 flex flex-col items-center z-10 w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                <button onClick={onNext} className="bg-[#f1caeb] text-[#973b88] transition-all duration-300 rounded-[24px] px-8 py-4 font-bold flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:bg-[#f5d4f0] active:scale-95 uppercase tracking-[0.12em] text-[13px]">
-                    One Last Thing <ArrowRight size={18} strokeWidth={3} />
+            <motion.div className="mt-14 flex flex-col items-center z-10 w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                <button onClick={onNext} className="neu-button text-[#973b88] px-10 py-5 font-bold flex items-center justify-center gap-3 uppercase tracking-[0.12em] text-[14px]">
+                    One Last Thing <ArrowRight size={20} strokeWidth={3} />
                 </button>
             </motion.div>
 

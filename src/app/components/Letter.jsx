@@ -70,13 +70,13 @@ Forever Yoursss ✨`
     }
 
     // Premium styles
-    const premiumCard = "bg-[#fff8fc] rounded-[32px] shadow-[0_25px_50px_-12px_rgba(151,59,136,0.25)] border border-white/50"
-    const inputBox = "bg-[#fff] rounded-[24px] shadow-inner p-6 md:p-8 border border-pink-100"
-    const btnPrimary = "bg-[#f1caeb] text-[#973b88] transition-all duration-300 rounded-[20px] px-8 py-4 font-bold flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:bg-[#f5d4f0] active:scale-95 w-full max-w-[300px] uppercase tracking-[0.12em] text-[13px]"
+    const premiumCard = "neu-card"
+    const inputBox = "neu-card-pressed p-6 md:p-8"
+    const btnPrimary = "neu-button text-[#973b88] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full max-w-[300px] uppercase tracking-[0.12em] text-[13px]"
 
     return (
         <motion.div
-            className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-[#fdf7ff] bg-polka-dots font-sans"
+            className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-aesthetic font-sans"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
@@ -106,7 +106,7 @@ Forever Yoursss ✨`
                                 exit={{ rotateY: 90, opacity: 0 }}
                                 transition={{ duration: 0.4 }}
                             >
-                                <div className="w-20 h-20 bg-gradient-to-b from-white/80 to-pink-200 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                                <div className="neu-image-frame w-20 h-20 flex items-center justify-center mx-auto">
                                     <Mail className="w-8 h-8 text-[#973b88]" />
                                 </div>
                                 <div className="mt-4 flex items-center gap-2 text-[#973b88] font-bold text-[12px] uppercase tracking-widest">Tap to open <Heart className="w-3 h-3 text-[#973b88] fill-[#973b88]/50" /></div>

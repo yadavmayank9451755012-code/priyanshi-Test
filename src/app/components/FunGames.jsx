@@ -88,17 +88,17 @@ export default function FunGames({ onComplete }) {
     // Premium Pink/Purple Theme
     const bgBase = "bg-[#fdf7ff]"
     const cardBg = "bg-[#fff8fc]"
-    const premiumCard = `${cardBg} rounded-[32px] shadow-[0_25px_50px_-12px_rgba(151,59,136,0.25)] border border-white/50 relative mt-16`
+    const premiumCard = `neu-card relative mt-20 p-8`
     const btnDefault = `bg-white text-[#77537e] transition-all duration-300 rounded-[20px] shadow-lg hover:shadow-xl hover:bg-[#fff] active:scale-95 font-medium border border-pink-100`
     const btnSelected = `bg-[#f1caeb] text-[#973b88] transition-all duration-300 rounded-[20px] shadow-inner font-bold`
     const inputStyle = `bg-[#fff] rounded-[16px] shadow-inner border border-pink-100 text-[#77537e] placeholder-[#77537e]/50 focus:outline-none focus:ring-2 focus:ring-[#973b88]/30 p-4 font-medium text-sm`
     
-    const gifBox = "w-36 h-36 md:w-40 md:h-40 mx-auto -mt-20 mb-6 bg-gradient-to-b from-white/80 to-pink-200 rounded-[32px] shadow-lg border-[4px] border-white p-2 flex items-center justify-center relative z-20 overflow-hidden"
+    const gifBox = "w-44 h-44 md:w-52 md:h-52 mx-auto -mt-24 mb-8 neu-image-frame flex items-center justify-center relative z-20 overflow-hidden"
 
     const currentGif = QUESTIONS[currentQ]?.gif || "/images/bubu-dudu-bubu.gif"
 
     return (
-        <div className={`min-h-screen flex flex-col items-center justify-center p-4 ${bgBase} text-[#77537e] font-sans relative overflow-hidden bg-polka-dots`}>
+        <div className={`min-h-screen flex flex-col items-center justify-center p-4 bg-aesthetic text-[#77537e] font-sans relative overflow-hidden`}>
             
             {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">

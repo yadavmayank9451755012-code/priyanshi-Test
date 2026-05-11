@@ -44,7 +44,7 @@ export default function Loader({ onComplete }) {
   }, [])
 
   return (
-    <div className="min-h-screen relative w-full flex flex-col items-center overflow-hidden bg-[#fdf7ff] font-sans pt-12 pb-8 bg-polka-dots">
+    <div className="min-h-screen relative w-full flex flex-col items-center overflow-hidden bg-aesthetic font-sans pt-12 pb-8">
       
       {/* Elegant Background Glows */}
       <div className="absolute inset-0 pointer-events-none z-0">
@@ -103,7 +103,7 @@ export default function Loader({ onComplete }) {
         transition={{ duration: 1, delay: 0.5, type: "spring" }}
       >
         <motion.div 
-            className="w-[260px] h-[320px] md:w-[300px] md:h-[360px] border-[6px] border-[#fff]/50 overflow-hidden bg-gradient-to-b from-white/80 to-pink-200 shadow-inner rounded-[40px]"
+            className="neu-image-frame w-[280px] h-[360px] md:w-[340px] md:h-[420px] overflow-hidden"
             animate={{ 
                 borderRadius: [
                     "60% 40% 55% 45% / 50% 55% 45% 50%", 
@@ -160,7 +160,7 @@ export default function Loader({ onComplete }) {
               {/* Premium Continue Button */}
               <button 
                 onClick={onComplete} 
-                className="bg-[#f1caeb] text-[#973b88] transition-all duration-300 rounded-[24px] px-10 py-4 font-bold flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:bg-[#f5d4f0] active:scale-95 uppercase tracking-[0.15em] text-[14px]"
+                className="neu-button text-[#973b88] px-10 py-4 font-bold flex items-center justify-center gap-3 uppercase tracking-[0.15em] text-[14px]"
               >
                 <span>Continue</span>
                 <ArrowRight size={18} strokeWidth={3} />

@@ -92,7 +92,7 @@ const AnimatedCake = () => (
 export default function HappyBirthday({ onNext }) {
     return (
         <motion.div
-            className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-[#fdf7ff] bg-polka-dots"
+            className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-aesthetic"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
@@ -108,41 +108,44 @@ export default function HappyBirthday({ onNext }) {
             {/* Live Raining Confetti */}
             <RainingConfetti />
 
-            <div className="relative z-10 w-full max-w-md mx-auto flex flex-col items-center">
+            <div className="relative z-10 w-full max-w-lg mx-auto flex flex-col items-center">
                 
-                <AnimatedCake />
+                {/* 3D Neumorphism Card Container */}
+                <div className="neu-card p-8 md:p-12 w-full flex flex-col items-center">
+                    <AnimatedCake />
 
-                <motion.div
-                    className="text-center mt-10 mb-10"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6, type: "spring" }}
-                >
-                    <h1 className="text-4xl md:text-5xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow-lg"
-                        style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
-                        Happy Birthday
-                    </h1>
-                    
-                    <h2 className="text-xl md:text-2xl font-semibold text-[#77537e] tracking-[0.15em] uppercase flex items-center justify-center gap-2">
-                        <Sparkles className="w-5 h-5 text-[#f472b6]" />
-                        Madam Jii
-                        <Sparkles className="w-5 h-5 text-[#f472b6]" />
-                    </h2>
-                </motion.div>
-
-                <motion.div
-                    className="w-full max-w-[280px]"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
-                >
-                    <button
-                        onClick={onNext}
-                        className="bg-[#f1caeb] text-[#973b88] transition-all duration-300 rounded-[24px] px-8 py-4 font-bold flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:bg-[#f5d4f0] active:scale-95 w-full uppercase tracking-[0.12em] text-[13px]"
+                    <motion.div
+                        className="text-center mt-10 mb-10"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6, type: "spring" }}
                     >
-                        See Our Moments <ArrowRight size={18} strokeWidth={3} />
-                    </button>
-                </motion.div>
+                        <h1 className="text-5xl md:text-6xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow-lg"
+                            style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
+                            Happy Birthday
+                        </h1>
+                        
+                        <h2 className="text-2xl md:text-3xl font-semibold text-[#77537e] tracking-[0.15em] uppercase flex items-center justify-center gap-2">
+                            <Sparkles className="w-6 h-6 text-[#f472b6]" />
+                            Madam Jii
+                            <Sparkles className="w-6 h-6 text-[#f472b6]" />
+                        </h2>
+                    </motion.div>
+
+                    <motion.div
+                        className="w-full max-w-[320px]"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
+                    >
+                        <button
+                            onClick={onNext}
+                            className="neu-button text-[#973b88] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full uppercase tracking-[0.12em] text-[14px]"
+                        >
+                            See Our Moments <ArrowRight size={18} strokeWidth={3} />
+                        </button>
+                    </motion.div>
+                </div>
 
             </div>
         </motion.div>

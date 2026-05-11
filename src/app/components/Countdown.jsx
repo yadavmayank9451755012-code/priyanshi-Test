@@ -116,13 +116,13 @@ export default function Countdown({ onNext, birthdayDate }) {
     const strokeDashoffset = circumference - (skipProgress / 100) * circumference;
 
     // Premium Card Styles
-    const premiumCard = "bg-[#fff8fc] rounded-[32px] shadow-[0_25px_50px_-12px_rgba(151,59,136,0.25)] border border-white/50"
-    const timerBox = "bg-[#fff] rounded-[20px] shadow-inner flex flex-col items-center justify-center py-5 overflow-hidden"
-    const btnPrimary = "bg-[#f1caeb] text-[#973b88] transition-all duration-300 rounded-[20px] px-6 py-4 font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:bg-[#f5d4f0] active:scale-95 w-full uppercase tracking-[0.12em] text-[13px]"
-    const lockedBtn = "bg-[#fff8fc] text-[#77537e]/60 rounded-[20px] shadow-inner font-bold flex items-center justify-center gap-3 px-6 py-4 w-full uppercase tracking-[0.12em] text-[13px] opacity-80 cursor-not-allowed"
+    const premiumCard = "neu-card p-8"
+    const timerBox = "neu-card-pressed flex flex-col items-center justify-center py-6 overflow-hidden"
+    const btnPrimary = "neu-button text-[#973b88] px-6 py-4 font-bold flex items-center justify-center gap-2 w-full uppercase tracking-[0.12em] text-[13px]"
+    const lockedBtn = "neu-card-pressed text-[#77537e]/60 font-bold flex items-center justify-center gap-3 px-6 py-4 w-full uppercase tracking-[0.12em] text-[13px] opacity-80 cursor-not-allowed"
 
     return (
-        <motion.div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-[#fdf7ff] font-sans bg-polka-dots" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.8 }}>
+        <motion.div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-aesthetic font-sans" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.8 }}>
             
             {/* Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
@@ -148,8 +148,8 @@ export default function Countdown({ onNext, birthdayDate }) {
                     {gameState === "timer" && (
                         <motion.div key="timer" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className={`p-6 text-center ${premiumCard}`}>
                                 
-                            <div className="w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4 bg-gradient-to-b from-white/80 to-pink-200 shadow-inner overflow-hidden">
-                                <img src="/images/peach-and-goma-peach-loves-goma.gif" alt="Waiting" className="w-full h-full object-contain p-2" />
+                            <div className="neu-image-frame w-44 h-44 md:w-52 md:h-52 flex items-center justify-center mx-auto mb-6 overflow-hidden">
+                                <img src="/images/peach-and-goma-peach-loves-goma.gif" alt="Waiting" className="w-full h-full object-contain" />
                             </div>
 
                             <h2 className="text-[15px] font-bold text-[#973b88] mb-6 uppercase tracking-widest">
@@ -205,8 +205,8 @@ export default function Countdown({ onNext, birthdayDate }) {
                     {/* STATE 2: MOCKING */}
                     {gameState === "mocking" && (
                         <motion.div key="mocking" initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} className={`p-8 text-center ${premiumCard}`}>
-                            <div className="w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4 bg-gradient-to-b from-white/80 to-pink-200 shadow-inner overflow-hidden">
-                                <img src="/images/airallia-cat-chan.gif" alt="Teasing" className="w-full h-full object-contain p-2" />
+                            <div className="neu-image-frame w-44 h-44 md:w-52 md:h-52 flex items-center justify-center mx-auto mb-6 overflow-hidden">
+                                <img src="/images/airallia-cat-chan.gif" alt="Teasing" className="w-full h-full object-contain" />
                             </div>
                             <h2 className="text-[18px] font-bold text-[#973b88] mb-2 uppercase tracking-widest mt-4">Hehehe!</h2>
                             <p className="text-[#77537e] mb-8 text-[14px] font-medium leading-relaxed">

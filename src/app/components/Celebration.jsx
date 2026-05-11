@@ -38,7 +38,7 @@ export default function Celebration({ onNext }) {
 
     return (
         <motion.div
-            className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#fdf7ff] text-[#77537e] font-sans relative overflow-hidden bg-polka-dots"
+            className="min-h-screen flex flex-col items-center justify-center p-6 bg-aesthetic text-[#77537e] font-sans relative overflow-hidden"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, y: -50 }}
@@ -58,7 +58,7 @@ export default function Celebration({ onNext }) {
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="bg-[#fff8fc] p-8 md:p-10 rounded-[60px] shadow-[0_25px_50px_-12px_rgba(151,59,136,0.25)] w-full max-w-[420px]"
+                    className="neu-card p-10 md:p-12 w-full max-w-[460px]"
                 >
                     {/* Gift Icon with Animation */}
                     <motion.div
@@ -70,7 +70,7 @@ export default function Celebration({ onNext }) {
                             repeat: Infinity,
                             ease: "easeInOut",
                         }}
-                        className="w-28 h-28 rounded-full flex items-center justify-center mx-auto mb-6 bg-gradient-to-b from-white/80 to-pink-200 shadow-inner"
+                        className="neu-image-frame w-28 h-28 flex items-center justify-center mx-auto mb-8"
                     >
                         <Gift className="w-14 h-14 text-[#973b88]" strokeWidth={1.5} />
                     </motion.div>
@@ -107,7 +107,7 @@ export default function Celebration({ onNext }) {
                     >
                         <button
                             onClick={onNext}
-                            className="bg-[#f1caeb] text-[#973b88] transition-all duration-300 rounded-[24px] px-8 py-4 font-bold flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:bg-[#f5d4f0] active:scale-95 w-full uppercase tracking-[0.12em] text-[13px]"
+                            className="neu-button text-[#973b88] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full uppercase tracking-[0.12em] text-[14px]"
                         >
                             Let's Celebrate <Heart className="w-5 h-5 ml-1 text-[#973b88] fill-[#973b88]/30" /> <ArrowRight size={16} />
                         </button>
