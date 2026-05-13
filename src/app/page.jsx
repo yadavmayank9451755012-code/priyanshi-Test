@@ -13,6 +13,7 @@ import PhotoGallery from "./components/PhotoGallery"
 import Letter from "./components/Letter"
 import Wishes from "./components/Wishes"
 import MessageBoard from "./components/MessageBoard"
+import BackgroundEffects from "./components/BackgroundEffects"
 
 export default function BirthdayApp() {
   const [currentScreen, setCurrentScreen] = useState(0)
@@ -68,6 +69,7 @@ export default function BirthdayApp() {
 
   return (
     <div className="min-h-screen bg-aesthetic overflow-hidden relative">
+      <BackgroundEffects />
       
       {/* HIDDEN AUDIO PLAYER */}
       <audio 
@@ -77,13 +79,6 @@ export default function BirthdayApp() {
         preload="auto" 
         className="hidden" 
       />
-
-      {/* Background Accents - Pink/Purple soft glows */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-pink-300/20 blur-[120px] rounded-full" />
-        <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-purple-300/20 blur-[120px] rounded-full" />
-        <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
-      </div>
 
       <div className="relative z-10 h-full">
         <AnimatePresence mode="wait">

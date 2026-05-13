@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Mail, Heart, Sparkles, ArrowRight } from "lucide-react"
 import confetti from "canvas-confetti"
+import TiltCard from "./TiltCard"
 
 export default function Letter({ onNext }) {
     const [isOpen, setIsOpen] = useState(false)
@@ -70,9 +71,9 @@ Forever Yoursss ✨`
     }
 
     // Premium styles
-    const premiumCard = "neu-card"
+    const premiumCard = "glass-card"
     const inputBox = "neu-card-pressed p-6 md:p-8"
-    const btnPrimary = "neu-button text-[#973b88] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full max-w-[300px] uppercase tracking-[0.12em] text-[13px]"
+    const btnPrimary = "glass-button text-[#973b88] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full max-w-[300px] uppercase tracking-[0.12em] text-[13px] rounded-2xl"
 
     return (
         <motion.div
@@ -97,27 +98,20 @@ Forever Yoursss ✨`
                 <motion.div className="relative w-full flex justify-center" initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} transition={{ delay: 0.5, type: "spring", stiffness: 200 }}>
                     <AnimatePresence mode="wait">
                         {!isOpen ? (
-                            <motion.div
+                            <TiltCard
                                 key="envelope"
                                 className={`w-[280px] h-[200px] md:w-[320px] md:h-[220px] ${premiumCard} cursor-pointer flex flex-col items-center justify-center relative`}
-                                whileHover={{ scale: 1.05, y: -5 }}
-                                whileTap={{ scale: 0.95 }}
                                 onClick={handleOpenLetter}
-                                exit={{ rotateY: 90, opacity: 0 }}
-                                transition={{ duration: 0.4 }}
                             >
                                 <div className="neu-image-frame w-20 h-20 flex items-center justify-center mx-auto">
                                     <Mail className="w-8 h-8 text-[#973b88]" />
                                 </div>
                                 <div className="mt-4 flex items-center gap-2 text-[#973b88] font-bold text-[12px] uppercase tracking-widest">Tap to open <Heart className="w-3 h-3 text-[#973b88] fill-[#973b88]/50" /></div>
-                            </motion.div>
+                            </TiltCard>
                         ) : (
-                            <motion.div
+                            <TiltCard
                                 key="letter"
                                 className={`w-full ${premiumCard} p-6 md:p-10 relative flex flex-col`}
-                                initial={{ rotateY: -90, opacity: 0 }}
-                                animate={{ rotateY: 0, opacity: 1 }}
-                                transition={{ duration: 0.6, type: "spring", stiffness: 150 }}
                             >
                                 <div className="text-center mb-6">
                                     <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
@@ -127,7 +121,7 @@ Forever Yoursss ✨`
 
                                 <div ref={scrollRef} className={`min-h-[50vh] max-h-[50vh] md:min-h-[350px] md:max-h-[350px] overflow-y-auto ${inputBox} scrollbar-hide`}>
                                     {showText && (
-                                        <div className="whitespace-pre-wrap text-[#77537e] text-[15px] md:text-[16px] font-medium leading-[1.9] tracking-wide">
+                                        <div className="font-letter whitespace-pre-wrap text-[#77537e] text-[28px] md:text-[32px] leading-[1.5] tracking-wide">
                                             {currentText}
                                             {showCursor && <motion.span className="inline-block w-[3px] h-[18px] bg-[#973b88] ml-1 align-middle rounded-full" animate={{ opacity: [0, 1, 0] }} transition={{ duration: 0.8, repeat: Infinity }} />}
                                         </div>
@@ -139,7 +133,7 @@ Forever Yoursss ✨`
                                         <button onClick={onNext} className={btnPrimary}>See what&apos;s next <ArrowRight size={18} strokeWidth={3} /></button>
                                     </motion.div>
                                 )}
-                            </motion.div>
+                            </TiltCard>
                         )}
                     </AnimatePresence>
                 </motion.div>

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { ArrowRight, Sparkles } from "lucide-react"
 import { useEffect, useState } from "react"
+import TiltCard from "./TiltCard"
 
 // Raining Confetti - Pink/Purple/Gold Theme
 const RainingConfetti = () => {
@@ -90,6 +91,11 @@ const AnimatedCake = () => (
 )
 
 export default function HappyBirthday({ onNext }) {
+    const reveal = {
+        hidden: { opacity: 0, y: 24 },
+        show: { opacity: 1, y: 0, transition: { staggerChildren: 0.16, delayChildren: 0.2 } },
+    }
+
     return (
         <motion.div
             className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-aesthetic"
@@ -111,14 +117,14 @@ export default function HappyBirthday({ onNext }) {
             <div className="relative z-10 w-full max-w-lg mx-auto flex flex-col items-center">
                 
                 {/* 3D Neumorphism Card Container */}
-                <div className="neu-card p-8 md:p-12 w-full flex flex-col items-center">
-                    <AnimatedCake />
+                <TiltCard className="glass-card p-8 md:p-12 w-full flex flex-col items-center">
+                    <motion.div variants={reveal} initial="hidden" animate="show" className="w-full flex flex-col items-center">
+                    <motion.div variants={{ hidden: { opacity: 0, scale: 0.95 }, show: { opacity: 1, scale: 1 } }}>
+                        <AnimatedCake />
+                    </motion.div>
 
-                    <motion.div
+                    <motion.div variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
                         className="text-center mt-10 mb-10"
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6, type: "spring" }}
                     >
                         <h1 className="text-5xl md:text-6xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow-lg"
                             style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
@@ -132,20 +138,18 @@ export default function HappyBirthday({ onNext }) {
                         </h2>
                     </motion.div>
 
-                    <motion.div
+                    <motion.div variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
                         className="w-full max-w-[320px]"
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
                     >
                         <button
                             onClick={onNext}
-                            className="neu-button text-[#973b88] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full uppercase tracking-[0.12em] text-[14px]"
+                            className="glass-button text-[#973b88] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full uppercase tracking-[0.12em] text-[14px] rounded-2xl"
                         >
                             See Our Moments <ArrowRight size={18} strokeWidth={3} />
                         </button>
                     </motion.div>
-                </div>
+                    </motion.div>
+                </TiltCard>
 
             </div>
         </motion.div>
