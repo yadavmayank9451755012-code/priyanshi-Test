@@ -90,9 +90,9 @@ Forever Yoursss ✨`
 
             <div className="max-w-3xl w-full relative z-10 flex flex-col items-center">
                 <motion.div className="text-center mb-10" initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
-                    <h1 className="text-3xl md:text-5xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow-md"
+                    <h1 className="text-3xl md:text-5xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow-md font-heading"
                         style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>A Special Letter</h1>
-                    <motion.p className="text-[#77537e] text-[13px] font-medium tracking-[0.15em] uppercase" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 3, repeat: Infinity }}>Just for you, on your special day ✨</motion.p>
+                    <motion.p className="text-[#77537e] text-[13px] font-bold tracking-[0.15em] uppercase font-cute" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 3, repeat: Infinity }}>Just for you, on your special day ✨</motion.p>
                 </motion.div>
 
                 <motion.div className="relative w-full flex justify-center" initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} transition={{ delay: 0.5, type: "spring", stiffness: 200 }}>
@@ -121,7 +121,7 @@ Forever Yoursss ✨`
 
                                 <div ref={scrollRef} className={`min-h-[50vh] max-h-[50vh] md:min-h-[350px] md:max-h-[350px] overflow-y-auto ${inputBox} scrollbar-hide`}>
                                     {showText && (
-                                        <div className="font-letter whitespace-pre-wrap text-[#77537e] text-[28px] md:text-[32px] leading-[1.5] tracking-wide">
+                                        <div className="font-letter whitespace-pre-wrap text-[#77537e] text-[24px] md:text-[30px] leading-[1.4] tracking-wide">
                                             {currentText}
                                             {showCursor && <motion.span className="inline-block w-[3px] h-[18px] bg-[#973b88] ml-1 align-middle rounded-full" animate={{ opacity: [0, 1, 0] }} transition={{ duration: 0.8, repeat: Infinity }} />}
                                         </div>

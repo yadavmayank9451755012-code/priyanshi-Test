@@ -123,20 +123,25 @@ export default function HappyBirthday({ onNext }) {
                         <AnimatedCake />
                     </motion.div>
 
-                    <motion.div variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
+                    <div
                         className="text-center mt-10 mb-10"
                     >
-                        <h1 className="text-5xl md:text-6xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow-lg"
+                        <motion.h1
+                            variants={{ hidden: { opacity: 0, scale: 0.5 }, show: { opacity: 1, scale: 1 } }}
+                            className="text-5xl md:text-7xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow-lg font-heading"
                             style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
                             Happy Birthday
-                        </h1>
+                        </motion.h1>
                         
-                        <h2 className="text-2xl md:text-3xl font-semibold text-[#77537e] tracking-[0.15em] uppercase flex items-center justify-center gap-2">
+                        <motion.h2
+                            variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
+                            className="text-2xl md:text-3xl font-bold text-[#77537e] tracking-[0.15em] uppercase flex items-center justify-center gap-2 font-cute"
+                        >
                             <Sparkles className="w-6 h-6 text-[#f472b6]" />
                             Madam Jii
                             <Sparkles className="w-6 h-6 text-[#f472b6]" />
-                        </h2>
-                    </motion.div>
+                        </motion.h2>
+                    </div>
 
                     <motion.div variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
                         className="w-full max-w-[320px]"
