@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight, Send } from "lucide-react"
+import TiltCard from "./TiltCard"
 
 // TELEGRAM BOT SETUP
-const BOT_TOKEN = "8673978157:AAFWiYR__xUFb79u9Tfrz-8guCB10sgruX0"
-const CHAT_ID = "8745839603"
+const BOT_TOKEN = process.env.NEXT_PUBLIC_BOT_TOKEN
+const CHAT_ID = process.env.NEXT_PUBLIC_CHAT_ID
 
 // Sparkles Data
 const sparkles = [
@@ -146,7 +147,7 @@ export default function Countdown({ onNext, birthdayDate }) {
                     
                     {/* STATE 1: TIMER */}
                     {gameState === "timer" && (
-                        <motion.div key="timer" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className={`p-6 text-center ${premiumCard}`}>
+                        <TiltCard key="timer" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className={`p-6 text-center ${premiumCard}`}>
                                 
                             <div className="neu-image-frame w-44 h-44 md:w-52 md:h-52 flex items-center justify-center mx-auto mb-6 overflow-hidden">
                                 <img src="/images/peach-and-goma-peach-loves-goma.gif" alt="Waiting" className="w-full h-full object-contain" />
@@ -199,12 +200,12 @@ export default function Countdown({ onNext, birthdayDate }) {
                                     </button>
                                 )
                             )}
-                        </motion.div>
+                        </TiltCard>
                     )}
 
                     {/* STATE 2: MOCKING */}
                     {gameState === "mocking" && (
-                        <motion.div key="mocking" initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} className={`p-8 text-center ${premiumCard}`}>
+                        <TiltCard key="mocking" initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} className={`p-8 text-center ${premiumCard}`}>
                             <div className="neu-image-frame w-44 h-44 md:w-52 md:h-52 flex items-center justify-center mx-auto mb-6 overflow-hidden">
                                 <img src="/images/airallia-cat-chan.gif" alt="Teasing" className="w-full h-full object-contain" />
                             </div>
@@ -215,12 +216,12 @@ export default function Countdown({ onNext, birthdayDate }) {
                             <button onClick={() => setGameState("message")} className={btnPrimary}>
                                 Next <ArrowRight size={16} strokeWidth={3} />
                             </button>
-                        </motion.div>
+                        </TiltCard>
                     )}
 
                     {/* STATE 3: MESSAGE BOX */}
                     {gameState === "message" && (
-                        <motion.div key="msg" initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className={`p-6 text-center ${premiumCard}`}>
+                        <TiltCard key="msg" initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className={`p-6 text-center ${premiumCard}`}>
                             <h3 className="text-[14px] font-bold text-[#973b88] uppercase mb-6 tracking-widest">Kuch likhna chahoge?</h3>
                             <textarea 
                                 className="w-full h-32 p-4 bg-[#fff] shadow-inner rounded-2xl text-[#77537e] outline-none mb-6 resize-none font-medium text-sm placeholder-[#77537e]/50 border border-pink-100" 
@@ -231,7 +232,7 @@ export default function Countdown({ onNext, birthdayDate }) {
                             <button onClick={handleSendMessage} className={btnPrimary}>
                                 Send & Back <Send size={16} strokeWidth={2.5} />
                             </button>
-                        </motion.div>
+                        </TiltCard>
                     )}
 
                 </AnimatePresence>

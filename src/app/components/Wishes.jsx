@@ -56,8 +56,8 @@ export default function Wishes({ onNext, onBack }) {
     const w = wishes[current]
 
     // Premium styles
-    const cardBg = "neu-card"
-    const btnPrimary = "neu-button text-[#973b88] font-bold flex items-center justify-center gap-2 px-6 py-3"
+    const cardBg = "glass-card"
+    const btnPrimary = "glass-button text-[#973b88] font-bold flex items-center justify-center gap-2 px-6 py-3 rounded-xl"
 
     return (
         <motion.div
@@ -76,11 +76,11 @@ export default function Wishes({ onNext, onBack }) {
 
             {/* Header */}
             <motion.div className="text-center mb-8 relative z-10" initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-                <h1 className="text-3xl md:text-5xl font-bold text-[#973b88] mb-2 tracking-wide drop-shadow"
+                <h1 className="text-3xl md:text-5xl font-bold text-[#973b88] mb-2 tracking-wide drop-shadow font-heading"
                     style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
                     Secret Wishes
                 </h1>
-                <p className="text-[#77537e] text-[13px] font-medium tracking-[0.15em] uppercase">
+                <p className="text-[#77537e] text-[13px] font-bold tracking-[0.15em] uppercase font-cute">
                     Tap the card to reveal 💌
                 </p>
             </motion.div>
@@ -105,24 +105,24 @@ export default function Wishes({ onNext, onBack }) {
                         >
                             {/* FRONT OF CARD (Hidden State) */}
                             <div className={`absolute w-full h-full rounded-3xl ${cardBg} p-8 flex flex-col items-center justify-center [backface-visibility:hidden]`}>
-                                <div className="neu-image-frame w-20 h-20 flex items-center justify-center mb-6">
+                                <div className="neu-image-frame w-20 h-20 flex items-center justify-center mb-6 shadow-lg">
                                     <Sparkles className="w-8 h-8 text-[#973b88]" />
                                 </div>
-                                <h3 className="text-xl font-bold text-[#973b88] uppercase tracking-widest mb-2">Wish {current + 1}</h3>
-                                <p className="text-[#77537e] text-[12px] font-medium flex items-center gap-2">
+                                <h3 className="text-xl font-bold text-[#973b88] uppercase tracking-widest mb-2 font-heading">Wish {current + 1}</h3>
+                                <p className="text-[#77537e] text-[12px] font-bold flex items-center gap-2 font-cute">
                                     <MousePointerClick size={14} /> Tap to open
                                 </p>
                             </div>
 
                             {/* BACK OF CARD (Revealed State) */}
-                            <div className={`absolute w-full h-full rounded-3xl bg-white shadow-inner p-8 flex flex-col items-center text-center [backface-visibility:hidden]`} style={{ transform: 'rotateY(180deg)' }}>
-                                <motion.div className="text-5xl mb-4" animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }}>
+                            <div className={`absolute w-full h-full rounded-3xl bg-white/90 backdrop-blur-md shadow-2xl p-8 flex flex-col items-center text-center [backface-visibility:hidden] border border-white/50`} style={{ transform: 'rotateY(180deg)' }}>
+                                <motion.div className="text-5xl mb-4" animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }}>
                                     {w.emoji}
                                 </motion.div>
-                                <h2 className="text-xl font-bold text-[#973b88] mb-4 uppercase tracking-widest">
+                                <h2 className="text-xl font-bold text-[#973b88] mb-4 uppercase tracking-widest font-heading">
                                     {w.title}
                                 </h2>
-                                <p className="text-[#77537e] leading-relaxed text-sm font-medium">
+                                <p className="text-[#77537e] leading-relaxed text-sm font-bold font-cute">
                                     {w.text}
                                 </p>
                             </div>
@@ -145,7 +145,7 @@ export default function Wishes({ onNext, onBack }) {
                     <button
                         onClick={goPrev}
                         disabled={current === 0}
-                        className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-[#973b88]/20 text-[#973b88] disabled:opacity-30 transition-all hover:bg-[#973b88]/10 active:scale-95"
+                        className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-[#973b88]/20 text-[#973b88] disabled:opacity-30 transition-all hover:bg-[#973b88]/10 active:scale-95 glass-button"
                     >
                         <ArrowLeft className="w-5 h-5" strokeWidth={3} />
                     </button>

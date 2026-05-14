@@ -4,8 +4,9 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Camera, ArrowRight, X, Sparkles } from "lucide-react"
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Autoplay } from 'swiper/modules'
+import { Autoplay, EffectCards } from 'swiper/modules'
 import 'swiper/css'
+import 'swiper/css/effect-cards'
 
 export default function PhotoGallery({ onNext }) {
     const [selectedImg, setSelectedImg] = useState(null)
@@ -50,56 +51,69 @@ export default function PhotoGallery({ onNext }) {
                 <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
             </div>
 
-            <motion.div className="text-center mb-10 z-10" initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-                <div className="neu-card w-20 h-20 flex items-center justify-center mx-auto mb-6">
+            <motion.div
+                className="text-center mb-10 z-10"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                    hidden: { opacity: 0 },
+                    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+                }}
+            >
+                <motion.div variants={{ hidden: { scale: 0, rotate: -180 }, visible: { scale: 1, rotate: 0 } }} className="neu-card w-20 h-20 flex items-center justify-center mx-auto mb-6">
                     <Camera className="w-10 h-10 text-[#973b88]" />
-                </div>
-                <h1 className="text-5xl md:text-6xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow"
+                </motion.div>
+                <motion.h1 variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }} className="text-5xl md:text-7xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow font-heading"
                     style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
                     Purely Her
-                </h1>
-                <p className="text-[#77537e] text-[14px] font-medium tracking-[0.15em] uppercase flex items-center justify-center gap-2">
+                </motion.h1>
+                <motion.p variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }} className="text-[#77537e] text-[14px] font-bold tracking-[0.15em] uppercase flex items-center justify-center gap-2 font-cute">
                     <Sparkles className="w-4 h-4 text-[#973b88]" /> Tap any photo to view
-                </p>
+                </motion.p>
             </motion.div>
 
-            {/* INFINITE RANDOM SLIDER - Enlarged & Neumorphism */}
-            <div className="w-full max-w-[340px] md:max-w-[460px] mx-auto z-10">
+            {/* 3D CARDS SLIDER */}
+            <div className="w-full max-w-[300px] md:max-w-[400px] mx-auto z-10 perspective-1000">
                 {randomPhotos.length > 0 && (
-                    <div className="neu-image-frame">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.6, duration: 0.8 }}
+                    >
                         <Swiper
+                            effect={'cards'}
                             grabCursor={true}
                             loop={true}
-                            spaceBetween={16}
                             speed={800}
-                            autoplay={{ delay: 2500, disableOnInteraction: false }}
-                            modules={[Autoplay]}
-                            className="w-full h-[480px] md:h-[580px] rounded-[1.5rem] bg-gradient-to-b from-white/60 to-pink-100/40"
+                            autoplay={{ delay: 3000, disableOnInteraction: false }}
+                            modules={[Autoplay, EffectCards]}
+                            className="w-full h-[400px] md:h-[500px]"
                         >
                             {randomPhotos.map((photo, index) => (
-                                <SwiperSlide key={photo.id} className="w-full h-full p-2">
-                                    <motion.div 
-                                        className="w-full h-full rounded-[1.25rem] overflow-hidden cursor-pointer neu-card-pressed"
-                                        whileHover={{ scale: 0.98 }}
-                                        whileTap={{ scale: 0.95 }}
+                                <SwiperSlide key={photo.id} className="rounded-[2rem] overflow-hidden shadow-2xl">
+                                    <div
+                                        className="w-full h-full cursor-pointer relative group"
                                         onClick={() => setSelectedImg(photo.src)}
                                     >
                                         <img
                                             src={photo.src}
                                             alt="Memory"
-                                            className="w-full h-full object-cover hover:grayscale-0 transition-all duration-500"
+                                            className="w-full h-full object-cover"
                                         />
-                                    </motion.div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-8">
+                                            <Sparkles className="text-white w-8 h-8" />
+                                        </div>
+                                    </div>
                                 </SwiperSlide>
                             ))}
                         </Swiper>
-                    </div>
+                    </motion.div>
                 )}
             </div>
 
             {/* Bottom Section */}
-            <motion.div className="mt-14 flex flex-col items-center z-10 w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                <button onClick={onNext} className="neu-button text-[#973b88] px-10 py-5 font-bold flex items-center justify-center gap-3 uppercase tracking-[0.12em] text-[14px]">
+            <motion.div className="mt-14 flex flex-col items-center z-10 w-full" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
+                <button onClick={onNext} className="glass-button text-[#973b88] px-10 py-5 font-bold flex items-center justify-center gap-3 uppercase tracking-[0.12em] text-[14px] rounded-2xl">
                     One Last Thing <ArrowRight size={20} strokeWidth={3} />
                 </button>
             </motion.div>

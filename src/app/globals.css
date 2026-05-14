@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;700&family=Nunito:wght@400;500;700;800&family=Playfair+Display:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;700&family=Nunito:wght@400;500;700;800&family=Playfair+Display:wght@500;600;700;800&family=Dancing+Script:wght@400;700&family=Pacifico&family=Handlee&family=Quicksand:wght@300;400;500;700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -7,6 +7,13 @@
   --primary: #cf5f8a;
   --secondary: #f19e84;
   --accent: #79a8c7;
+
+  /* Premium Font Variables */
+  --font-main: "Quicksand", "Nunito", sans-serif;
+  --font-fancy: "Pacifico", cursive;
+  --font-handwritten: "Dancing Script", cursive;
+  --font-classic: "Playfair Display", serif;
+  --font-journal: "Handlee", cursive;
 }
 
 @theme inline {
@@ -15,27 +22,36 @@
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
-  --font-sans: "Nunito", sans-serif;
+  --font-sans: var(--font-main);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Nunito", sans-serif;
+  font-family: var(--font-main);
   user-select: none;
+  -webkit-font-smoothing: antialiased;
 }
 
 .font-cute {
-  font-family: "Nunito", sans-serif;
+  font-family: var(--font-main);
 }
 
 .font-heading {
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-fancy);
 }
 
 .font-letter {
-  font-family: "Caveat", cursive;
+  font-family: var(--font-handwritten);
+}
+
+.font-journal {
+  font-family: var(--font-journal);
+}
+
+.font-serif {
+  font-family: var(--font-classic);
 }
 
 button {
