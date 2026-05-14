@@ -14,6 +14,7 @@ import Letter from "./components/Letter"
 import Wishes from "./components/Wishes"
 import MessageBoard from "./components/MessageBoard"
 import BackgroundEffects from "./components/BackgroundEffects"
+import { BIRTHDAY_INFO } from "./data/content"
 
 export default function BirthdayApp() {
   const [currentScreen, setCurrentScreen] = useState(0)
@@ -55,7 +56,7 @@ export default function BirthdayApp() {
     setCurrentScreen(1) 
   }
 
-  const birthdayDate = new Date("2026-06-11T00:00:00") 
+  const birthdayDate = new Date(BIRTHDAY_INFO.birthdayDate)
 
   const screens = [
     <Countdown key="countdown" onNext={handleCountdownComplete} birthdayDate={birthdayDate} />,

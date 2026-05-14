@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { ArrowRight, Sparkles } from "lucide-react"
 import { useEffect, useState } from "react"
 import TiltCard from "./TiltCard"
+import { BIRTHDAY_INFO } from "../data/content"
 
 // Raining Confetti - Pink/Purple/Gold Theme
 const RainingConfetti = () => {
@@ -138,7 +139,7 @@ export default function HappyBirthday({ onNext }) {
                             className="text-2xl md:text-3xl font-bold text-[#77537e] tracking-[0.15em] uppercase flex items-center justify-center gap-2 font-cute"
                         >
                             <Sparkles className="w-6 h-6 text-[#f472b6]" />
-                            Madam Jii
+                            {BIRTHDAY_INFO.name}
                             <Sparkles className="w-6 h-6 text-[#f472b6]" />
                         </motion.h2>
                     </div>

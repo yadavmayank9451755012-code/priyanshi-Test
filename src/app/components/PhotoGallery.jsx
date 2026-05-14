@@ -7,32 +7,14 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, EffectCards } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/effect-cards'
+import { GALLERY_PHOTOS } from "../data/content"
 
 export default function PhotoGallery({ onNext }) {
     const [selectedImg, setSelectedImg] = useState(null)
     const [randomPhotos, setRandomPhotos] = useState([])
 
-    // 12 Images Array
-    const initialPhotos = [
-        { id: 1, src: "/images/1.jpg" },
-        { id: 2, src: "/images/2.jpg" },
-        { id: 4, src: "/images/4.jpg" },
-        { id: 5, src: "/images/5.jpg" },
-        { id: 6, src: "/images/6.jpg" },
-        { id: 7, src: "/images/7.jpg" },
-        { id: 8, src: "/images/8.jpg" },
-        { id: 9, src: "/images/9.jpg" },
-        { id: 10, src: "/images/10.jpg" },
-        { id: 11, src: "/images/11.jpg" },
-        { id: 12, src: "/images/12.jpg" },
-        { id: 13, src: "/images/13.jpg" },
-        { id: 14, src: "/images/14.jpg" },
-        { id: 15, src: "/images/15.jpg" },
-        { id: 16, src: "/images/3.jpg" },
-    ]
-
     useEffect(() => {
-        const shuffled = [...initialPhotos].sort(() => Math.random() - 0.5)
+        const shuffled = [...GALLERY_PHOTOS].sort(() => Math.random() - 0.5)
         setRandomPhotos(shuffled)
     }, [])
 
@@ -73,7 +55,7 @@ export default function PhotoGallery({ onNext }) {
             </motion.div>
 
             {/* 3D CARDS SLIDER */}
-            <div className="w-full max-w-[300px] md:max-w-[400px] mx-auto z-10 perspective-1000">
+            <div className="w-full max-w-[300px] md:max-w-[500px] lg:max-w-[600px] mx-auto z-10 perspective-1000">
                 {randomPhotos.length > 0 && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.8 }}
@@ -87,7 +69,7 @@ export default function PhotoGallery({ onNext }) {
                             speed={800}
                             autoplay={{ delay: 3000, disableOnInteraction: false }}
                             modules={[Autoplay, EffectCards]}
-                            className="w-full h-[400px] md:h-[500px]"
+                            className="w-full h-[400px] md:h-[600px] lg:h-[700px]"
                         >
                             {randomPhotos.map((photo, index) => (
                                 <SwiperSlide key={photo.id} className="rounded-[2rem] overflow-hidden shadow-2xl">

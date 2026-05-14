@@ -46,6 +46,28 @@ export default function Loader({ onComplete }) {
   return (
     <div className="min-h-screen relative w-full flex flex-col items-center overflow-hidden bg-aesthetic font-sans pt-12 pb-8">
       
+      {/* Tearing / Reveal Effect Overlay */}
+      <AnimatePresence>
+        {!showButton && (
+          <>
+            <motion.div
+              initial={{ x: 0, rotateY: 0 }}
+              exit={{ x: "-100%", rotateY: -15, scale: 1.1, filter: "blur(10px)" }}
+              transition={{ duration: 1.5, ease: [0.77, 0, 0.175, 1] }}
+              style={{ transformOrigin: "right center" }}
+              className="fixed inset-y-0 left-0 w-1/2 bg-[#fff8f3] z-[100] border-r border-pink-100/50 shadow-[20px_0_40px_rgba(0,0,0,0.05)]"
+            />
+            <motion.div
+              initial={{ x: 0, rotateY: 0 }}
+              exit={{ x: "100%", rotateY: 15, scale: 1.1, filter: "blur(10px)" }}
+              transition={{ duration: 1.5, ease: [0.77, 0, 0.175, 1] }}
+              style={{ transformOrigin: "left center" }}
+              className="fixed inset-y-0 right-0 w-1/2 bg-[#fff8f3] z-[100] border-l border-pink-100/50 shadow-[-20px_0_40px_rgba(0,0,0,0.05)]"
+            />
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Elegant Background Glows */}
       <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-[20%] left-[50%] -translate-x-1/2 w-[60%] h-[40%] bg-pink-300/20 blur-[100px] rounded-full" />
@@ -75,21 +97,27 @@ export default function Loader({ onComplete }) {
           <Heart className="w-8 h-8 text-[#973b88] fill-[#973b88] drop-shadow-[0_0_10px_rgba(151,59,136,0.6)]" />
         </motion.div>
 
-        <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} 
-            className="text-4xl md:text-5xl text-[#973b88] leading-tight tracking-tight drop-shadow-md font-bold">
-            Preparing
-        </motion.h1>
-        <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} 
-            className="text-4xl md:text-5xl text-[#973b88] leading-tight tracking-tight drop-shadow-md font-bold">
-            Something
-        </motion.h1>
+        <div className="overflow-hidden">
+          <motion.h1 initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: "circOut" }}
+              className="text-4xl md:text-5xl text-[#973b88] leading-tight tracking-tight drop-shadow-md font-bold">
+              Preparing
+          </motion.h1>
+        </div>
+        <div className="overflow-hidden">
+          <motion.h1 initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: "circOut" }}
+              className="text-4xl md:text-5xl text-[#973b88] leading-tight tracking-tight drop-shadow-md font-bold">
+              Something
+          </motion.h1>
+        </div>
         
         {/* Cursive Special Text */}
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-1">
-          <span className="text-5xl md:text-6xl text-[#973b88] tracking-wide drop-shadow-lg font-bold italic">
-            Special
-          </span>
-        </motion.div>
+        <div className="overflow-hidden mt-1">
+          <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "circOut" }}>
+            <span className="text-5xl md:text-6xl text-[#973b88] tracking-wide drop-shadow-lg font-bold italic font-heading">
+              Special
+            </span>
+          </motion.div>
+        </div>
 
         <motion.div initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: "40px" }} transition={{ delay: 0.6 }} 
             className="h-[2px] bg-[#973b88]/20 rounded-full mt-6 mb-4" />
@@ -97,27 +125,27 @@ export default function Loader({ onComplete }) {
 
       {/* Center Section (Photo Blob) */}
       <motion.div 
-        className="relative z-20 w-full flex justify-center mt-6 flex-1 max-h-[400px]"
-        initial={{ opacity: 0, scale: 0.9, y: 30 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.5, type: "spring" }}
+        className="relative z-20 w-full flex justify-center mt-6 flex-1 max-h-[500px]"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, delay: 0.4, ease: "easeOut" }}
       >
         <motion.div 
-            className="neu-image-frame w-[280px] h-[360px] md:w-[340px] md:h-[420px] overflow-hidden"
+            className="neu-image-frame w-[300px] h-[380px] md:w-[450px] md:h-[550px] overflow-hidden"
             animate={{ 
                 borderRadius: [
                     "60% 40% 55% 45% / 50% 55% 45% 50%", 
                     "40% 60% 45% 55% / 45% 50% 55% 50%", 
                     "60% 40% 55% 45% / 50% 55% 45% 50%"
                 ],
-                y: [0, -12, 0]
+                y: [0, -15, 0]
             }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         >
           <img
             src="/images/10.jpg"
             alt="Special person"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-center scale-110"
           />
           {/* Subtle inner shadow overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-pink-100/30 to-transparent pointer-events-none" />

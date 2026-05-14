@@ -3,39 +3,14 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight, ArrowLeft, Sparkles, Heart, MousePointerClick } from "lucide-react"
-
-const wishes = [
-    {
-        emoji: "🌸",
-        title: "You Are Loved",
-        text: "More than words can say, more than stars in the sky — you are surrounded by love today and always. Never forget how much you mean to the people lucky enough to have you.",
-    },
-    {
-        emoji: "✨",
-        title: "You Are Magic",
-        text: "The way you smile, the way you care, the way you show up — it's all pure magic. The world is genuinely better because you exist in it, Madam Jii.",
-    },
-    {
-        emoji: "🌟",
-        title: "Your Year Ahead",
-        text: "May this year bring you everything your heart has been quietly wishing for. New adventures, deep joy, unexpected blessings, and every dream arriving right on time.",
-    },
-    {
-        emoji: "💫",
-        title: "Keep Shining",
-        text: "You have this rare gift of making everyone around you feel seen and special. Keep being exactly who you are — the world needs more of your light.",
-    },
-    {
-        emoji: "🎀",
-        title: "Happy Birthday!",
-        text: "Here's to cake, laughter, and celebrating YOU! You deserve every single good thing coming your way. Happy Birthday, beautiful soul — this one's all for you! 🎂🥳",
-    },
-]
+import { WISHES } from "../data/content"
 
 export default function Wishes({ onNext, onBack }) {
     const [current, setCurrent] = useState(0)
     const [direction, setDirection] = useState(1)
     const [isFlipped, setIsFlipped] = useState(false)
+
+    const wishes = WISHES
 
     const goNext = () => {
         if (current < wishes.length - 1) {

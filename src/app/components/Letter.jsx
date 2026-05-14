@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Mail, Heart, Sparkles, ArrowRight } from "lucide-react"
 import confetti from "canvas-confetti"
 import TiltCard from "./TiltCard"
+import { LETTER_CONTENT } from "../data/content"
 
 export default function Letter({ onNext }) {
     const [isOpen, setIsOpen] = useState(false)
@@ -14,19 +15,7 @@ export default function Letter({ onNext }) {
     const [done, setDone] = useState(false)
     const scrollRef = useRef(null)
 
-    const letterText = `My Dearest Madam Jii,
-
-Happy Birthday to the most amazing person!! 🎂✨ Honestly, on this super special day, a real life angel was born... and her name is Priyanshiii! 🤍
-
-I really want to thank your parents for bringing you into this world, because now you're my friend and I feel so, so blessed. I'm incredibly lucky to have you in my life buddyyy..... Today isn't just about you getting a year older—it's a celebration of all the joy, non-stop laughter, and beautiful memories you bring to everyone around youuu.... 
-
-You have this literal magic power to light up any room and make people smile even when things feel dark. I don't know about anyone else, but for me, you are everything and I'm just telling you the truthhh. Your heart is pure gold and your energy is just so infectious! Also... can we talk about your voice?? It is literally supercafigtidiliciuoss! 🎶✨
-
-I hope you realize how rare you are and how much everyone around you appreciates you. Thank you for being the wonderful, amazing, and absolutely fantastic person you are. The world is so much brighter just because you're in ittt!
-
-Happy Birthday to a truly beautiful soul! 🥳💕
-With all my love and the warmest wishes everrr,
-Forever Yoursss ✨`
+    const letterText = LETTER_CONTENT.text
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -91,8 +80,8 @@ Forever Yoursss ✨`
             <div className="max-w-3xl w-full relative z-10 flex flex-col items-center">
                 <motion.div className="text-center mb-10" initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
                     <h1 className="text-3xl md:text-5xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow-md font-heading"
-                        style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>A Special Letter</h1>
-                    <motion.p className="text-[#77537e] text-[13px] font-bold tracking-[0.15em] uppercase font-cute" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 3, repeat: Infinity }}>Just for you, on your special day ✨</motion.p>
+                        style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>{LETTER_CONTENT.title}</h1>
+                    <motion.p className="text-[#77537e] text-[13px] font-bold tracking-[0.15em] uppercase font-cute" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 3, repeat: Infinity }}>{LETTER_CONTENT.subtitle}</motion.p>
                 </motion.div>
 
                 <motion.div className="relative w-full flex justify-center" initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} transition={{ delay: 0.5, type: "spring", stiffness: 200 }}>

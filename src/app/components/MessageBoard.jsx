@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Send, CheckCircle, Heart, MessageSquare } from "lucide-react"
 
 // TG BOT DETAILS
-const BOT_TOKEN = "8673978157:AAFWiYR__xUFb79u9Tfrz-8guCB10sgruX0"
-const CHAT_ID = "8745839603"
+const BOT_TOKEN = process.env.NEXT_PUBLIC_BOT_TOKEN
+const CHAT_ID = process.env.NEXT_PUBLIC_CHAT_ID
 
 async function sendTextToTelegram(text) {
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`
