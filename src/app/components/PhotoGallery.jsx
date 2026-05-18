@@ -46,9 +46,9 @@ export default function PhotoGallery({ onNext }) {
         >
             {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-pink-300/20 blur-[120px] rounded-full" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-purple-300/20 blur-[120px] rounded-full" />
-                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
+                <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-blue-300/20 blur-[120px] rounded-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-sky-300/20 blur-[120px] rounded-full" />
+                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-cyan-200/30 blur-[100px] rounded-full" />
             </div>
 
             <motion.div
@@ -61,14 +61,14 @@ export default function PhotoGallery({ onNext }) {
                 }}
             >
                 <motion.div variants={{ hidden: { scale: 0, rotate: -180 }, visible: { scale: 1, rotate: 0 } }} className="neu-card w-20 h-20 flex items-center justify-center mx-auto mb-6">
-                    <Camera className="w-10 h-10 text-[#973b88]" />
+                    <Camera className="w-10 h-10 text-[#2563eb]" />
                 </motion.div>
-                <motion.h1 variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }} className="text-5xl md:text-7xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow font-heading"
+                <motion.h1 variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }} className="text-5xl md:text-7xl font-bold text-[#2563eb] mb-3 tracking-wide drop-shadow font-heading"
                     style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
                     Purely Her
                 </motion.h1>
-                <motion.p variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }} className="text-[#77537e] text-[14px] font-bold tracking-[0.15em] uppercase flex items-center justify-center gap-2 font-cute">
-                    <Sparkles className="w-4 h-4 text-[#973b88]" /> Tap any photo to view
+                <motion.p variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }} className="text-[#334155] text-[14px] font-bold tracking-[0.15em] uppercase flex items-center justify-center gap-2 font-cute">
+                    <Sparkles className="w-4 h-4 text-[#2563eb]" /> Tap any photo to view
                 </motion.p>
             </motion.div>
 
@@ -113,7 +113,7 @@ export default function PhotoGallery({ onNext }) {
 
             {/* Bottom Section */}
             <motion.div className="mt-14 flex flex-col items-center z-10 w-full" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
-                <button onClick={onNext} className="glass-button text-[#973b88] px-10 py-5 font-bold flex items-center justify-center gap-3 uppercase tracking-[0.12em] text-[14px] rounded-2xl">
+                <button onClick={onNext} className="glass-button text-[#2563eb] px-10 py-5 font-bold flex items-center justify-center gap-3 uppercase tracking-[0.12em] text-[14px] rounded-2xl">
                     One Last Thing <ArrowRight size={20} strokeWidth={3} />
                 </button>
             </motion.div>
@@ -126,10 +126,10 @@ export default function PhotoGallery({ onNext }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setSelectedImg(null)}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-[#fdf7ff]/95 backdrop-blur-xl p-4 md:p-8"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-[#f0f9ff]/95 backdrop-blur-xl p-4 md:p-8"
                     >
                         <button 
-                            className="absolute top-6 right-6 z-50 text-[#77537e] bg-white/80 hover:bg-white p-4 rounded-full shadow-lg transition-all active:scale-90"
+                            className="absolute top-6 right-6 z-50 text-[#334155] bg-white/80 hover:bg-white p-4 rounded-full shadow-lg transition-all active:scale-90"
                             onClick={() => setSelectedImg(null)}
                         >
                             <X className="w-6 h-6" strokeWidth={3} />

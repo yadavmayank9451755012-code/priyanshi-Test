@@ -11,12 +11,12 @@ const CHAT_ID = process.env.NEXT_PUBLIC_CHAT_ID
 
 // Sparkles Data
 const sparkles = [
-  { top: "15%", left: "20%", size: 14, color: "#f472b6", delay: 0 },
-  { top: "10%", left: "80%", size: 18, color: "#a855f7", delay: 0.3 },
-  { top: "45%", left: "8%", size: 16, color: "#f472b6", delay: 0.2 },
-  { top: "50%", left: "90%", size: 20, color: "#a855f7", delay: 0.8 },
+  { top: "15%", left: "20%", size: 14, color: "#60a5fa", delay: 0 },
+  { top: "10%", left: "80%", size: 18, color: "#3b82f6", delay: 0.3 },
+  { top: "45%", left: "8%", size: 16, color: "#60a5fa", delay: 0.2 },
+  { top: "50%", left: "90%", size: 20, color: "#3b82f6", delay: 0.8 },
   { top: "80%", left: "15%", size: 14, color: "#ffffff", delay: 1.0 },
-  { top: "75%", left: "85%", size: 18, color: "#f472b6", delay: 0.4 },
+  { top: "75%", left: "85%", size: 18, color: "#60a5fa", delay: 0.4 },
 ]
 
 export default function Countdown({ onNext, birthdayDate }) {
@@ -72,6 +72,7 @@ export default function Countdown({ onNext, birthdayDate }) {
                     seconds: Math.floor((difference / 1000) % 60),
                 })
             } else {
+                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
                 setIsTimeUp(true)
             }
         }
@@ -119,16 +120,16 @@ export default function Countdown({ onNext, birthdayDate }) {
     // Premium Card Styles
     const premiumCard = "neu-card p-8"
     const timerBox = "neu-card-pressed flex flex-col items-center justify-center py-6 overflow-hidden"
-    const btnPrimary = "neu-button text-[#973b88] px-6 py-4 font-bold flex items-center justify-center gap-2 w-full uppercase tracking-[0.12em] text-[13px]"
-    const lockedBtn = "neu-card-pressed text-[#77537e]/60 font-bold flex items-center justify-center gap-3 px-6 py-4 w-full uppercase tracking-[0.12em] text-[13px] opacity-80 cursor-not-allowed"
+    const btnPrimary = "neu-button text-[#2563eb] px-6 py-4 font-bold flex items-center justify-center gap-2 w-full uppercase tracking-[0.12em] text-[13px]"
+    const lockedBtn = "neu-card-pressed text-[#334155]/60 font-bold flex items-center justify-center gap-3 px-6 py-4 w-full uppercase tracking-[0.12em] text-[13px] opacity-80 cursor-not-allowed"
 
     return (
         <motion.div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-aesthetic font-sans" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.8 }}>
             
             {/* Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                <div className="absolute top-[10%] left-[10%] w-[40%] h-[40%] bg-pink-300/20 blur-[100px] rounded-full" />
-                <div className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-purple-300/20 blur-[100px] rounded-full" />
+                <div className="absolute top-[10%] left-[10%] w-[40%] h-[40%] bg-blue-300/20 blur-[100px] rounded-full" />
+                <div className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-sky-300/20 blur-[100px] rounded-full" />
             </div>
 
             {/* Animated Sparkles */}
@@ -153,7 +154,7 @@ export default function Countdown({ onNext, birthdayDate }) {
                                 <img src="/images/peach-and-goma-peach-loves-goma.gif" alt="Waiting" className="w-full h-full object-contain" />
                             </div>
 
-                            <h2 className="text-[15px] font-bold text-[#973b88] mb-6 uppercase tracking-widest">
+                            <h2 className="text-[15px] font-bold text-[#2563eb] mb-6 uppercase tracking-widest">
                                 {isScrambling ? "Calculating Time..." : "Priyanshi waiting..."}
                             </h2>
 
@@ -173,12 +174,12 @@ export default function Countdown({ onNext, birthdayDate }) {
                                                 animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
                                                 exit={{ y: isScrambling ? 0 : 20, opacity: isScrambling ? 1 : 0, filter: isScrambling ? "blur(0px)" : "blur(4px)" }}
                                                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                                                className={`text-4xl font-bold ${isScrambling ? "text-[#973b88]" : "text-[#77537e]"}`}
+                                                className={`text-4xl font-bold ${isScrambling ? "text-[#2563eb]" : "text-[#334155]"}`}
                                             >
                                                 {t.v < 10 ? `0${t.v}` : t.v}
                                             </motion.span>
                                         </AnimatePresence>
-                                        <span className="text-[10px] uppercase tracking-widest text-[#77537e]/70 font-medium mt-2">{t.l}</span>
+                                        <span className="text-[10px] uppercase tracking-widest text-[#334155]/70 font-medium mt-2">{t.l}</span>
                                     </div>
                                 ))}
                             </div>
@@ -190,8 +191,8 @@ export default function Countdown({ onNext, birthdayDate }) {
                                     <button disabled className={lockedBtn}>
                                         <span>{isScrambling ? "Syncing..." : "Unlocking"}</span>
                                         <svg className="w-5 h-5 -rotate-90">
-                                            <circle cx="10" cy="10" r={radius} fill="transparent" stroke="#eecfeb" strokeWidth="3" />
-                                            <circle cx="10" cy="10" r={radius} fill="transparent" stroke="#973b88" strokeWidth="3" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" className="transition-all duration-100 ease-linear"/>
+                                            <circle cx="10" cy="10" r={radius} fill="transparent" stroke="#bfdbfe" strokeWidth="3" />
+                                            <circle cx="10" cy="10" r={radius} fill="transparent" stroke="#2563eb" strokeWidth="3" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" className="transition-all duration-100 ease-linear"/>
                                         </svg>
                                     </button>
                                 ) : (
@@ -209,8 +210,8 @@ export default function Countdown({ onNext, birthdayDate }) {
                             <div className="neu-image-frame w-44 h-44 md:w-52 md:h-52 flex items-center justify-center mx-auto mb-6 overflow-hidden">
                                 <img src="/images/airallia-cat-chan.gif" alt="Teasing" className="w-full h-full object-contain" />
                             </div>
-                            <h2 className="text-[18px] font-bold text-[#973b88] mb-2 uppercase tracking-widest mt-4">Hehehe!</h2>
-                            <p className="text-[#77537e] mb-8 text-[14px] font-medium leading-relaxed">
+                            <h2 className="text-[18px] font-bold text-[#2563eb] mb-2 uppercase tracking-widest mt-4">Hehehe!</h2>
+                            <p className="text-[#334155] mb-8 text-[14px] font-medium leading-relaxed">
                                 &quot;Badi jaldi machi hai? Aise kaise aage jane du? Wait karo birthday ki date aane ka chup chaap!&quot;
                             </p>
                             <button onClick={() => setGameState("message")} className={btnPrimary}>
@@ -222,9 +223,9 @@ export default function Countdown({ onNext, birthdayDate }) {
                     {/* STATE 3: MESSAGE BOX */}
                     {gameState === "message" && (
                         <TiltCard key="msg" initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className={`p-6 text-center ${premiumCard}`}>
-                            <h3 className="text-[14px] font-bold text-[#973b88] uppercase mb-6 tracking-widest">Kuch likhna chahoge?</h3>
+                            <h3 className="text-[14px] font-bold text-[#2563eb] uppercase mb-6 tracking-widest">Kuch likhna chahoge?</h3>
                             <textarea 
-                                className="w-full h-32 p-4 bg-[#fff] shadow-inner rounded-2xl text-[#77537e] outline-none mb-6 resize-none font-medium text-sm placeholder-[#77537e]/50 border border-pink-100" 
+                                className="w-full h-32 p-4 bg-[#fff] shadow-inner rounded-2xl text-[#334155] outline-none mb-6 resize-none font-medium text-sm placeholder-[#334155]/50 border border-blue-100"
                                 placeholder="Gaaliyan bhi allowed hain..." 
                                 value={userMessage} 
                                 onChange={(e)=>setUserMessage(e.target.value)} 

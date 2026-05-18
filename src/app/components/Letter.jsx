@@ -46,7 +46,7 @@ Forever Yoursss ✨`
                     setShowCursor(false)
                     setDone(true)
                     
-                    const colors = ["#f472b6", "#a855f7", "#fcd34d"]
+                    const colors = ["#60a5fa", "#3b82f6", "#fcd34d"]
                     
                     confetti({
                         particleCount: 80,
@@ -73,7 +73,7 @@ Forever Yoursss ✨`
     // Premium styles
     const premiumCard = "glass-card"
     const inputBox = "neu-card-pressed p-6 md:p-8"
-    const btnPrimary = "glass-button text-[#973b88] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full max-w-[300px] uppercase tracking-[0.12em] text-[13px] rounded-2xl"
+    const btnPrimary = "glass-button text-[#2563eb] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full max-w-[300px] uppercase tracking-[0.12em] text-[13px] rounded-2xl"
 
     return (
         <motion.div
@@ -84,15 +84,15 @@ Forever Yoursss ✨`
         >
             {/* Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-pink-300/20 blur-[120px] rounded-full" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-purple-300/20 blur-[120px] rounded-full" />
+                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-blue-300/20 blur-[120px] rounded-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-sky-300/20 blur-[120px] rounded-full" />
             </div>
 
             <div className="max-w-3xl w-full relative z-10 flex flex-col items-center">
                 <motion.div className="text-center mb-10" initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
-                    <h1 className="text-3xl md:text-5xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow-md font-heading"
+                    <h1 className="text-3xl md:text-5xl font-bold text-[#2563eb] mb-3 tracking-wide drop-shadow-md font-heading"
                         style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>A Special Letter</h1>
-                    <motion.p className="text-[#77537e] text-[13px] font-bold tracking-[0.15em] uppercase font-cute" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 3, repeat: Infinity }}>Just for you, on your special day ✨</motion.p>
+                    <motion.p className="text-[#334155] text-[13px] font-bold tracking-[0.15em] uppercase font-cute" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 3, repeat: Infinity }}>Just for you, on your special day ✨</motion.p>
                 </motion.div>
 
                 <motion.div className="relative w-full flex justify-center" initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} transition={{ delay: 0.5, type: "spring", stiffness: 200 }}>
@@ -104,9 +104,9 @@ Forever Yoursss ✨`
                                 onClick={handleOpenLetter}
                             >
                                 <div className="neu-image-frame w-20 h-20 flex items-center justify-center mx-auto">
-                                    <Mail className="w-8 h-8 text-[#973b88]" />
+                                    <Mail className="w-8 h-8 text-[#2563eb]" />
                                 </div>
-                                <div className="mt-4 flex items-center gap-2 text-[#973b88] font-bold text-[12px] uppercase tracking-widest">Tap to open <Heart className="w-3 h-3 text-[#973b88] fill-[#973b88]/50" /></div>
+                                <div className="mt-4 flex items-center gap-2 text-[#2563eb] font-bold text-[12px] uppercase tracking-widest">Tap to open <Heart className="w-3 h-3 text-[#2563eb] fill-[#2563eb]/50" /></div>
                             </TiltCard>
                         ) : (
                             <TiltCard
@@ -115,15 +115,15 @@ Forever Yoursss ✨`
                             >
                                 <div className="text-center mb-6">
                                     <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
-                                        <Heart className="w-10 h-10 text-[#973b88] mx-auto fill-[#973b88]/20" />
+                                        <Heart className="w-10 h-10 text-[#2563eb] mx-auto fill-[#2563eb]/20" />
                                     </motion.div>
                                 </div>
 
                                 <div ref={scrollRef} className={`min-h-[50vh] max-h-[50vh] md:min-h-[350px] md:max-h-[350px] overflow-y-auto ${inputBox} scrollbar-hide`}>
                                     {showText && (
-                                        <div className="font-letter whitespace-pre-wrap text-[#77537e] text-[24px] md:text-[30px] leading-[1.4] tracking-wide">
+                                        <div className="font-letter whitespace-pre-wrap text-[#334155] text-[24px] md:text-[30px] leading-[1.4] tracking-wide">
                                             {currentText}
-                                            {showCursor && <motion.span className="inline-block w-[3px] h-[18px] bg-[#973b88] ml-1 align-middle rounded-full" animate={{ opacity: [0, 1, 0] }} transition={{ duration: 0.8, repeat: Infinity }} />}
+                                            {showCursor && <motion.span className="inline-block w-[3px] h-[18px] bg-[#2563eb] ml-1 align-middle rounded-full" animate={{ opacity: [0, 1, 0] }} transition={{ duration: 0.8, repeat: Infinity }} />}
                                         </div>
                                     )}
                                 </div>

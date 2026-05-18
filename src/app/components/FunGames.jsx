@@ -52,7 +52,7 @@ export default function FunGames({ onComplete }) {
             particleCount: 150,
             spread: 80,
             origin: { y: 0.6 },
-            colors: ['#F472B6', '#A855F7', '#FFFFFF', '#FFD700'],
+            colors: ['#60a5fa', '#3b82f6', '#FFFFFF', '#FFD700'],
             disableForReducedMotion: true
         });
         setGameState("reply")
@@ -85,26 +85,26 @@ export default function FunGames({ onComplete }) {
         return selectedOpt === "other" ? otherText || "Something else" : QUESTIONS[currentQ].options[selectedOpt]?.text
     }
 
-    // Premium Pink/Purple Theme
-    const bgBase = "bg-[#fdf7ff]"
-    const cardBg = "bg-[#fff8fc]"
+    // Premium Blue/Cyan Theme
+    const bgBase = "bg-[#f0f9ff]"
+    const cardBg = "bg-[#f8fafc]"
     const premiumCard = `neu-card relative mt-20 p-8`
-    const btnDefault = `bg-white text-[#77537e] transition-all duration-300 rounded-[20px] shadow-lg hover:shadow-xl hover:bg-[#fff] active:scale-95 font-medium border border-pink-100`
-    const btnSelected = `bg-[#f1caeb] text-[#973b88] transition-all duration-300 rounded-[20px] shadow-inner font-bold`
-    const inputStyle = `bg-[#fff] rounded-[16px] shadow-inner border border-pink-100 text-[#77537e] placeholder-[#77537e]/50 focus:outline-none focus:ring-2 focus:ring-[#973b88]/30 p-4 font-medium text-sm`
+    const btnDefault = `bg-white text-[#334155] transition-all duration-300 rounded-[20px] shadow-lg hover:shadow-xl hover:bg-[#fff] active:scale-95 font-medium border border-blue-100`
+    const btnSelected = `bg-[#dbeafe] text-[#2563eb] transition-all duration-300 rounded-[20px] shadow-inner font-bold`
+    const inputStyle = `bg-[#fff] rounded-[16px] shadow-inner border border-blue-100 text-[#334155] placeholder-[#334155]/50 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 p-4 font-medium text-sm`
     
     const gifBox = "w-44 h-44 md:w-52 md:h-52 mx-auto -mt-24 mb-8 neu-image-frame flex items-center justify-center relative z-20 overflow-hidden"
 
     const currentGif = QUESTIONS[currentQ]?.gif || "/images/bubu-dudu-bubu.gif"
 
     return (
-        <div className={`min-h-screen flex flex-col items-center justify-center p-4 bg-aesthetic text-[#77537e] font-sans relative overflow-hidden`}>
+        <div className={`min-h-screen flex flex-col items-center justify-center p-4 bg-aesthetic text-[#334155] font-sans relative overflow-hidden`}>
             
             {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-pink-300/20 blur-[120px] rounded-full" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-purple-300/20 blur-[120px] rounded-full" />
-                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
+                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-blue-300/20 blur-[120px] rounded-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-sky-300/20 blur-[120px] rounded-full" />
+                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-cyan-200/30 blur-[100px] rounded-full" />
             </div>
 
             <div className="w-full max-w-[380px] z-10">
@@ -119,13 +119,13 @@ export default function FunGames({ onComplete }) {
                             </div>
 
                             <div className="flex justify-between items-center mb-6 px-1">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#77537e]">Step {currentQ + 1} / {QUESTIONS.length}</span>
-                                <div className="w-20 h-1.5 bg-[#eecfeb] rounded-full overflow-hidden">
-                                    <div className="h-full bg-gradient-to-r from-pink-400 to-purple-400 transition-all duration-500" style={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }} />
+                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#334155]">Step {currentQ + 1} / {QUESTIONS.length}</span>
+                                <div className="w-20 h-1.5 bg-[#bfdbfe] rounded-full overflow-hidden">
+                                    <div className="h-full bg-gradient-to-r from-blue-400 to-sky-400 transition-all duration-500" style={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }} />
                                 </div>
                             </div>
 
-                            <h2 className="text-[17px] font-bold mb-6 text-[#973b88] leading-snug tracking-wide text-center">{QUESTIONS[currentQ].q}</h2>
+                            <h2 className="text-[17px] font-bold mb-6 text-[#2563eb] leading-snug tracking-wide text-center">{QUESTIONS[currentQ].q}</h2>
 
                             <div className="space-y-4 mb-6">
                                 {QUESTIONS[currentQ].options.map((opt, idx) => {
@@ -133,14 +133,14 @@ export default function FunGames({ onComplete }) {
                                     return (
                                         <button key={idx} onClick={() => setSelectedOpt(idx)} className={`w-full p-4 text-[14px] text-left flex justify-between items-center ${isSelected ? btnSelected : btnDefault}`}>
                                             {opt.text}
-                                            {isSelected && <Check size={18} className="text-[#973b88]" strokeWidth={3} />}
+                                            {isSelected && <Check size={18} className="text-[#2563eb]" strokeWidth={3} />}
                                         </button>
                                     )
                                 })}
                                 
                                 <button onClick={() => setSelectedOpt("other")} className={`w-full p-4 text-[14px] text-left flex justify-between items-center ${selectedOpt === "other" ? btnSelected : btnDefault}`}>
                                     Something else...
-                                    {selectedOpt === "other" && <Check size={18} className="text-[#973b88]" strokeWidth={3} />}
+                                    {selectedOpt === "other" && <Check size={18} className="text-[#2563eb]" strokeWidth={3} />}
                                 </button>
                             </div>
 
@@ -157,7 +157,7 @@ export default function FunGames({ onComplete }) {
                                 )}
                             </AnimatePresence>
 
-                            <button disabled={selectedOpt === null} onClick={handleProceedToConfirm} className={`w-full py-4 text-[13px] uppercase tracking-[0.12em] transition-all flex items-center justify-center gap-3 ${selectedOpt !== null ? btnDefault : 'bg-[#eecfeb] text-[#77537e]/60 rounded-[20px] cursor-not-allowed font-bold'}`}>
+                            <button disabled={selectedOpt === null} onClick={handleProceedToConfirm} className={`w-full py-4 text-[13px] uppercase tracking-[0.12em] transition-all flex items-center justify-center gap-3 ${selectedOpt !== null ? btnDefault : 'bg-[#bfdbfe] text-[#334155]/60 rounded-[20px] cursor-not-allowed font-bold'}`}>
                                 Next <ArrowRight size={16} strokeWidth={3} />
                             </button>
                         </motion.div>
@@ -171,10 +171,10 @@ export default function FunGames({ onComplete }) {
                                 <img src="/images/8.gif" alt="Thinking" className="w-full h-full object-contain" />
                             </div>
 
-                            <h2 className="text-xl font-bold text-[#973b88] mb-2 mt-2">Are you sure?</h2>
-                            <p className="text-[#77537e] mb-6 text-[12px] font-medium">You selected:</p>
+                            <h2 className="text-xl font-bold text-[#2563eb] mb-2 mt-2">Are you sure?</h2>
+                            <p className="text-[#334155] mb-6 text-[12px] font-medium">You selected:</p>
                             
-                            <div className="p-4 mb-8 text-[#973b88] text-[15px] font-bold bg-white rounded-[16px] shadow-inner border border-pink-100">
+                            <div className="p-4 mb-8 text-[#2563eb] text-[15px] font-bold bg-white rounded-[16px] shadow-inner border border-blue-100">
                                 &quot;{getSelectedText()}&quot;
                             </div>
 
@@ -182,7 +182,7 @@ export default function FunGames({ onComplete }) {
                                 <button onClick={handleLockAnswer} className={`w-full py-4 text-[13px] uppercase tracking-[0.12em] flex items-center justify-center gap-2 ${btnSelected}`}>
                                     Yes, Lock It! <Check size={16} strokeWidth={3} />
                                 </button>
-                                <button onClick={() => setGameState("playing")} className="w-full py-3 text-[#77537e] hover:text-[#973b88] uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-colors">
+                                <button onClick={() => setGameState("playing")} className="w-full py-3 text-[#334155] hover:text-[#2563eb] uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-colors">
                                     <ArrowLeft size={14} strokeWidth={2.5} /> Wait, change answer
                                 </button>
                             </div>
@@ -197,13 +197,13 @@ export default function FunGames({ onComplete }) {
                                 <img src={currentGif} alt="Reaction" className="w-full h-full object-contain" />
                             </div>
                             
-                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="w-full p-5 mt-2 rounded-2xl shadow-inner mb-6 bg-white border border-pink-100">
-                                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#973b88] mb-3">Mayank&apos;s Reaction</h3>
-                                <p className="text-[15px] font-medium text-[#77537e] italic">&quot;{getMyThought()}&quot;</p>
+                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="w-full p-5 mt-2 rounded-2xl shadow-inner mb-6 bg-white border border-blue-100">
+                                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2563eb] mb-3">Mayank&apos;s Reaction</h3>
+                                <p className="text-[15px] font-medium text-[#334155] italic">&quot;{getMyThought()}&quot;</p>
                             </motion.div>
 
                             <div className="mb-6 text-left">
-                                <label className="text-[10px] font-medium uppercase tracking-[0.15em] text-[#77537e] mb-3 block">Your Reply / Thoughts (Optional)</label>
+                                <label className="text-[10px] font-medium uppercase tracking-[0.15em] text-[#334155] mb-3 block">Your Reply / Thoughts (Optional)</label>
                                 <textarea 
                                     className={`w-full h-24 resize-none ${inputStyle}`}
                                     placeholder="Kuch kehna hai is baare mein?" 
@@ -224,8 +224,8 @@ export default function FunGames({ onComplete }) {
                             <div className={gifBox}>
                                 <img src="/images/bubu-dudu-bubu.gif" alt="Start" className="w-full h-full object-contain" />
                             </div>
-                            <h1 className="text-2xl font-bold mb-2 text-[#973b88] mt-4">Welcome back</h1>
-                            <p className="text-[#77537e] mb-8 text-[13px] font-medium">Your thoughts matter. Let&apos;s understand them better. ✨</p>
+                            <h1 className="text-2xl font-bold mb-2 text-[#2563eb] mt-4">Welcome back</h1>
+                            <p className="text-[#334155] mb-8 text-[13px] font-medium">Your thoughts matter. Let&apos;s understand them better. ✨</p>
                             <button onClick={() => setGameState("playing")} className={`w-full py-4 text-[13px] uppercase tracking-[0.12em] ${btnDefault}`}>
                                 Let&apos;s Begin
                             </button>
@@ -238,11 +238,11 @@ export default function FunGames({ onComplete }) {
                             <div className={gifBox}>
                                 <img src="/images/10.gif" alt="Finished" className="w-full h-full object-contain" />
                             </div>
-                            <h2 className="text-2xl font-bold text-[#973b88] mb-3 mt-4">You&apos;re amazing!</h2>
-                            <p className="text-[#77537e] mb-10 text-[13px] font-medium tracking-wide leading-relaxed">
+                            <h2 className="text-2xl font-bold text-[#2563eb] mb-3 mt-4">You&apos;re amazing!</h2>
+                            <p className="text-[#334155] mb-10 text-[13px] font-medium tracking-wide leading-relaxed">
                                 One step closer to understanding each other.
                             </p>
-                            <button onClick={() => { localStorage.clear(); window.location.reload(); }} className="mb-6 text-[10px] font-bold text-[#77537e] hover:text-[#973b88] uppercase tracking-widest flex items-center justify-center gap-2 mx-auto transition-colors">
+                            <button onClick={() => { localStorage.clear(); window.location.reload(); }} className="mb-6 text-[10px] font-bold text-[#334155] hover:text-[#2563eb] uppercase tracking-widest flex items-center justify-center gap-2 mx-auto transition-colors">
                                 <RotateCcw size={14} strokeWidth={3}/> Restart Journey
                             </button>
                             <button onClick={() => onComplete(100)} className={`w-full py-4 text-[13px] uppercase tracking-[0.12em] flex items-center justify-center gap-2 ${btnSelected}`}>

@@ -57,7 +57,7 @@ export default function Wishes({ onNext, onBack }) {
 
     // Premium styles
     const cardBg = "glass-card"
-    const btnPrimary = "glass-button text-[#973b88] font-bold flex items-center justify-center gap-2 px-6 py-3 rounded-xl"
+    const btnPrimary = "glass-button text-[#2563eb] font-bold flex items-center justify-center gap-2 px-6 py-3 rounded-xl"
 
     return (
         <motion.div
@@ -69,18 +69,18 @@ export default function Wishes({ onNext, onBack }) {
         >
             {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-pink-300/20 blur-[120px] rounded-full" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-purple-300/20 blur-[120px] rounded-full" />
-                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
+                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-blue-300/20 blur-[120px] rounded-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-sky-300/20 blur-[120px] rounded-full" />
+                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-cyan-200/30 blur-[100px] rounded-full" />
             </div>
 
             {/* Header */}
             <motion.div className="text-center mb-8 relative z-10" initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-                <h1 className="text-3xl md:text-5xl font-bold text-[#973b88] mb-2 tracking-wide drop-shadow font-heading"
+                <h1 className="text-3xl md:text-5xl font-bold text-[#2563eb] mb-2 tracking-wide drop-shadow font-heading"
                     style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
                     Secret Wishes
                 </h1>
-                <p className="text-[#77537e] text-[13px] font-bold tracking-[0.15em] uppercase font-cute">
+                <p className="text-[#334155] text-[13px] font-bold tracking-[0.15em] uppercase font-cute">
                     Tap the card to reveal 💌
                 </p>
             </motion.div>
@@ -106,10 +106,10 @@ export default function Wishes({ onNext, onBack }) {
                             {/* FRONT OF CARD (Hidden State) */}
                             <div className={`absolute w-full h-full rounded-3xl ${cardBg} p-8 flex flex-col items-center justify-center [backface-visibility:hidden]`}>
                                 <div className="neu-image-frame w-20 h-20 flex items-center justify-center mb-6 shadow-lg">
-                                    <Sparkles className="w-8 h-8 text-[#973b88]" />
+                                    <Sparkles className="w-8 h-8 text-[#2563eb]" />
                                 </div>
-                                <h3 className="text-xl font-bold text-[#973b88] uppercase tracking-widest mb-2 font-heading">Wish {current + 1}</h3>
-                                <p className="text-[#77537e] text-[12px] font-bold flex items-center gap-2 font-cute">
+                                <h3 className="text-xl font-bold text-[#2563eb] uppercase tracking-widest mb-2 font-heading">Wish {current + 1}</h3>
+                                <p className="text-[#334155] text-[12px] font-bold flex items-center gap-2 font-cute">
                                     <MousePointerClick size={14} /> Tap to open
                                 </p>
                             </div>
@@ -119,10 +119,10 @@ export default function Wishes({ onNext, onBack }) {
                                 <motion.div className="text-5xl mb-4" animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }}>
                                     {w.emoji}
                                 </motion.div>
-                                <h2 className="text-xl font-bold text-[#973b88] mb-4 uppercase tracking-widest font-heading">
+                                <h2 className="text-xl font-bold text-[#2563eb] mb-4 uppercase tracking-widest font-heading">
                                     {w.title}
                                 </h2>
-                                <p className="text-[#77537e] leading-relaxed text-sm font-bold font-cute">
+                                <p className="text-[#334155] leading-relaxed text-sm font-bold font-cute">
                                     {w.text}
                                 </p>
                             </div>
@@ -135,7 +135,7 @@ export default function Wishes({ onNext, onBack }) {
                     {wishes.map((_, i) => (
                         <div
                             key={i}
-                            className={`transition-all duration-300 rounded-full h-2 ${i === current ? 'w-6 bg-[#973b88] shadow-[0_0_10px_rgba(151,59,136,0.5)]' : 'w-2 bg-[#eecfeb]'}`}
+                            className={`transition-all duration-300 rounded-full h-2 ${i === current ? 'w-6 bg-[#2563eb] shadow-[0_0_10px_rgba(151,59,136,0.5)]' : 'w-2 bg-[#bfdbfe]'}`}
                         />
                     ))}
                 </div>
@@ -145,7 +145,7 @@ export default function Wishes({ onNext, onBack }) {
                     <button
                         onClick={goPrev}
                         disabled={current === 0}
-                        className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-[#973b88]/20 text-[#973b88] disabled:opacity-30 transition-all hover:bg-[#973b88]/10 active:scale-95 glass-button"
+                        className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-[#2563eb]/20 text-[#2563eb] disabled:opacity-30 transition-all hover:bg-[#2563eb]/10 active:scale-95 glass-button"
                     >
                         <ArrowLeft className="w-5 h-5" strokeWidth={3} />
                     </button>

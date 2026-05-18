@@ -95,7 +95,7 @@ export default function BirthdayApp() {
         initial={{ x: 100, opacity: 0 }} 
         animate={{ x: 0, opacity: 1 }} 
         transition={{ duration: 1, delay: 1 }} 
-        className="fixed bottom-4 right-4 text-sm text-[#77537e]/40 pointer-events-none z-50 font-light"
+        className="fixed bottom-4 right-4 text-sm text-[#334155]/40 pointer-events-none z-50 font-light"
       >
         Rao.mayankkk
       </motion.div>

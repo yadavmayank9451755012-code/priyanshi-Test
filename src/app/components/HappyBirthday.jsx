@@ -10,7 +10,7 @@ const RainingConfetti = () => {
     const [pieces, setPieces] = useState([])
 
     useEffect(() => {
-        const colors = ['#f472b6', '#a855f7', '#fcd34d', '#ffffff']
+        const colors = ['#60a5fa', '#3b82f6', '#fcd34d', '#ffffff']
         
         const generatedPieces = Array.from({ length: 80 }).map((_, i) => ({
             id: i,
@@ -63,7 +63,7 @@ const AnimatedCake = () => (
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
     >
         {/* Soft Back Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-pink-300/20 blur-[50px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-blue-300/20 blur-[50px] rounded-full pointer-events-none" />
         
         <div className="cake">
             <div className="plate"></div>
@@ -106,9 +106,9 @@ export default function HappyBirthday({ onNext }) {
         >
             {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-pink-300/20 blur-[120px] rounded-full" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-purple-300/20 blur-[120px] rounded-full" />
-                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
+                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-blue-300/20 blur-[120px] rounded-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-sky-300/20 blur-[120px] rounded-full" />
+                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-cyan-200/30 blur-[100px] rounded-full" />
             </div>
 
             {/* Live Raining Confetti */}
@@ -128,18 +128,18 @@ export default function HappyBirthday({ onNext }) {
                     >
                         <motion.h1
                             variants={{ hidden: { opacity: 0, scale: 0.5 }, show: { opacity: 1, scale: 1 } }}
-                            className="text-5xl md:text-7xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow-lg font-heading"
+                            className="text-5xl md:text-7xl font-bold text-[#2563eb] mb-3 tracking-wide drop-shadow-lg font-heading"
                             style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
                             Happy Birthday
                         </motion.h1>
                         
                         <motion.h2
                             variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
-                            className="text-2xl md:text-3xl font-bold text-[#77537e] tracking-[0.15em] uppercase flex items-center justify-center gap-2 font-cute"
+                            className="text-2xl md:text-3xl font-bold text-[#334155] tracking-[0.15em] uppercase flex items-center justify-center gap-2 font-cute"
                         >
-                            <Sparkles className="w-6 h-6 text-[#f472b6]" />
+                            <Sparkles className="w-6 h-6 text-[#60a5fa]" />
                             Madam Jii
-                            <Sparkles className="w-6 h-6 text-[#f472b6]" />
+                            <Sparkles className="w-6 h-6 text-[#60a5fa]" />
                         </motion.h2>
                     </div>
 
@@ -148,7 +148,7 @@ export default function HappyBirthday({ onNext }) {
                     >
                         <button
                             onClick={onNext}
-                            className="glass-button text-[#973b88] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full uppercase tracking-[0.12em] text-[14px] rounded-2xl"
+                            className="glass-button text-[#2563eb] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full uppercase tracking-[0.12em] text-[14px] rounded-2xl"
                         >
                             See Our Moments <ArrowRight size={18} strokeWidth={3} />
                         </button>

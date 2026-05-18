@@ -6,10 +6,10 @@ import confetti from "canvas-confetti"
 import TiltCard from "./TiltCard"
 import { useEffect } from "react"
 
-export default function Celebration({ onNext }) {
+export default function Celebration({ onNext, finalScore }) {
     
-    // Premium Confetti Colors (Pink, Purple, Gold)
-    const colors = ["#f472b6", "#a855f7", "#fcd34d", "#ffffff"]
+    // Premium Confetti Colors (Blue, Sky, Gold)
+    const colors = ["#60a5fa", "#3b82f6", "#fcd34d", "#ffffff"]
     
     useEffect(() => {
         const duration = 2500
@@ -61,7 +61,7 @@ export default function Celebration({ onNext }) {
 
     return (
         <motion.div
-            className="min-h-screen flex flex-col items-center justify-center p-6 bg-aesthetic text-[#77537e] font-sans relative overflow-hidden"
+            className="min-h-screen flex flex-col items-center justify-center p-6 bg-aesthetic text-[#334155] font-sans relative overflow-hidden"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, y: -50 }}
@@ -69,9 +69,9 @@ export default function Celebration({ onNext }) {
         >
             {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-pink-300/20 blur-[120px] rounded-full" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-purple-300/20 blur-[120px] rounded-full" />
-                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
+                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-blue-300/20 blur-[120px] rounded-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-sky-300/20 blur-[120px] rounded-full" />
+                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-cyan-200/30 blur-[100px] rounded-full" />
             </div>
 
             <div className="relative z-10 w-full max-w-md mx-auto flex flex-col items-center text-center">
@@ -96,13 +96,13 @@ export default function Celebration({ onNext }) {
                         }}
                         className="neu-image-frame w-28 h-28 flex items-center justify-center mx-auto mb-8 shadow-[0_15px_35px_rgba(151,59,136,0.2)]"
                     >
-                        <Gift className="w-14 h-14 text-[#973b88]" strokeWidth={1.5} />
+                        <Gift className="w-14 h-14 text-[#2563eb]" strokeWidth={1.5} />
                     </motion.div>
 
                     {/* Celebration Text */}
                     <motion.h1
                         variants={itemVariants}
-                        className="text-3xl md:text-4xl font-bold text-[#973b88] mb-4 drop-shadow font-heading"
+                        className="text-3xl md:text-4xl font-bold text-[#2563eb] mb-4 drop-shadow font-heading"
                         style={{
                             filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))",
                         }}
@@ -112,12 +112,21 @@ export default function Celebration({ onNext }) {
 
                     <motion.p
                         variants={itemVariants}
-                        className="text-[14px] font-bold text-[#77537e] tracking-[0.15em] uppercase mb-8 flex items-center justify-center gap-2 font-cute"
+                        className="text-[14px] font-bold text-[#334155] tracking-[0.15em] uppercase mb-8 flex items-center justify-center gap-2 font-cute"
                     >
-                        <Sparkles className="w-4 h-4 text-[#f472b6]" />
+                        <Sparkles className="w-4 h-4 text-[#60a5fa]" />
                         The countdown is over
-                        <Sparkles className="w-4 h-4 text-[#f472b6]" />
+                        <Sparkles className="w-4 h-4 text-[#60a5fa]" />
                     </motion.p>
+
+                    {finalScore !== undefined && (
+                        <motion.p
+                            variants={itemVariants}
+                            className="text-[18px] font-bold text-[#334155] tracking-[0.15em] uppercase mb-8 flex items-center justify-center gap-2 font-cute"
+                        >
+                            Score: {finalScore}/100
+                        </motion.p>
+                    )}
 
                     {/* Final Button */}
                     <motion.div
@@ -125,15 +134,15 @@ export default function Celebration({ onNext }) {
                     >
                         <button
                             onClick={onNext}
-                            className="glass-button text-[#973b88] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full uppercase tracking-[0.12em] text-[14px] rounded-2xl"
+                            className="glass-button text-[#2563eb] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full uppercase tracking-[0.12em] text-[14px] rounded-2xl"
                         >
-                            Let's Celebrate <Heart className="w-5 h-5 ml-1 text-[#973b88] fill-[#973b88]/30" /> <ArrowRight size={16} />
+                            Let's Celebrate <Heart className="w-5 h-5 ml-1 text-[#2563eb] fill-[#2563eb]/30" /> <ArrowRight size={16} />
                         </button>
                     </motion.div>
                 </TiltCard>
 
                 <motion.p
-                    className="mt-8 text-[#77537e]/60 text-[11px] font-medium uppercase tracking-[0.2em]"
+                    className="mt-8 text-[#334155]/60 text-[11px] font-medium uppercase tracking-[0.2em]"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1.2 }}

@@ -6,11 +6,11 @@ import { useEffect, useState } from "react"
 export default function FloatingHearts() {
     const [hearts, setHearts] = useState([])
 
-    // Pink/Purple colors
+    // Blue/Cyan colors
     const themeColors = [
-        "rgba(244, 114, 182, 0.5)", // Pink
-        "rgba(168, 85, 247, 0.5)", // Purple
-        "rgba(151, 59, 136, 0.5)", // Magenta
+        "rgba(96, 165, 250, 0.5)", // Blue
+        "rgba(56, 189, 248, 0.5)", // Sky
+        "rgba(37, 99, 235, 0.5)", // Deep Blue
     ]
 
     useEffect(() => {

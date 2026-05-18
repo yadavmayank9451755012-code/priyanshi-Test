@@ -43,28 +43,28 @@ export default function MessageBoard() {
     // Premium styles
     const cardBg = "glass-card"
     const inputBox = "neu-card-pressed p-4"
-    const btnDefault = "glass-button text-[#77537e] font-bold"
-    const btnPrimary = "glass-button text-[#973b88] font-bold"
+    const btnDefault = "glass-button text-[#334155] font-bold"
+    const btnPrimary = "glass-button text-[#2563eb] font-bold"
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-aesthetic text-[#77537e] font-sans relative overflow-hidden">
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-aesthetic text-[#334155] font-sans relative overflow-hidden">
             
             {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-pink-300/20 blur-[120px] rounded-full" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-purple-300/20 blur-[120px] rounded-full" />
-                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
+                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-blue-300/20 blur-[120px] rounded-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-sky-300/20 blur-[120px] rounded-full" />
+                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-cyan-200/30 blur-[100px] rounded-full" />
             </div>
 
             <div className="relative z-10 w-full max-w-[380px] mx-auto flex flex-col gap-6">
 
                 {/* Header */}
                 <motion.div className="text-center mb-2" initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
-                    <h1 className="text-3xl font-bold text-[#973b88] mb-2 tracking-wide drop-shadow font-heading"
+                    <h1 className="text-3xl font-bold text-[#2563eb] mb-2 tracking-wide drop-shadow font-heading"
                         style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
                         Leave a Note
                     </h1>
-                    <p className="text-[#77537e] text-[13px] font-bold tracking-widest uppercase font-cute">
+                    <p className="text-[#334155] text-[13px] font-bold tracking-widest uppercase font-cute">
                         I&apos;d love to hear from you ✨
                     </p>
                 </motion.div>
@@ -72,8 +72,8 @@ export default function MessageBoard() {
                 {/* TEXT MESSAGE CARD */}
                 <motion.div className={`p-6 ${cardBg} preserve-3d`} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
                     <div className="flex items-center gap-3 mb-5">
-                        <MessageSquare className="w-5 h-5 text-[#973b88]" />
-                        <h2 className="font-bold text-[#973b88] text-[15px] uppercase tracking-widest font-heading">
+                        <MessageSquare className="w-5 h-5 text-[#2563eb]" />
+                        <h2 className="font-bold text-[#2563eb] text-[15px] uppercase tracking-widest font-heading">
                             Write Something
                         </h2>
                     </div>
@@ -81,10 +81,10 @@ export default function MessageBoard() {
                     <AnimatePresence mode="wait">
                         {textSent ? (
                             <motion.div key="sent" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center gap-2 py-6">
-                                <CheckCircle className="w-12 h-12 text-[#973b88] mb-2" />
-                                <p className="text-[#973b88] font-bold text-lg">Message sent!</p>
-                                <p className="text-[#77537e] text-sm mb-4">I&apos;ll read it with a smile.</p>
-                                <button onClick={() => setTextSent(false)} className="text-[12px] font-medium text-[#77537e] hover:text-[#973b88] uppercase tracking-widest transition-colors">
+                                <CheckCircle className="w-12 h-12 text-[#2563eb] mb-2" />
+                                <p className="text-[#2563eb] font-bold text-lg">Message sent!</p>
+                                <p className="text-[#334155] text-sm mb-4">I&apos;ll read it with a smile.</p>
+                                <button onClick={() => setTextSent(false)} className="text-[12px] font-medium text-[#334155] hover:text-[#2563eb] uppercase tracking-widest transition-colors">
                                     Write another?
                                 </button>
                             </motion.div>
@@ -95,7 +95,7 @@ export default function MessageBoard() {
                                     onChange={(e) => setMessage(e.target.value)}
                                     placeholder="Type your feelings here..."
                                     rows={4}
-                                    className={`w-full ${inputBox} mb-5 text-[#77537e] placeholder-[#77537e]/50 focus:outline-none focus:ring-2 focus:ring-[#973b88]/30 font-cute font-bold`}
+                                    className={`w-full ${inputBox} mb-5 text-[#334155] placeholder-[#334155]/50 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30 font-cute font-bold`}
                                 />
                                 {textError && <p className="text-red-400 text-xs mb-3 font-medium">{textError}</p>}
                                 <button
@@ -104,7 +104,7 @@ export default function MessageBoard() {
                                     className={`w-full py-4 text-[13px] uppercase tracking-[0.12em] flex items-center justify-center gap-2 rounded-2xl
                                     ${!message.trim() ? 'opacity-50 cursor-not-allowed ' + btnDefault : btnPrimary}`}
                                 >
-                                    {textLoading ? <motion.div className="w-4 h-4 border-2 border-[#973b88]/30 border-t-[#973b88] rounded-full" animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} /> : (
+                                    {textLoading ? <motion.div className="w-4 h-4 border-2 border-[#2563eb]/30 border-t-[#2563eb] rounded-full" animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} /> : (
                                         <><Send size={16} strokeWidth={2.5} /> Send Message</>
                                     )}
                                 </button>
@@ -115,10 +115,10 @@ export default function MessageBoard() {
 
                 {/* Footer */}
                 <motion.div className="text-center pb-6 pt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                    <p className="text-[#77537e] text-[10px] font-bold tracking-[0.2em] uppercase font-cute">
-                        Made with <Heart className="inline w-3 h-3 mx-1 text-[#973b88] fill-[#973b88]" /> just for You
+                    <p className="text-[#334155] text-[10px] font-bold tracking-[0.2em] uppercase font-cute">
+                        Made with <Heart className="inline w-3 h-3 mx-1 text-[#2563eb] fill-[#2563eb]" /> just for You
                     </p>
-                    <p className="text-[#77537e]/60 text-[9px] font-bold tracking-[0.3em] uppercase mt-1 font-cute">
+                    <p className="text-[#334155]/60 text-[9px] font-bold tracking-[0.3em] uppercase mt-1 font-cute">
                         Artist
                     </p>
                 </motion.div>
