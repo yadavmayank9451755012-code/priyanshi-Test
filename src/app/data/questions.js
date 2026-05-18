@@ -2,111 +2,101 @@ export const QUESTIONS = [
   {
     q: "Jab main message pe 10 minute tak reply na karu toh kya hota hai?",
     options: [
-      { text: "Kahi aur busy honge", reply: "Wah! Itna trust? Sach batao phone phekne ka mann karta hai na? 😂" },
-      { text: "mar gyaaaa", reply: "Hahaha! Meri aatma chudail banke tumhe pareshan karegi phir! 👻" },
-      { text: "block wgehra karne ka man karta hh", reply: "Are meri maa, block mat kiya karo, ek hi toh achha dost hai tumhara! 😂" },
-      { text: "Sad wali shakal bana lena", reply: "Aww ale le le... main apne dost ko kabhi sad nahi hone dunga. 💕" }
+      { text: "Kahi aur busy honge", reply: "Busy? Mera dimaag 10 minute mein 1000 endings bana chuka hota hai. 😂 Tum jaise dost ka trust kaise tod sakte ho? 💔" },
+      { text: "mar gyaaaa", reply: "Toh main bhi marr jaunga! Seedha tumhare saath chalaunga. Ghost besties forever! 👻💀" },
+      { text: "block wgehra karne ka man karta hh", reply: "Block kiya toh main naya phone leke naya ID banaunga. Tumse milne ke liye hack kar lunga duniya! 🔥" },
+      { text: "Sad wali shakal bana lena", reply: "Bhai, teri ek sad wali photo aayi nahi ki main paani banke beh chuka hu. 🥲😂" }
     ],
-    // 1.gif -> Gusse wala / Phone peetne wala GIF
-    gif: "/images/1.gif" 
+    gif: "/images/1.gif"
   },
   {
     q: "Hum dono me se sabse bada dramebaaz kaun hai?",
     options: [
-      { text: "it's me (Priyanshi)", reply: "Chalo manzoor toh kiya! Par tumhare drame ke bina life sach me boring hai. 🍿" },
-      { text: "Of course Mayank!", reply: "Jhuthi! Saara drama toh tumhara hota hai, mai toh kitna seedha baccha hu. 🙄" },
-      { text: "Dono barabar ke hain", reply: "Yeh baat ekdum sahi boli. We are a deadly dramatic duo! 🎭" },
-      { text: "Pata nahi", reply: "Pata kaise nahi? Tum hi ho sabse badi nautanki! ❤️" }
+      { text: "it's me (Priyanshi)", reply: "Maine kaha tha! Par tumhare bina drama bekaar hai. Oscar mile tumhe mere show mein! 🎭🏆" },
+      { text: "Of course Mayank!", reply: "Main? Main toh real hu bhai. Tum ho jo 100 episode ka daily soap ho. 📺😂" },
+      { text: "Dono barabar ke hain", reply: "Exactly! Humari dosti ka budget 90% drama hai, 10% sleep. 💥" },
+      { text: "Pata nahi", reply: "Pata nahi? Tum hi ho jo raat 2 baje mujhe 'main badal hu' bolte ho. ☁️🤣" }
     ],
-    // 2.gif -> Jeebh dikha ke chidhane wala GIF
-    gif: "/images/2.gif" 
+    gif: "/images/2.gif"
   },
   {
     q: "Tumhara sabse favourite tareeka mujhe pareshan karne ka?",
     options: [
-      { text: "Baat na karke ignore karna", reply: "Ye sabse khatarnak weapon hai tumhara! Kasam se fat jati hai. 🥺" },
-      { text: "Huh ye sab se doorrr huu", reply: "Accha ji? Itni shareef toh tum bilkul nahi ho mujhe pata hai! 🤨" },
-      { text: "Bina baat ke nakhre dikhana", reply: "Aur mera kaam hai tumhare nakhre jhelna... aakhir dost jo thehra! ✨" },
-      { text: "Jaan bujh kar gussa hona, nautanki karna", reply: "Uske baad mujhe hi manana padta hai tumhe 😈" }
+      { text: "Baat na karke ignore karna", reply: "Woh toh maut se bhi zyada dard hota hai. Main pagal ho jaata hu bina tumhari baat ki dose ke! 😵‍💫" },
+      { text: "Huh ye sab se doorrr huu", reply: "Tu door? Haan haan. Tu toh mere dimaag mein rent free rehti hai, door kya cheez hai. 🧠💰" },
+      { text: "Bina baat ke nakhre dikhana", reply: "Nakhre? Usko main 'meri bestie ka signature move' bolta hu. Aur main fan hu! 🤩" },
+      { text: "Jaan bujh kar gussa hona, nautanki karna", reply: "Aur main pighalne waala actor. Bas ek notification se meri raat ban jaati hai! 📱✨" }
     ],
-    // 3.gif -> Kaatne (Biting) / Maar peet wala GIF
-    gif: "/images/3.gif" 
+    gif: "/images/3.gif"
   },
   {
     q: "Agar main kabhi kisi aur ladki se zyada baat kar lu toh?",
     options: [
-      { text: "Mujhe kya, karo baat", reply: "Mujhe pata hai bestie replace hone ka darr lagta hai tumhe! 😂🔥" },
-      { text: "Us ladki ko block karwaugi", reply: "Boss lady vibes! Darna padega tumhari dosti se. 🥶" },
-      { text: "Tumhari jaan le lungi", reply: "Baap re! Meri bestie serial killer mode me! 😂🗡️" },
-      { text: "Gussa karke baith jaungi", reply: "Aur phir mujhe ice-cream khila ke apna dost manana padega! 🍦" }
+      { text: "Mujhe kya, karo baat", reply: "Jhooth! Tu jealous ho jaati hai aur main jaanta hu. Teri aankhein sab bol deti hai. 👀😂" },
+      { text: "Us ladki ko block karwaugi", reply: "Boss lady! Main toh dar se usse baat karna hi chhod dunga. No one beats my Priyanshi! 🔥" },
+      { text: "Tumhari jaan le lungi", reply: "Lele meri jaan! Phir dono bhoot banke dusron ki dosti kharab karenge. 👻🔪" },
+      { text: "Gussa karke baith jaungi", reply: "Toh main tere gusse ko album banaunga. 'Greatest Hits: Volume 1 - Gussa aur Gulab Jamun' 💿🌹" }
     ],
-    // 4.gif -> Talwar/Chaku ghusane wala GIF
-    gif: "/images/4.gif" 
+    gif: "/images/4.gif"
   },
   {
     q: "Jab main achanak se tumhari tareef karu toh kaisa lagta hai?",
     options: [
-      { text: "Bohot sharam aati hai", reply: "Hehehe, meri tareefon ka asar hi aisa hai! Dost hu na tumhara. 😎" },
-      { text: "Lagta hai koi kaam nikalwana hai", reply: "Yaar itna bhi matlaabi dost nahi hu main! Sach me tareef karta hu. 🙄" },
-      { text: "Butter fly uddne lagti hain", reply: "Kya baat kar rahi ho! Aaj kal kuch zyada hi hawa me ud rahi ho. 😂🦋" },
-      { text: "Aadat ho gayi hai ab", reply: "Acha ji? Toh ab se apne bestie ki tareef karna band! (Just kidding) 😂" }
+      { text: "Bohot sharam aati hai", reply: "Sharam? Tujhe? Haan haan, woh bhi jab main world record tod du tareefon mein! 🏆😂" },
+      { text: "Lagta hai koi kaam nikalwana hai", reply: "Matlab? Main sach mein bolta hu, kaam baad mein yaad aata hai! Tu overthinker hai. 🤯" },
+      { text: "Butter fly uddne lagti hain", reply: "Aur main wo butterfly catcher hu jo teri tareef ke liye zoo khool de. 🦋🐝" },
+      { text: "Aadat ho gayi hai ab", reply: "Accha? Toh ab tareef sunke aur crazy ho jaana! Full volume! 🔊💥" }
     ],
-    // 5.gif -> Sharmane (Blushing) wala GIF
-    gif: "/images/5.gif" 
+    gif: "/images/5.gif"
   },
   {
     q: "Tumhara mood theek karne ka ultimate tareeka kya hai?",
     options: [
-      { text: "Shopping", reply: "Mera bank account khatre me hai bhai! 💸😂" },
-      { text: "Khana (Food!)", reply: "Momo ya Pizza? Done raha, next time pakka! 🍕" },
-      { text: "Pyaar se manana ", reply: "Ye mere budget me hai aur sabse best dosti wali vibe bhi! 🤗" },
-      { text: "Door bhag jaoo mughseyyy", reply: "Ye bolti toh ho par asli matlab kuch aur hota hai. " }
+      { text: "Shopping", reply: "Mera ghar bech dunga lekin tera mood thik karke rahunga. Tu ro mat bas! 🏠➡️🛍️" },
+      { text: "Khana (Food!)", reply: "Pizza, momo, biryani? Main delivery boy ban jaunga. Tera khazana khali kardunga! 🍕🍔" },
+      { text: "Pyaar se manana", reply: "Pyaar toh free mein milta hai, par tera smile dekh ke main EMI bhar dunga uspe bhi! 😄💰" },
+      { text: "Door bhag jaoo mughseyyy", reply: "Bhagun? Teri ek hi toh bestie hu. Door gaya toh kaun degi tujhe pakode aur bakchodi? 😭🥟" }
     ],
-    // 6.gif -> Manane wala / Massage karne wala GIF
-    gif: "/images/7.gif" 
+    gif: "/images/7.gif"
   },
   {
     q: "Agar maine kabhi gusse mein aake tumhe sach me block kar diya, toh tumhara reaction kya hoga?",
     options: [
-      { text: "Fark nahi padta, ghoom phir ke aana toh waapas yahin hai", reply: "Itna overconfidence? Sahi khel gayi! Par dukh ki baat ye hai ki ye sach hai... 😂" },
-      { text: "Wait karungi ki kab khud shant hoke unblock karoge", reply: "Matlab thodi si bhi mehnat nahi karni manane ke liye? Waah re dost! 😒" },
-      { text: "Kisi aur number/id se message karke daant lagaungi", reply: "Aaha! Chalo iska matlab thoda bohot toh farq padta hai mere hone se! ✨" },
-      { text: "Main bhi block mar dungi, kissa khatam!", reply: "Ego clash pro max! Ye dosti hai ya World War 3? 🥊😂" }
+      { text: "Fark nahi padta, ghoom phir ke aana toh waapas yahin hai", reply: "Overconfidence tera 11/10. Par tu sahi hai. Main bina block ke bhi teri soch mein rehta hu. 🧠🔥" },
+      { text: "Wait karungi ki kab khud shant hoke unblock karoge", reply: "Main toh waise bhi tera wait kar raha hu life se. Thoda aur sahi. ⏳😎" },
+      { text: "Kisi aur number/id se message karke daant lagaungi", reply: "Us daant ke liye main hazaar ID bana dunga. Duniya ke saare numbers se tujhe 'sorry' likh dunga! 📲💀" },
+      { text: "Main bhi block mar dungi, kissa khatam!", reply: "Phir dono block hoke bhi ek dusre ko ping karte rahenge. Humari dosti WiFi se nahi, dil se chalti hai. ❤️📶" }
     ],
-    // 7.gif -> Attitude dikhane wala / Ignore karne wala / Ego clash GIF
-    gif: "/images/6.gif" 
+    gif: "/images/6.gif"
   },
-  { // 👈 YAHAN BRACKET MISSING THA! Maine laga diya hai.
+  {
     q: "Jab hum phli baar mile the / baat ki thi, toh kya socha tha?",
     options: [
-      { text: "Ye kitna ajeeb hai", reply: "Ajeeb hu, par jaisa bhi hu tumhara hi dost hu! 😎" },
-      { text: "Cute laga tha", reply: "Pata tha mujhe!. ✨" },
-      { text: "Attitude bohot hai isme", reply: "Attitude nahi, thoda shy tha main starting mein. 🥺" },
-      { text: "Dost banne layak hai", reply: "Aur dekho dosti kahan tak aa gayi! 💫" }
+      { text: "Ye kitna ajeeb hai", reply: "Ajeeb? Main alien hu jo tumhari orbit mein aa gaya. Ab nikal nahi sakta. 🛸✨" },
+      { text: "Cute laga tha", reply: "Ha! Main toh jaanta tha. Tumhari aankhon ne pehle din hi haan bol di thi dosti ke liye. 👁️🗨️" },
+      { text: "Attitude bohot hai isme", reply: "Attitude nahi, swag tha. Ab toh tum bhi same ho gayi. Copycat! 😼" },
+      { text: "Dost bana ne layak hai", reply: "Dost? Main toh tere schedule ka fixed part hu. Missed call nahi, alarm clock hu tera. ⏰❤️" }
     ],
-    // 8.gif -> Sochne (Thinking) wala GIF
-    gif: "/images/8.gif" 
+    gif: "/images/8.gif"
   },
   {
     q: "Raat ko sone se pehle sabse aakhiri khayal kiska aata hai?",
     options: [
-      { text: "idk", reply: "ooo Op" },
-      { text: "Din bhar ki baaton ka", reply: "Overthinking queen ho tum sach me! 👑" },
-      { text: "Subah uthne ka tension", reply: "Alarm se pehle main utha diya karunga, Agar kaho toh! ⏰" },
-      { text: "Khane ka", reply: "Sach-sach batao, bhukkad ho na tum? 🍜😂" }
+      { text: "idk", reply: "idk ka matlab 'I Don't Know' nahi, 'I Definitely Know' aur mujhe bataana padega! 👿" },
+      { text: "Din bhar ki baaton ka", reply: "Woh baatein mere playlist mein repeat pe hoti hai. Teri voice loop pe chalegi neend tak. 🎧😴" },
+      { text: "Subah uthne ka tension", reply: "Tension nahi lene ka! Main raat 3 baje bhi ready hu teri bakchodi ke liye. ☕🤪" },
+      { text: "Khane ka", reply: "Khane aur teri yaad — dono ki bhookh raat ko jaagti hai mere andar. 🍜💭" }
     ],
-    // 9.gif -> Sone (Sleeping) / Yawning wala GIF
-    gif: "/images/9.gif" 
+    gif: "/images/9.gif"
   },
   {
     q: "How are youuu?",
     options: [
-      { text: "masttr", reply: "Badhiyaaa haiii, hamesha aisi hi raho! ❤️" },
-      { text: "good goodd", reply: "Sahi hai, aise hi haste khilte raho! ✨" },
-      { text: "Pata nahi, bas jinda huu", reply: "Arre aise devdas ki tarah mat bolo, main hu na entertainment ke liye! 😂" },
-      { text: "sad🥺 ", reply: "Sad kyun? Abhi aa ke tumhara mood theek karta hu! 🥺🌻" }
+      { text: "masttr", reply: "Mast tu reh, main aur pagal ho jaunga teri khushi dekh ke. Aag laga dunga duniya mein! 🔥🌍" },
+      { text: "good goodd", reply: "Good ek word hai, main toh teri dosti ke nashe mein high hu 24/7. 🚀🤪" },
+      { text: "Pata nahi, bas jinda huu", reply: "Jinda rehna kaafi nahi. Main jaha hu, waha blast hona zaroori hai. Tu aaja, full mazaak machaate hai! 💣😂" },
+      { text: "sad🥺", reply: "Sad? Teri ek aankh nam hui nahi ki main samandar le aau dhoone ke liye. Rone de mujhe bhi teri tension mein! 🌊🥲" }
     ],
-    // 10.gif -> Happy/Dancing/Celebration wala GIF
-    gif: "/images/10.gif" 
+    gif: "/images/10.gif"
   }
 ];
