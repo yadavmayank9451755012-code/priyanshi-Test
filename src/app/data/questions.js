@@ -23,7 +23,7 @@ export const QUESTIONS = [
     q: "Tumhara sabse favourite tareeka mujhe pareshan karne ka?",
     options: [
       { text: "Baat na karke ignore karna", reply: "Woh toh maut se bhi zyada dard hota hai. Main pagal ho jaata hu bina tumhari baat ki dose ke! 😵‍💫" },
-      { text: "Huh ye sab se doorrr huu", reply: "Tu door? Haan haan. Tu toh mere dimaag mein rent free rehti hai, door kya cheez hai. 🧠💰" },
+      { text: "Huh ye sab se doorrr huu", reply: "Tum door? Haan haan. Tum toh mere dimaag mein rent free rehti hai, door kya cheez hai. 🧠💰" },
       { text: "Bina baat ke nakhre dikhana", reply: "Nakhre? Usko main 'meri bestie ka signature move' bolta hu. Aur main fan hu! 🤩" },
       { text: "Jaan bujh kar gussa hona, nautanki karna", reply: "Aur main pighalne waala actor. Bas ek notification se meri raat ban jaati hai! 📱✨" }
     ],
@@ -35,7 +35,7 @@ export const QUESTIONS = [
       { text: "Mujhe kya, karo baat", reply: "Jhooth! Tu jealous ho jaati hai aur main jaanta hu. Teri aankhein sab bol deti hai. 👀😂" },
       { text: "Us ladki ko block karwaugi", reply: "Boss lady! Main toh dar se usse baat karna hi chhod dunga. No one beats my Priyanshi! 🔥" },
       { text: "Tumhari jaan le lungi", reply: "Lele meri jaan! Phir dono bhoot banke dusron ki dosti kharab karenge. 👻🔪" },
-      { text: "Gussa karke baith jaungi", reply: "Toh main tere gusse ko album banaunga. 'Greatest Hits: Volume 1 - Gussa aur Gulab Jamun' 💿🌹" }
+      { text: "Gussa karke baith jaungi", reply: "Toh main tumhre gusse ko album banaunga." }
     ],
     gif: "/images/4.gif"
   },
@@ -52,20 +52,20 @@ export const QUESTIONS = [
   {
     q: "Tumhara mood theek karne ka ultimate tareeka kya hai?",
     options: [
-      { text: "Shopping", reply: "Mera ghar bech dunga lekin tera mood thik karke rahunga. Tu ro mat bas! 🏠➡️🛍️" },
-      { text: "Khana (Food!)", reply: "Pizza, momo, biryani? Main delivery boy ban jaunga. Tera khazana khali kardunga! 🍕🍔" },
+      { text: "Shopping", reply: "Mera ghar bech dunga lekin tera mood thik karke rahunga. Tum ro mat bas! 🏠➡️🛍️" },
+      { text: "Khana (Food!)", reply: "Pizza, momo, biryani? Main delivery boy ban jaunga.  🍕🍔" },
       { text: "Pyaar se manana", reply: "Pyaar toh free mein milta hai, par tera smile dekh ke main EMI bhar dunga uspe bhi! 😄💰" },
-      { text: "Door bhag jaoo mughseyyy", reply: "Bhagun? Teri ek hi toh bestie hu. Door gaya toh kaun degi tujhe pakode aur bakchodi? 😭🥟" }
+      { text: "Door bhag jaoo mughseyyy", reply: "Bhagun? Door gaya toh kaun dega tumhe masti aur pakode smajhii bhaii ki pakodii🤣 😭🥟" }
     ],
     gif: "/images/7.gif"
   },
   {
     q: "Agar maine kabhi gusse mein aake tumhe sach me block kar diya, toh tumhara reaction kya hoga?",
     options: [
-      { text: "Fark nahi padta, ghoom phir ke aana toh waapas yahin hai", reply: "Overconfidence tera 11/10. Par tu sahi hai. Main bina block ke bhi teri soch mein rehta hu. 🧠🔥" },
+      { text: "Fark nahi padta, ghoom phir ke aana toh waapas yahin hai", reply: "Overconfidence tumhra 11/10. Par tum sahi hao. Main bina block ke bhi tumhri soch mein rehta hu. 🧠🔥" },
       { text: "Wait karungi ki kab khud shant hoke unblock karoge", reply: "Main toh waise bhi tera wait kar raha hu life se. Thoda aur sahi. ⏳😎" },
-      { text: "Kisi aur number/id se message karke daant lagaungi", reply: "Us daant ke liye main hazaar ID bana dunga. Duniya ke saare numbers se tujhe 'sorry' likh dunga! 📲💀" },
-      { text: "Main bhi block mar dungi, kissa khatam!", reply: "Phir dono block hoke bhi ek dusre ko ping karte rahenge. Humari dosti WiFi se nahi, dil se chalti hai. ❤️📶" }
+      { text: "Kisi aur number/id se message karke daant lagaungi", reply: "Us daant ke liye main hazaar barr block karne ka natal dunga....ha lekin ye bhi Duniya ke saare numbers se tujhe 'sorry' likh dunga! 📲💀" },
+      { text: "Main bhi block mar dungi, kissa khatam!", reply: "wahh jii btw har reply ke answerr alag alag haii ....📶" }
     ],
     gif: "/images/6.gif"
   },
@@ -73,7 +73,7 @@ export const QUESTIONS = [
     q: "Jab hum phli baar mile the / baat ki thi, toh kya socha tha?",
     options: [
       { text: "Ye kitna ajeeb hai", reply: "Ajeeb? Main alien hu jo tumhari orbit mein aa gaya. Ab nikal nahi sakta. 🛸✨" },
-      { text: "Cute laga tha", reply: "Ha! Main toh jaanta tha. Tumhari aankhon ne pehle din hi haan bol di thi dosti ke liye. 👁️🗨️" },
+      { text: "Cute laga tha", reply: "Ha! Main toh jaanta tha ye. 👁️🗨️" },
       { text: "Attitude bohot hai isme", reply: "Attitude nahi, swag tha. Ab toh tum bhi same ho gayi. Copycat! 😼" },
       { text: "Dost bana ne layak hai", reply: "Dost? Main toh tere schedule ka fixed part hu. Missed call nahi, alarm clock hu tera. ⏰❤️" }
     ],
@@ -83,19 +83,19 @@ export const QUESTIONS = [
     q: "Raat ko sone se pehle sabse aakhiri khayal kiska aata hai?",
     options: [
       { text: "idk", reply: "idk ka matlab 'I Don't Know' nahi, 'I Definitely Know' aur mujhe bataana padega! 👿" },
-      { text: "Din bhar ki baaton ka", reply: "Woh baatein mere playlist mein repeat pe hoti hai. Teri voice loop pe chalegi neend tak. 🎧😴" },
-      { text: "Subah uthne ka tension", reply: "Tension nahi lene ka! Main raat 3 baje bhi ready hu teri bakchodi ke liye. ☕🤪" },
-      { text: "Khane ka", reply: "Khane aur teri yaad — dono ki bhookh raat ko jaagti hai mere andar. 🍜💭" }
+      { text: "Din bhar ki baaton ka", reply: "Woh baatein mere playlist mein repeat pe hoti hai. Tumhri voice loop pe chalegi neend tak. 🎧😴" },
+      { text: "Subah uthne ka tension", reply: "Tension nahi lene ka! Main raat 3 baje bhi ready hu Jagane ke liye.agr kho tohh ☕🤪" },
+      { text: "Khane ka", reply: "Khane aur teri yaad dono ki bhookh raat ko jaagti hai mere andar. 🍜💭" }
     ],
     gif: "/images/9.gif"
   },
   {
     q: "How are youuu?",
     options: [
-      { text: "masttr", reply: "Mast tu reh, main aur pagal ho jaunga teri khushi dekh ke. Aag laga dunga duniya mein! 🔥🌍" },
-      { text: "good goodd", reply: "Good ek word hai, main toh teri dosti ke nashe mein high hu 24/7. 🚀🤪" },
-      { text: "Pata nahi, bas jinda huu", reply: "Jinda rehna kaafi nahi. Main jaha hu, waha blast hona zaroori hai. Tu aaja, full mazaak machaate hai! 💣😂" },
-      { text: "sad🥺", reply: "Sad? Teri ek aankh nam hui nahi ki main samandar le aau dhoone ke liye. Rone de mujhe bhi teri tension mein! 🌊🥲" }
+      { text: "mastt", reply: "Mast tum reho, noiceee badhiyaaa🌍" },
+      { text: "good goodd", reply: "Good ek word hai, main toh tumhrii dosti ke nashe mein hu 24/7. 🚀🤪" },
+      { text: "Pata nahi, bas jinda huu", reply: "Jinda rehna kaafi nahi. Main jaha hu, waha blast hona zaroori hai. kya bolti hooo! 💣😂" },
+      { text: "sad🥺", reply: "Sad? Teri ek aankh nam hui nahi ki main samandar le aau dhoone ke liye. Rone do ab mujhe bhi tumhri tension mein! 🌊🥲" }
     ],
     gif: "/images/10.gif"
   }
