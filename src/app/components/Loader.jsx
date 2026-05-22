@@ -95,33 +95,69 @@ export default function Loader({ onComplete }) {
             className="h-[2px] bg-[#973b88]/20 rounded-full mt-6 mb-4" />
       </div>
 
-      {/* Center Section (Photo Blob) */}
+      {/* Center Section (Premium Photo Frame) */}
       <motion.div 
         className="relative z-20 w-full flex justify-center mt-6 flex-1 max-h-[400px]"
         initial={{ opacity: 0, scale: 0.9, y: 30 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.5, type: "spring" }}
       >
+        {/* Glowing Outer Ring */}
         <motion.div 
-            className="neu-image-frame w-[280px] h-[360px] md:w-[340px] md:h-[420px] overflow-hidden"
-            animate={{ 
-                borderRadius: [
-                    "60% 40% 55% 45% / 50% 55% 45% 50%", 
-                    "40% 60% 45% 55% / 45% 50% 55% 50%", 
-                    "60% 40% 55% 45% / 50% 55% 45% 50%"
-                ],
-                y: [0, -12, 0]
+          className="absolute w-[320px] h-[400px] md:w-[380px] md:h-[460px] rounded-[30px]"
+          style={{
+            background: "radial-gradient(circle, rgba(244,114,182,0.3) 0%, transparent 70%)",
+            filter: "blur(25px)"
+          }}
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        />
+        
+        {/* Premium Frame Container */}
+        <div className="relative w-[280px] h-[360px] md:w-[340px] md:h-[420px]">
+          {/* Gradient Border Background */}
+          <motion.div 
+            className="absolute inset-0 rounded-[25px] p-1"
+            style={{
+              background: "linear-gradient(135deg, #f472b6 0%, #a855f7 50%, #f472b6 100%)",
+              boxShadow: "0 0 40px rgba(244,114,182,0.4), 0 0 60px rgba(168,85,247,0.3)"
             }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <img
-            src="/images/10.jpg"
-            alt="Special person"
-            className="w-full h-full object-cover object-center"
+            animate={{ 
+              backgroundPosition: ["0% 0%", "100% 100%"],
+            }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          >
+            {/* Inner white container for image */}
+            <div className="relative w-full h-full bg-white/95 rounded-[24px] overflow-hidden backdrop-blur-sm">
+              {/* Image */}
+              <img
+                src="/images/10.jpg"
+                alt="Special person"
+                className="w-full h-full object-cover object-center"
+              />
+              {/* Elegant overlay gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-pink-200/20 via-transparent to-transparent pointer-events-none" />
+              
+              {/* Decorative Corner Accents */}
+              <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-pink-400/40 rounded-tl-lg" />
+              <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-purple-400/40 rounded-tr-lg" />
+              <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-purple-400/40 rounded-bl-lg" />
+              <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-pink-400/40 rounded-br-lg" />
+            </div>
+          </motion.div>
+          
+          {/* Floating Accent Orbs */}
+          <motion.div 
+            className="absolute -top-6 -right-6 w-12 h-12 bg-gradient-to-br from-pink-300 to-pink-400 rounded-full opacity-60"
+            animate={{ y: [0, -15, 0], x: [0, 10, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           />
-          {/* Subtle inner shadow overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-pink-100/30 to-transparent pointer-events-none" />
-        </motion.div>
+          <motion.div 
+            className="absolute -bottom-4 -left-4 w-10 h-10 bg-gradient-to-tr from-purple-300 to-purple-400 rounded-full opacity-60"
+            animate={{ y: [0, 15, 0], x: [0, -10, 0] }}
+            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+          />
+        </div>
       </motion.div>
 
       {/* Bottom Section (Progress / Button) */}
