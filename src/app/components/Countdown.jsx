@@ -147,7 +147,7 @@ export default function Countdown({ onNext, birthdayDate }) {
                     
                     {/* STATE 1: TIMER */}
                     {gameState === "timer" && (
-                        <TiltCard key="timer" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className={`p-6 text-center ${premiumCard}`}>
+                        <TiltCard key="timer" initial={{ scale: 0.85, opacity: 0, rotateX: 20 }} animate={{ scale: 1, opacity: 1, rotateX: 0 }} exit={{ scale: 0.85, opacity: 0, rotateX: -20 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className={`p-6 text-center ${premiumCard}`}>
                                 
                             <div className="neu-image-frame w-44 h-44 md:w-52 md:h-52 flex items-center justify-center mx-auto mb-6 overflow-hidden">
                                 <img src="/images/peach-and-goma-peach-loves-goma.gif" alt="Waiting" className="w-full h-full object-contain" />
@@ -157,47 +157,85 @@ export default function Countdown({ onNext, birthdayDate }) {
                                 {isScrambling ? "Calculating Time..." : "Priyanshi waiting..."}
                             </h2>
 
-                            {/* Timer Grid */}
-                            <div className="grid grid-cols-2 gap-4 mb-8">
+                            {/* Timer Grid - 3D Enhanced */}
+                            <div className="grid grid-cols-2 gap-5 mb-8 perspective">
                                 {[
                                     { l: "Days", v: timeLeft.days },
                                     { l: "Hours", v: timeLeft.hours },
                                     { l: "Mins", v: timeLeft.minutes },
                                     { l: "Secs", v: timeLeft.seconds }
                                 ].map((t, idx) => (
-                                    <div key={idx} className={timerBox}>
+                                    <motion.div 
+                                        key={idx} 
+                                        className={timerBox}
+                                        whileHover={{ 
+                                            y: -4,
+                                            boxShadow: "0 20px 40px rgba(244,114,182,0.3)"
+                                        }}
+                                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                        style={{
+                                            boxShadow: "0 10px 30px rgba(244,114,182,0.15), inset 0 1px 0 rgba(255,255,255,0.5)"
+                                        }}
+                                    >
                                         <AnimatePresence mode="popLayout">
                                             <motion.span 
                                                 key={isScrambling ? "scrambling" : t.v}
-                                                initial={{ y: isScrambling ? 0 : -20, opacity: isScrambling ? 1 : 0, filter: isScrambling ? "blur(0px)" : "blur(4px)" }}
-                                                animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                                                exit={{ y: isScrambling ? 0 : 20, opacity: isScrambling ? 1 : 0, filter: isScrambling ? "blur(0px)" : "blur(4px)" }}
-                                                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                                                className={`text-4xl font-bold ${isScrambling ? "text-[#973b88]" : "text-[#77537e]"}`}
+                                                initial={{ rotateX: 90, opacity: 0, z: -20 }}
+                                                animate={{ rotateX: 0, opacity: 1, z: 0 }}
+                                                exit={{ rotateX: -90, opacity: 0, z: -20 }}
+                                                transition={{ type: "spring", stiffness: 200, damping: 20, duration: 0.5 }}
+                                                style={{ perspective: "1000px" }}
+                                                className={`text-4xl font-bold block ${isScrambling ? "text-[#973b88]" : "text-[#77537e]"}`}
                                             >
                                                 {t.v < 10 ? `0${t.v}` : t.v}
                                             </motion.span>
                                         </AnimatePresence>
-                                        <span className="text-[10px] uppercase tracking-widest text-[#77537e]/70 font-medium mt-2">{t.l}</span>
-                                    </div>
+                                        <motion.span 
+                                            className="text-[10px] uppercase tracking-widest text-[#77537e]/70 font-medium mt-2 block"
+                                            animate={{ opacity: [0.6, 1] }}
+                                            transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+                                        >
+                                            {t.l}
+                                        </motion.span>
+                                    </motion.div>
                                 ))}
                             </div>
 
                             {isTimeUp ? (
-                                <button onClick={onNext} className={btnPrimary}>Start Celebration!</button>
+                                <motion.button 
+                                    onClick={onNext} 
+                                    className={btnPrimary}
+                                    whileHover={{ scale: 1.05, y: -2 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                                >
+                                    Start Celebration!
+                                </motion.button>
                             ) : (
                                 !canSkip ? (
-                                    <button disabled className={lockedBtn}>
+                                    <motion.button 
+                                        disabled 
+                                        className={lockedBtn}
+                                        initial={{ opacity: 0.7 }}
+                                        animate={{ opacity: 0.8 }}
+                                        transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+                                    >
                                         <span>{isScrambling ? "Syncing..." : "Unlocking"}</span>
                                         <svg className="w-5 h-5 -rotate-90">
                                             <circle cx="10" cy="10" r={radius} fill="transparent" stroke="#eecfeb" strokeWidth="3" />
-                                            <circle cx="10" cy="10" r={radius} fill="transparent" stroke="#973b88" strokeWidth="3" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" className="transition-all duration-100 ease-linear"/>
+                                            <circle cx="10" cy="10" r={radius} fill="transparent" stroke="#973b88" strokeWidth="3" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" className="transition-all duration-150 ease-linear"/>
                                         </svg>
-                                    </button>
+                                    </motion.button>
                                 ) : (
-                                    <button onClick={() => setGameState("mocking")} className={btnPrimary}>
+                                    <motion.button 
+                                        onClick={() => setGameState("mocking")} 
+                                        className={btnPrimary}
+                                        whileHover={{ scale: 1.05, y: -2 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                                    >
                                         Skip Countdown <ArrowRight size={16} strokeWidth={3} />
-                                    </button>
+                                    </motion.button>
                                 )
                             )}
                         </TiltCard>
@@ -205,7 +243,7 @@ export default function Countdown({ onNext, birthdayDate }) {
 
                     {/* STATE 2: MOCKING */}
                     {gameState === "mocking" && (
-                        <TiltCard key="mocking" initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} className={`p-8 text-center ${premiumCard}`}>
+                        <TiltCard key="mocking" initial={{ x: 50, opacity: 0, rotateY: 20 }} animate={{ x: 0, opacity: 1, rotateY: 0 }} exit={{ x: -50, opacity: 0, rotateY: -20 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className={`p-8 text-center ${premiumCard}`}>
                             <div className="neu-image-frame w-44 h-44 md:w-52 md:h-52 flex items-center justify-center mx-auto mb-6 overflow-hidden">
                                 <img src="/images/airallia-cat-chan.gif" alt="Teasing" className="w-full h-full object-contain" />
                             </div>
@@ -213,25 +251,37 @@ export default function Countdown({ onNext, birthdayDate }) {
                             <p className="text-[#77537e] mb-8 text-[14px] font-medium leading-relaxed">
                                 &quot;Badi jaldi machi hai? Aise kaise aage jane du? Wait karo birthday ki date aane ka chup chaap!&quot;
                             </p>
-                            <button onClick={() => setGameState("message")} className={btnPrimary}>
+                            <motion.button 
+                                onClick={() => setGameState("message")} 
+                                className={btnPrimary}
+                                whileHover={{ scale: 1.05, y: -2 }}
+                                whileTap={{ scale: 0.95 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                            >
                                 Next <ArrowRight size={16} strokeWidth={3} />
-                            </button>
+                            </motion.button>
                         </TiltCard>
                     )}
 
                     {/* STATE 3: MESSAGE BOX */}
                     {gameState === "message" && (
-                        <TiltCard key="msg" initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className={`p-6 text-center ${premiumCard}`}>
+                        <TiltCard key="msg" initial={{ x: 50, opacity: 0, rotateY: 20 }} animate={{ x: 0, opacity: 1, rotateY: 0 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className={`p-6 text-center ${premiumCard}`}>
                             <h3 className="text-[14px] font-bold text-[#973b88] uppercase mb-6 tracking-widest">Kuch likhna chahoge?</h3>
                             <textarea 
-                                className="w-full h-32 p-4 bg-[#fff] shadow-inner rounded-2xl text-[#77537e] outline-none mb-6 resize-none font-medium text-sm placeholder-[#77537e]/50 border border-pink-100" 
+                                className="w-full h-32 p-4 bg-[#fff] shadow-inner rounded-2xl text-[#77537e] outline-none mb-6 resize-none font-medium text-sm placeholder-[#77537e]/50 border border-pink-100 backdrop-blur-sm transition-all duration-300 focus:border-pink-300 focus:shadow-md" 
                                 placeholder="Gaaliyan bhi allowed hain..." 
                                 value={userMessage} 
                                 onChange={(e)=>setUserMessage(e.target.value)} 
                             />
-                            <button onClick={handleSendMessage} className={btnPrimary}>
+                            <motion.button 
+                                onClick={handleSendMessage} 
+                                className={btnPrimary}
+                                whileHover={{ scale: 1.05, y: -2 }}
+                                whileTap={{ scale: 0.95 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                            >
                                 Send & Back <Send size={16} strokeWidth={2.5} />
-                            </button>
+                            </motion.button>
                         </TiltCard>
                     )}
 
