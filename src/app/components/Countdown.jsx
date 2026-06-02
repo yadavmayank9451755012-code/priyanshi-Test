@@ -21,7 +21,7 @@ const sparkles = [
 export default function Countdown({ onNext, birthdayDate }) {
     const [timeLeft, setTimeLeft] = useState({ days: 9999, hours: 99, minutes: 99, seconds: 99 })
     const [isTimeUp, setIsTimeUp] = useState(false)
-    
+
     const [isScrambling, setIsScrambling] = useState(true)
     const [skipProgress, setSkipProgress] = useState(0)
     const [canSkip, setCanSkip] = useState(false)
@@ -33,13 +33,13 @@ export default function Countdown({ onNext, birthdayDate }) {
         if (isScrambling) {
             let currentFakeDays = 9999;
             const targetDate = new Date(birthdayDate);
-            
+
             const scrambleInterval = setInterval(() => {
                 const diff = +targetDate - +new Date();
                 const realDays = Math.floor(diff / (1000 * 60 * 60 * 24));
-                
+
                 currentFakeDays -= 142;
-                
+
                 if (currentFakeDays <= realDays) {
                     setIsScrambling(false);
                     clearInterval(scrambleInterval);
@@ -60,7 +60,7 @@ export default function Countdown({ onNext, birthdayDate }) {
     // Normal Timer Logic
     useEffect(() => {
         if (isScrambling) return; 
-        
+
         const updateRealTime = () => {
             const difference = +new Date(birthdayDate) - +new Date()
             if (difference > 0) {
@@ -83,7 +83,7 @@ export default function Countdown({ onNext, birthdayDate }) {
     // Skip unlock timer
     useEffect(() => {
         if (isTimeUp || gameState !== "timer" || isScrambling) return;
-        
+
         const interval = setInterval(() => {
             setSkipProgress((prev) => {
                 if (prev >= 100) {
@@ -123,7 +123,7 @@ export default function Countdown({ onNext, birthdayDate }) {
 
     return (
         <motion.div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-aesthetic font-sans" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.8 }}>
-            
+
             {/* Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <div className="absolute top-[10%] left-[10%] w-[40%] h-[40%] bg-pink-300/20 blur-[100px] rounded-full" />
@@ -143,47 +143,59 @@ export default function Countdown({ onNext, birthdayDate }) {
 
             <div className="w-full max-w-[380px] z-10 relative">
                 <AnimatePresence mode="wait">
-                    
+
                     {/* STATE 1: TIMER */}
                     {gameState === "timer" && (
                         <motion.div key="timer" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className={`p-6 text-center ${premiumCard}`}>
-                                
+
                             <div className="neu-image-frame w-44 h-44 md:w-52 md:h-52 flex items-center justify-center mx-auto mb-6 overflow-hidden">
                                 <img src="/images/peach-and-goma-peach-loves-goma.gif" alt="Waiting" className="w-full h-full object-contain" />
                             </div>
 
+                            {/* DYNAMIC HEADING - Changes when time is up */}
                             <h2 className="text-[15px] font-bold text-[#973b88] mb-6 uppercase tracking-widest">
-                                {isScrambling ? "Calculating Time..." : "Priyanshi waiting..."}
+                                {isTimeUp ? "It's Time! 🎉" : isScrambling ? "Calculating Time..." : "Priyanshi waiting..."}
                             </h2>
 
-                            {/* Timer Grid */}
-                            <div className="grid grid-cols-2 gap-4 mb-8">
-                                {[
-                                    { l: "Days", v: timeLeft.days },
-                                    { l: "Hours", v: timeLeft.hours },
-                                    { l: "Mins", v: timeLeft.minutes },
-                                    { l: "Secs", v: timeLeft.seconds }
-                                ].map((t, idx) => (
-                                    <div key={idx} className={timerBox}>
-                                        <AnimatePresence mode="popLayout">
-                                            <motion.span 
-                                                key={isScrambling ? "scrambling" : t.v}
-                                                initial={{ y: isScrambling ? 0 : -20, opacity: isScrambling ? 1 : 0, filter: isScrambling ? "blur(0px)" : "blur(4px)" }}
-                                                animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                                                exit={{ y: isScrambling ? 0 : 20, opacity: isScrambling ? 1 : 0, filter: isScrambling ? "blur(0px)" : "blur(4px)" }}
-                                                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                                                className={`text-4xl font-bold ${isScrambling ? "text-[#973b88]" : "text-[#77537e]"}`}
-                                            >
-                                                {t.v < 10 ? `0${t.v}` : t.v}
-                                            </motion.span>
-                                        </AnimatePresence>
-                                        <span className="text-[10px] uppercase tracking-widest text-[#77537e]/70 font-medium mt-2">{t.l}</span>
-                                    </div>
-                                ))}
-                            </div>
+                            {/* TIMER GRID - Hides when time is up */}
+                            {!isTimeUp && (
+                                <div className="grid grid-cols-2 gap-4 mb-8">
+                                    {[
+                                        { l: "Days", v: timeLeft.days },
+                                        { l: "Hours", v: timeLeft.hours },
+                                        { l: "Mins", v: timeLeft.minutes },
+                                        { l: "Secs", v: timeLeft.seconds }
+                                    ].map((t, idx) => (
+                                        <div key={idx} className={timerBox}>
+                                            <AnimatePresence mode="popLayout">
+                                                <motion.span 
+                                                    key={isScrambling ? "scrambling" : t.v}
+                                                    initial={{ y: isScrambling ? 0 : -20, opacity: isScrambling ? 1 : 0, filter: isScrambling ? "blur(0px)" : "blur(4px)" }}
+                                                    animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                                                    exit={{ y: isScrambling ? 0 : 20, opacity: isScrambling ? 1 : 0, filter: isScrambling ? "blur(0px)" : "blur(4px)" }}
+                                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                                    className={`text-4xl font-bold ${isScrambling ? "text-[#973b88]" : "text-[#77537e]"}`}
+                                                >
+                                                    {t.v < 10 ? `0${t.v}` : t.v}
+                                                </motion.span>
+                                            </AnimatePresence>
+                                            <span className="text-[10px] uppercase tracking-widest text-[#77537e]/70 font-medium mt-2">{t.l}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
 
+                            {/* BUTTON LOGIC */}
                             {isTimeUp ? (
-                                <button onClick={onNext} className={btnPrimary}>Start Celebration!</button>
+                                <motion.button 
+                                    initial={{ scale: 0.8, opacity: 0 }} 
+                                    animate={{ scale: 1, opacity: 1 }} 
+                                    transition={{ type: "spring", bounce: 0.5 }}
+                                    onClick={onNext} 
+                                    className={btnPrimary}
+                                >
+                                    Start Celebration! <ArrowRight size={16} strokeWidth={3} className="ml-2"/>
+                                </motion.button>
                             ) : (
                                 !canSkip ? (
                                     <button disabled className={lockedBtn}>
