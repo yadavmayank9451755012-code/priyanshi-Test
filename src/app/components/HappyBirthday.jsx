@@ -1,152 +1,332 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useAnimation } from "framer-motion"
 import { ArrowRight, Sparkles } from "lucide-react"
 import { useEffect, useState } from "react"
 
-// Raining Confetti - Pink/Purple/Gold Theme
+// ─── Confetti ────────────────────────────────────────────────────────────────
 const RainingConfetti = () => {
     const [pieces, setPieces] = useState([])
-
     useEffect(() => {
-        const colors = ['#f472b6', '#a855f7', '#fcd34d', '#ffffff']
-        
-        const generatedPieces = Array.from({ length: 80 }).map((_, i) => ({
+        const colors = ['#f472b6', '#a855f7', '#fcd34d', '#fb7185', '#c084fc', '#ffffff']
+        setPieces(Array.from({ length: 90 }).map((_, i) => ({
             id: i,
-            left: `${Math.random() * 100}%`,
-            animDuration: Math.random() * 4 + 3,
-            delay: Math.random() * 5,
+            left: Math.random() * 100,
+            dur: Math.random() * 4 + 3,
+            delay: Math.random() * 6,
             color: colors[Math.floor(Math.random() * colors.length)],
-            size: Math.random() * 8 + 6,
-            isCircle: Math.random() > 0.5
-        }))
-        setPieces(generatedPieces)
+            size: Math.random() * 9 + 5,
+            isCircle: Math.random() > 0.5,
+            drift: Math.random() * 80 - 40,
+            rotate: Math.random() * 720,
+        })))
     }, [])
 
     return (
-        <div className="fixed inset-0 pointer-events-none overflow-hidden z-50">
+        <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 50 }}>
             {pieces.map(p => (
                 <motion.div
                     key={p.id}
-                    className="absolute top-[-10%]"
                     style={{
-                        left: p.left,
+                        position: 'absolute',
+                        top: '-10%',
+                        left: `${p.left}%`,
                         width: p.size,
-                        height: p.isCircle ? p.size : p.size * 1.5,
+                        height: p.isCircle ? p.size : p.size * 1.6,
                         backgroundColor: p.color,
                         borderRadius: p.isCircle ? '50%' : '2px',
-                        boxShadow: `0 0 10px ${p.color}80`
+                        boxShadow: `0 0 8px ${p.color}99`,
                     }}
-                    animate={{
-                        y: ['0vh', '110vh'],
-                        x: ['0px', `${Math.random() * 100 - 50}px`, '0px'],
-                        rotate: [0, Math.random() * 360 + 360],
-                    }}
-                    transition={{
-                        duration: p.animDuration,
-                        repeat: Infinity,
-                        delay: p.delay,
-                        ease: "linear"
-                    }}
+                    animate={{ y: ['0vh', '110vh'], x: [0, p.drift, 0], rotate: [0, p.rotate] }}
+                    transition={{ duration: p.dur, repeat: Infinity, delay: p.delay, ease: 'linear' }}
                 />
             ))}
         </div>
     )
 }
 
-// Elegant CSS Cake with Flickering Flame
-const AnimatedCake = () => (
+// ─── Flame ───────────────────────────────────────────────────────────────────
+const Flame = () => (
     <motion.div
-        className="relative z-10 mt-8 mx-auto"
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        style={{ position: 'relative', width: 18, height: 26, margin: '0 auto' }}
+        animate={{ scaleX: [1, 1.15, 0.9, 1.1, 1], scaleY: [1, 0.92, 1.08, 0.95, 1] }}
+        transition={{ duration: 0.7, repeat: Infinity, ease: 'easeInOut' }}
     >
-        {/* Soft Back Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-pink-300/20 blur-[50px] rounded-full pointer-events-none" />
-        
-        <div className="cake">
-            <div className="plate"></div>
-            
-            {/* Candle with Flickering Flame */}
-            <div className="candle">
-                <div className="flame"></div>
-            </div>
-            
-            {/* Top Layer */}
-            <div className="layer layer-top">
-                <div className="icing"></div>
-                <div className="drip drip1"></div>
-                <div className="drip drip2"></div>
-                <div className="drip drip3"></div>
-            </div>
-            
-            {/* Middle Layer */}
-            <div className="layer layer-middle"></div>
-            
-            {/* Bottom Layer */}
-            <div className="layer layer-bottom"></div>
-        </div>
+        {/* outer glow */}
+        <div style={{
+            position: 'absolute', inset: '-6px', borderRadius: '50% 50% 40% 40%',
+            background: 'radial-gradient(ellipse, #fde68a55 0%, transparent 70%)',
+            filter: 'blur(4px)',
+        }} />
+        {/* outer flame */}
+        <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(to top, #f97316, #fbbf24, #fef08a)',
+            borderRadius: '50% 50% 35% 35% / 60% 60% 40% 40%',
+            boxShadow: '0 0 12px 4px #f9731688',
+        }} />
+        {/* inner blue core */}
+        <div style={{
+            position: 'absolute', bottom: 2, left: '50%', transform: 'translateX(-50%)',
+            width: 7, height: 10,
+            background: 'linear-gradient(to top, #93c5fd, #bfdbfe)',
+            borderRadius: '50% 50% 35% 35% / 60% 60% 40% 40%',
+        }} />
     </motion.div>
 )
 
+// ─── Cake ────────────────────────────────────────────────────────────────────
+const AnimatedCake = () => {
+    const floatAnim = { y: [0, -12, 0] }
+    const floatTrans = { duration: 3.5, repeat: Infinity, ease: 'easeInOut' }
+
+    // Shared style helpers
+    const layer = (bg, w, h, radius = '14px 14px 6px 6px') => ({
+        width: w, height: h,
+        background: bg,
+        borderRadius: radius,
+        margin: '0 auto',
+        position: 'relative',
+    })
+
+    const icingDrips = (color, top = -12) => (
+        <div style={{ position: 'absolute', top, left: 0, right: 0, display: 'flex', justifyContent: 'space-around', padding: '0 8px' }}>
+            {[14, 22, 18, 25, 16, 20, 13].map((h, i) => (
+                <div key={i} style={{
+                    width: 10, height: h,
+                    background: color,
+                    borderRadius: '0 0 8px 8px',
+                    marginTop: 4,
+                }} />
+            ))}
+        </div>
+    )
+
+    return (
+        <motion.div
+            animate={floatAnim}
+            transition={floatTrans}
+            style={{ position: 'relative', width: 180, margin: '0 auto', paddingTop: 16 }}
+        >
+            {/* Soft glow behind cake */}
+            <div style={{
+                position: 'absolute', top: '40%', left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 200, height: 200,
+                background: 'radial-gradient(ellipse, #f472b630 0%, transparent 70%)',
+                filter: 'blur(30px)',
+                pointerEvents: 'none',
+            }} />
+
+            {/* ── Candle ── */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: -2, zIndex: 10, position: 'relative' }}>
+                <Flame />
+                <div style={{
+                    width: 14, height: 42,
+                    background: 'linear-gradient(to bottom, #fde68a, #fbbf24)',
+                    borderRadius: '4px 4px 2px 2px',
+                    boxShadow: '0 0 8px #fbbf2466, inset -3px 0 0 #f59e0b44',
+                    position: 'relative',
+                }}>
+                    {/* stripe decoration */}
+                    {[8, 18, 28].map(t => (
+                        <div key={t} style={{
+                            position: 'absolute', top: t, left: 0, right: 0,
+                            height: 3, background: '#f472b6aa', borderRadius: 2
+                        }} />
+                    ))}
+                </div>
+            </div>
+
+            {/* ── Top Tier ── */}
+            <div style={{ ...layer('linear-gradient(135deg, #f9a8d4, #ec4899, #db2777)', 120, 52, '14px 14px 4px 4px'), margin: '0 auto' }}>
+                {icingDrips('linear-gradient(to bottom, #fdf2f8, #fbcfe8)')}
+                {/* dots decoration */}
+                <div style={{ position: 'absolute', bottom: 10, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 8 }}>
+                    {['#fcd34d','#a78bfa','#fcd34d','#a78bfa'].map((c,i) => (
+                        <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: c, boxShadow: `0 0 6px ${c}` }} />
+                    ))}
+                </div>
+                {/* shine */}
+                <div style={{
+                    position: 'absolute', top: 8, left: 12, width: 28, height: 8,
+                    background: 'rgba(255,255,255,0.35)', borderRadius: 8,
+                    transform: 'rotate(-10deg)',
+                }} />
+            </div>
+
+            {/* ── Middle Tier ── */}
+            <div style={{ ...layer('linear-gradient(135deg, #c084fc, #a855f7, #7c3aed)', 150, 58, '4px 4px 4px 4px'), margin: '0 auto', marginTop: -2 }}>
+                {icingDrips('linear-gradient(to bottom, #faf5ff, #e9d5ff)', -10)}
+                {/* hearts decoration row */}
+                <div style={{ position: 'absolute', bottom: 10, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 10 }}>
+                    {['♥','♥','♥','♥'].map((h,i) => (
+                        <span key={i} style={{ fontSize: 11, color: '#fcd34d', filter: 'drop-shadow(0 0 3px #fcd34d)' }}>{h}</span>
+                    ))}
+                </div>
+                {/* shine */}
+                <div style={{
+                    position: 'absolute', top: 10, left: 16, width: 34, height: 9,
+                    background: 'rgba(255,255,255,0.25)', borderRadius: 8,
+                    transform: 'rotate(-8deg)',
+                }} />
+            </div>
+
+            {/* ── Bottom Tier ── */}
+            <div style={{ ...layer('linear-gradient(135deg, #f472b6, #ec4899, #be185d)', 180, 68, '4px 4px 10px 10px'), margin: '0 auto', marginTop: -2 }}>
+                {icingDrips('linear-gradient(to bottom, #fdf2f8, #fce7f3)', -10)}
+                {/* stars */}
+                <div style={{ position: 'absolute', bottom: 14, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 12 }}>
+                    {['★','★','★','★','★'].map((s,i) => (
+                        <span key={i} style={{ fontSize: 13, color: '#fcd34d', filter: 'drop-shadow(0 0 4px #fcd34d)' }}>{s}</span>
+                    ))}
+                </div>
+                {/* shine */}
+                <div style={{
+                    position: 'absolute', top: 12, left: 20, width: 40, height: 10,
+                    background: 'rgba(255,255,255,0.2)', borderRadius: 8,
+                    transform: 'rotate(-6deg)',
+                }} />
+            </div>
+
+            {/* ── Plate ── */}
+            <div style={{
+                width: 210, height: 20,
+                background: 'linear-gradient(to bottom, #f3f4f6, #e5e7eb)',
+                borderRadius: '50%',
+                margin: '0 auto', marginTop: -4,
+                boxShadow: '0 6px 20px rgba(0,0,0,0.18)',
+            }} />
+
+            {/* ── Table shadow ── */}
+            <div style={{
+                width: 200, height: 12,
+                background: 'radial-gradient(ellipse, rgba(0,0,0,0.2) 0%, transparent 70%)',
+                margin: '4px auto 0',
+            }} />
+        </motion.div>
+    )
+}
+
+// ─── Main Page ────────────────────────────────────────────────────────────────
 export default function HappyBirthday({ onNext }) {
     return (
         <motion.div
-            className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-aesthetic"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.8 }}
+            style={{
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '24px',
+                position: 'relative',
+                overflow: 'hidden',
+                background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1150 40%, #1a0a2e 100%)',
+            }}
         >
-            {/* Elegant Background Accents */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-pink-300/20 blur-[120px] rounded-full" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-purple-300/20 blur-[120px] rounded-full" />
-                <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-rose-200/30 blur-[100px] rounded-full" />
+            {/* BG blobs */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: '-10%', left: '-10%', width: '55%', height: '55%', background: 'radial-gradient(ellipse, #db277755 0%, transparent 70%)', filter: 'blur(60px)', borderRadius: '50%' }} />
+                <div style={{ position: 'absolute', bottom: '-10%', right: '-10%', width: '55%', height: '55%', background: 'radial-gradient(ellipse, #7c3aed55 0%, transparent 70%)', filter: 'blur(60px)', borderRadius: '50%' }} />
+                <div style={{ position: 'absolute', top: '35%', left: '55%', width: '35%', height: '35%', background: 'radial-gradient(ellipse, #f472b630 0%, transparent 70%)', filter: 'blur(50px)', borderRadius: '50%' }} />
             </div>
 
-            {/* Live Raining Confetti */}
             <RainingConfetti />
 
-            <div className="relative z-10 w-full max-w-lg mx-auto flex flex-col items-center">
-                
-                {/* 3D Neumorphism Card Container */}
-                <div className="neu-card p-8 md:p-12 w-full flex flex-col items-center">
+            <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+                {/* Card */}
+                <div style={{
+                    width: '100%',
+                    padding: '40px 32px 44px',
+                    borderRadius: 28,
+                    background: 'linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%)',
+                    backdropFilter: 'blur(24px)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    boxShadow: '0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}>
+
                     <AnimatedCake />
 
                     <motion.div
-                        className="text-center mt-10 mb-10"
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6, type: "spring" }}
+                        transition={{ delay: 0.6, type: 'spring', stiffness: 120 }}
+                        style={{ textAlign: 'center', marginTop: 36, marginBottom: 32 }}
                     >
-                        <h1 className="text-5xl md:text-6xl font-bold text-[#973b88] mb-3 tracking-wide drop-shadow-lg"
-                            style={{ filter: "drop-shadow(0 0 20px rgba(151,59,136,0.4))" }}>
+                        <h1 style={{
+                            fontSize: 'clamp(2.4rem, 7vw, 3.4rem)',
+                            fontWeight: 800,
+                            margin: '0 0 10px',
+                            background: 'linear-gradient(135deg, #f9a8d4, #ec4899, #c084fc)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            lineHeight: 1.1,
+                            letterSpacing: '-0.02em',
+                            filter: 'drop-shadow(0 0 30px rgba(236,72,153,0.5))',
+                        }}>
                             Happy Birthday
                         </h1>
-                        
-                        <h2 className="text-2xl md:text-3xl font-semibold text-[#77537e] tracking-[0.15em] uppercase flex items-center justify-center gap-2">
-                            <Sparkles className="w-6 h-6 text-[#f472b6]" />
+                        <h2 style={{
+                            fontSize: 'clamp(1.1rem, 4vw, 1.5rem)',
+                            fontWeight: 600,
+                            color: '#e9d5ff',
+                            letterSpacing: '0.2em',
+                            textTransform: 'uppercase',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 8,
+                            margin: 0,
+                        }}>
+                            <Sparkles style={{ width: 20, height: 20, color: '#f472b6' }} />
                             Madam Jii
-                            <Sparkles className="w-6 h-6 text-[#f472b6]" />
+                            <Sparkles style={{ width: 20, height: 20, color: '#f472b6' }} />
                         </h2>
                     </motion.div>
 
                     <motion.div
-                        className="w-full max-w-[320px]"
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
+                        transition={{ delay: 1.2, type: 'spring', stiffness: 200 }}
+                        style={{ width: '100%', maxWidth: 300 }}
                     >
-                        <button
+                        <motion.button
                             onClick={onNext}
-                            className="neu-button text-[#973b88] px-8 py-4 font-bold flex items-center justify-center gap-3 w-full uppercase tracking-[0.12em] text-[14px]"
+                            whileHover={{ scale: 1.04 }}
+                            whileTap={{ scale: 0.97 }}
+                            style={{
+                                width: '100%',
+                                padding: '15px 28px',
+                                borderRadius: 50,
+                                border: 'none',
+                                cursor: 'pointer',
+                                background: 'linear-gradient(135deg, #ec4899, #a855f7)',
+                                boxShadow: '0 8px 30px rgba(168,85,247,0.45), 0 0 0 1px rgba(255,255,255,0.1)',
+                                color: '#fff',
+                                fontSize: 14,
+                                fontWeight: 700,
+                                letterSpacing: '0.12em',
+                                textTransform: 'uppercase',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: 10,
+                            }}
                         >
                             See Our Moments <ArrowRight size={18} strokeWidth={3} />
-                        </button>
+                        </motion.button>
                     </motion.div>
-                </div>
 
+                </div>
             </div>
         </motion.div>
     )
