@@ -13,19 +13,19 @@ export default function Letter({ onNext }) {
     const [done, setDone] = useState(false)
     const scrollRef = useRef(null)
 
-    const letterText = `My Dearest Madam Jii,
+    const letterText = `Happy Birthday, Ms Priyanshi! 🎂✨
 
-Happy Birthday to the most amazing person!! 🎂✨ Honestly, on this super special day, a real life angel was born... and her name is Priyanshiii! 🤍
+Hope this day is everything you deserve and more....
+And on this special day, I just have to give the biggest shoutout to your mom 🌸 .. because she didn't just bring a daughter into this world, she raised someone truly special. All the love, respect, and blessings to her today. She deserves every bit of it for gifting the world someone like you.
 
-I really want to thank your parents for bringing you into this world, because now you're my friend and I feel so, so blessed. I'm incredibly lucky to have you in my life buddyyy..... Today isn't just about you getting a year older—it's a celebration of all the joy, non-stop laughter, and beautiful memories you bring to everyone around youuu.... 
+Wishing you a day full of smiles, warmth, and beautiful moments. Have the most wonderful birthday! 🎉💕
+Huh just 1 line more...
+root@kali:~# sudo apt-get install happy-birthday-priyanshi
+[+] Executing wish... Success! 🎉
 
-You have this literal magic power to light up any room and make people smile even when things feel dark. I don't know about anyone else, but for me, you are everything and I'm just telling you the truthhh. Your heart is pure gold and your energy is just so infectious! Also... can we talk about your voice?? It is literally supercafigtidiliciuoss! 🎶✨
+Have a fantastic Birthday...<3
 
-I hope you realize how rare you are and how much everyone around you appreciates you. Thank you for being the wonderful, amazing, and absolutely fantastic person you are. The world is so much brighter just because you're in ittt!
-
-Happy Birthday to a truly beautiful soul! 🥳💕
-With all my love and the warmest wishes everrr,
-Forever Yoursss ✨`
+~Mayank`
 
     useEffect(() => {
         if (scrollRef.current) {
