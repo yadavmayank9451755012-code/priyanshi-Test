@@ -72,7 +72,7 @@ export default function BirthdayApp() {
       {/* HIDDEN AUDIO PLAYER */}
       <audio 
         ref={audioRef} 
-        src="/images/IshqBulave.mp3" 
+        src="/images/FSHto5B4filPQ52j9K5Vu9ick1fs7HM.mp3" 
         loop 
         preload="auto" 
         className="hidden" 
