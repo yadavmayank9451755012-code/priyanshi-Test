@@ -15,8 +15,19 @@ export default function Letter({ onNext }) {
 
     const letterText = `Happy Birthday, Ms Priyanshi! 🎂✨
 
-Hope this day is everything you deserve and more....
-And on this special day, I just have to give the biggest shoutout to your mom 🌸 .. because she didn't just bring a daughter into this world, she raised someone truly special. All the love, respect, and blessings to her today. She deserves every bit of it for gifting the world someone like you.
+Hope this day is everything you deserve and more.....
+
+Happy Birthday, Priyanshi 🎨🖌️
+
+Aaj tumhara din hai, lekin aaj main ek aur insaan ko bhi thank you bolna chahta hu... tumhari mom ko.
+
+Unko thank you for giving birth to you. For bringing you into this world. Kyuki agar wo na hoti, toh main aaj tumse milta bhi nahi, baat karta bhi nahi..So Thankyou to Her...
+
+Toh aaj tumhe bhi wish hai, aur unhe bhi.. from the bottom of my heart.
+
+You're one of the best things that happened to me. And I mean that.
+
+Have the happiest birthday. Eat well. Smile more
 
 Wishing you a day full of smiles, warmth, and beautiful moments. Have the most wonderful birthday! 🎉💕
 Huh just 1 line more...
