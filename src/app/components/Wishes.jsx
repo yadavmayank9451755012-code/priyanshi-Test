@@ -6,33 +6,32 @@ import { ArrowRight, Sparkles, MousePointerClick, Hand } from "lucide-react"
 
 // Vocabulary updated from "Wishes" to "Thoughts/Truths"
 const thoughts = [
-    {
-        emoji: "🌸",
-        title: "You Are Loved",
-        text: "More than words can say, more than stars in the sky — you are surrounded by love today and always. Never forget how much you mean to the people lucky enough to have you.",
-    },
-    {
-        emoji: "✨",
-        title: "You Are Magic",
-        text: "The way you smile, the way you care, the way you show up — it's all pure magic. The world is genuinely better because you exist in it, Madam Jii.",
-    },
-    {
-        emoji: "🌟",
-        title: "Your Journey",
-        text: "May this year bring you everything your heart has been quietly wishing for. New adventures, deep joy, unexpected blessings, and every dream arriving right on time.",
-    },
-    {
-        emoji: "💫",
-        title: "Keep Shining",
-        text: "You have this rare gift of making everyone around you feel seen and special. Keep being exactly who you are — the world needs more of your light.",
-    },
-    {
-        emoji: "🎀",
-        title: "Happy Birthday!",
-        text: "Here's to cake, laughter, and celebrating YOU! You deserve every single good thing coming your way. Happy Birthday, beautiful soul — this one's all for you! 🎂🥳",
-    },
+  {
+    emoji: "🌸",
+    title: "A Special Day",
+    text: "Today is all about celebrating the person you are and the journey you've had so far. Wishing you a day filled with happiness, smiles, and good memories."
+  },
+  {
+    emoji: "✨",
+    title: "Stay Amazing",
+    text: "Your confidence, determination, and unique personality make you stand out in your own way. Keep moving forward and achieving great things."
+  },
+  {
+    emoji: "🌟",
+    title: "New Beginnings",
+    text: "May this new chapter bring exciting opportunities, meaningful experiences, and countless moments worth remembering."
+  },
+  {
+    emoji: "💫",
+    title: "Keep Growing",
+    text: "Every year adds new lessons, new memories, and new achievements. Keep believing in yourself and enjoying the journey ahead."
+  },
+  {
+    emoji: "🎂",
+    title: "Happy Birthday!",
+    text: "Wishing you a wonderful birthday filled with joy, laughter, and everything that makes you smile. Have an amazing year ahead, Chhota Don! 🎉"
+  }
 ]
-
 export default function LittleTruths({ onNext, onBack }) {
     const [current, setCurrent] = useState(0)
     const [direction, setDirection] = useState(1)
