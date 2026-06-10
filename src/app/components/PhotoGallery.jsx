@@ -74,7 +74,7 @@ export default function PhotoGallery({ onNext }) {
                 </div>
                 {/* Original Heading Styles */}
                 <h1 className="text-3xl font-black mb-2 uppercase tracking-widest" style={{ color: primaryColor }}>
-                    Memories
+                    ✨️
                 </h1>
             </motion.div>
 
