@@ -47,7 +47,7 @@ export default function BirthdayApp() {
   const handleCountdownComplete = () => {
     if (audioRef.current) {
       audioRef.current.pause() 
-      audioRef.current.src = "/images/rxOk25le1ZUlLX1vrnij86Ir7ndh36Q.mp3" 
+      audioRef.current.src = "/images/FSHto5B4filPQ52j9K5Vu9ick1fs7HM.mp3" 
       audioRef.current.load() 
       audioRef.current.play().catch(e => console.log("Audio change error:", e)) 
     }
